@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style> body { margin: 0; background: #FBF6ED; -webkit-font-smoothing: antialiased; text-wrap: pretty; } </style>
+</helmet>
+
+<dc-import name="NavBar" current-page="privacy" lang="{{ lang }}" on-set-lang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+<main style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;color:#2B2019">
+  <section style="maxWidth:760px;margin:0 auto;padding:64px 24px 16px">
+    <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(28px,3.8vw,40px);fontWeight:800;margin:0 0 16px">{{ title }}</h1>
+    <p style="fontSize:17px;lineHeight:1.7;color:#6B5D4F;margin:0">{{ intro }}</p>
+  </section>
+
+  <section style="maxWidth:760px;margin:0 auto;padding:32px 24px 24px;display:flex;flexDirection:column;gap:20px">
+    <sc-for list="{{ sections }}" as="s" hint-placeholder-count="4">
+      <div style="background:#FFFFFF;border:1px solid #E8DDC9;borderRadius:20px;padding:28px 28px">
+        <div style="display:flex;alignItems:center;gap:14px;marginBottom:14px">
+          <div style="width:36px;height:36px;borderRadius:10px;background:#2F4B3C;color:#FBF6ED;fontFamily:'Baloo 2',sans-serif;fontWeight:800;fontSize:16px;display:flex;alignItems:center;justifyContent:center;flexShrink:0">{{ s.n }}</div>
+          <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:20px;fontWeight:700;margin:0">{{ s.title }}</h2>
+        </div>
+        <div style="display:flex;flexDirection:column;gap:10px;paddingLeft:50px">
+          <sc-for list="{{ s.points }}" as="pt" hint-placeholder-count="2">
+            <p style="fontSize:15.5px;lineHeight:1.7;color:#4A3E32;margin:0">{{ pt }}</p>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="maxWidth:760px;margin:0 auto;padding:16px 24px 80px">
+    <div style="background:#F3E3D3;borderRadius:20px;padding:24px 28px;display:flex;flexDirection:column;gap:8px">
+      <p style="fontSize:15px;lineHeight:1.6;color:#5A4632;margin:0">{{ questionsNote }} <a href="Contact.dc.html" style="color:#954025;fontWeight:700">{{ contactLink }}</a></p>
+      <p style="fontSize:13px;color:#8B7A63;margin:0">{{ lastUpdated }}</p>
+    </div>
+  </section>
+</main>
+
+<dc-import name="Footer" lang="{{ lang }}" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const COPY = {
+  en: {
+    title: 'Privacy Policy',
+    intro: 'We know your shop\u2019s sales information is important and personal. Here\u2019s a plain explanation of how we handle it, no legal jargon.',
+    questionsNote: 'Questions about your data?', contactLink: 'Contact us', lastUpdated: 'Last updated: July 2026',
+    sections: [
+      { title: 'What we collect', points: ['Your store name, email address, and password, so we can run your account.', 'Your product list, prices, and sales records, so the POS can actually work.', 'We don\u2019t collect anything beyond what\u2019s needed to run your shop\u2019s POS.'] },
+      { title: 'Where it\u2019s stored', points: ['Your data is stored securely on cloud servers, the same kind of infrastructure used by banks and other online services.', 'We don\u2019t keep your data on any single physical device in your shop, so you don\u2019t lose your records if a phone or tablet breaks.'] },
+      { title: 'Who can see it', points: ['Only you and the staff you give access to can see your shop\u2019s data.', 'We never share, sell, or mix your shop\u2019s information with any other shop\u2019s information. Your data is yours.'] },
+      { title: 'Deleting your data', points: ['You can request to delete your account and all associated data at any time.', 'Just email us at hello@khatiwadapos.com and we\u2019ll remove your information, no fees, no hoops to jump through.'] }
+    ]
+  },
+  ne: {
+    title: 'गोपनीयता नीति',
+    intro: 'हामी जान्दछौं कि तपाईंको पसलको बिक्री जानकारी महत्त्वपूर्ण र व्यक्तिगत हो। यहाँ यसलाई हामीले कसरी व्यवहार गर्छौं भन्ने सरल व्याख्या छ, कानुनी शब्दजाल छैन।',
+    questionsNote: 'तपाईंको डेटाबारे प्रश्न छ?', contactLink: 'हामीलाई सम्पर्क गर्नुहोस्', lastUpdated: 'अन्तिम अपडेट: जुलाई २०२६',
+    sections: [
+      { title: 'हामी के सङ्कलन गर्छौं', points: ['तपाईंको खाता चलाउन: पसलको नाम, इमेल ठेगाना, र पासवर्ड।', 'POS वास्तवमा काम गर्नका लागि: तपाईंको प्रोडक्ट सूची, मूल्य, र बिक्री रेकर्ड।', 'तपाईंको पसल चलाउन आवश्यक भन्दा बढी हामी केही सङ्कलन गर्दैनौं।'] },
+      { title: 'यो कहाँ भण्डारण गरिन्छ', points: ['तपाईंको डेटा क्लाउड सर्भरहरूमा सुरक्षित रूपमा भण्डारण गरिन्छ, बैंक र अन्य अनलाइन सेवाहरूले प्रयोग गर्ने जस्तै पूर्वाधार।', 'हामी तपाईंको डेटा पसलको कुनै एक्ला भौतिक डिभाइसमा राख्दैनौं, त्यसैले फोन वा ट्याब्लेट बिग्रिए पनि तपाईंको रेकर्ड हराउँदैन।'] },
+      { title: 'यो कसले देख्न सक्छ', points: ['तपाईं र तपाईंले पहुँच दिनुभएको स्टाफले मात्र तपाईंको पसलको डेटा देख्न सक्छन्।', 'हामी तपाईंको पसलको जानकारी अरू कुनै पसलसँग कहिल्यै साझा, बिक्री, वा मिसाउँदैनौं। तपाईंको डेटा तपाईंकै हो।'] },
+      { title: 'आफ्नो डेटा मेटाउने', points: ['तपाईं जुनसुकै बेला आफ्नो खाता र सम्बन्धित सबै डेटा मेटाउन अनुरोध गर्न सक्नुहुन्छ।', 'hello@khatiwadapos.com मा इमेल गर्नुहोस्, हामी तपाईंको जानकारी हटाउनेछौं, कुनै शुल्क छैन, कुनै झन्झट छैन।'] }
+    ]
+  }
+};
+
+class Component extends DCLogic {
+  state = { lang: 'en' };
+  renderVals() {
+    const c = COPY[this.state.lang];
+    return {
+      lang: this.state.lang, setLang: (l) => this.setState({ lang: l }),
+      title: c.title, intro: c.intro, questionsNote: c.questionsNote, contactLink: c.contactLink, lastUpdated: c.lastUpdated,
+      sections: c.sections.map((s, i) => ({ ...s, n: i + 1 }))
+    };
+  }
+}
+</script>
+</body>
+</html>

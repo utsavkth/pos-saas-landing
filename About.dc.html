@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style> body { margin: 0; background: #FBF6ED; -webkit-font-smoothing: antialiased; text-wrap: pretty; } </style>
+</helmet>
+
+<dc-import name="NavBar" current-page="about" lang="{{ lang }}" on-set-lang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+<main style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;color:#2B2019">
+  <section style="maxWidth:1180px;margin:0 auto;padding:64px 24px 24px;display:flex;gap:48px;alignItems:center;flexWrap:wrap">
+    <div style="flex:1 1 420px;minWidth:280px">
+      <div style="fontSize:13px;fontWeight:800;letterSpacing:0.06em;textTransform:uppercase;color:#B5502C;marginBottom:14px">{{ kicker }}</div>
+      <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(28px,3.8vw,42px);fontWeight:800;margin:0 0 20px;lineHeight:1.15">{{ title }}</h1>
+      <div style="display:flex;flexDirection:column;gap:18px">
+        <p style="fontSize:17px;lineHeight:1.75;color:#4A3E32;margin:0">{{ p1 }}</p>
+        <p style="fontSize:17px;lineHeight:1.75;color:#4A3E32;margin:0">{{ p2 }}</p>
+      </div>
+    </div>
+
+    <div style="flex:1 1 320px;minWidth:260px;maxWidth:400px;margin:0 auto">
+      <svg viewBox="0 0 320 260" style="width:100%;height:auto">
+        <rect x="20" y="90" width="280" height="150" rx="8" fill="#FFFFFF" stroke="#E8DDC9" stroke-width="2"></rect>
+        <polygon points="10,90 160,30 310,90" fill="#2F4B3C"></polygon>
+        <rect x="55" y="130" width="70" height="60" rx="4" fill="#F3E3D3"></rect>
+        <rect x="195" y="130" width="70" height="60" rx="4" fill="#F3E3D3"></rect>
+        <rect x="140" y="160" width="40" height="80" rx="3" fill="#B5502C"></rect>
+        <circle cx="90" cy="230" r="14" fill="#2B2019"></circle>
+        <rect x="76" y="244" width="28" height="34" rx="10" fill="#2B2019"></rect>
+        <circle cx="230" cy="230" r="14" fill="#954025"></circle>
+        <rect x="216" y="244" width="28" height="34" rx="10" fill="#954025"></rect>
+        <circle cx="160" cy="222" r="12" fill="#2F4B3C"></circle>
+        <rect x="148" y="234" width="24" height="30" rx="9" fill="#2F4B3C"></rect>
+      </svg>
+    </div>
+  </section>
+
+  <section style="maxWidth:820px;margin:0 auto;padding:16px 24px 56px;display:flex;flexDirection:column;gap:18px">
+    <p style="fontSize:17px;lineHeight:1.75;color:#4A3E32;margin:0">{{ p3 }}</p>
+    <p style="fontSize:17px;lineHeight:1.75;color:#4A3E32;margin:0;fontWeight:700">{{ p4 }}</p>
+    <p style="fontSize:17px;lineHeight:1.75;color:#4A3E32;margin:0">{{ p5 }}</p>
+  </section>
+
+  <section style="background:#2F4B3C;padding:64px 24px">
+    <p style="maxWidth:760px;margin:0 auto;textAlign:center;fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(21px,2.6vw,28px);fontWeight:700;lineHeight:1.5;color:#FBF6ED">{{ revolutionQuote }}</p>
+  </section>
+
+  <section style="background:#F3E3D3;padding:64px 24px">
+    <div style="maxWidth:1080px;margin:0 auto;display:grid;gridTemplateColumns:repeat(auto-fit,minmax(240px,1fr));gap:28px">
+      <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+        <div style="background:#FBF6ED;borderRadius:20px;padding:28px">
+          <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:19px;fontWeight:700;margin:0 0 10px;color:#2F4B3C">{{ v.title }}</h3>
+          <p style="fontSize:15px;lineHeight:1.65;color:#6B5D4F;margin:0">{{ v.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:72px 24px;textAlign:center">
+    <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(24px,3vw,30px);fontWeight:800;margin:0 0 24px">{{ closingTitle }}</h2>
+    <a href="Contact.dc.html" style="textDecoration:none;background:#B5502C;color:#FFF;fontWeight:800;fontSize:18px;padding:18px 40px;borderRadius:999px;display:inline-block;boxShadow:0 8px 24px rgba(181,80,44,0.28)">{{ cta }}</a>
+  </section>
+</main>
+
+<dc-import name="Footer" lang="{{ lang }}" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const COPY = {
+  en: {
+    kicker: 'Our story', title: 'Built for one shop. Now built for yours.',
+    p1: 'Khatiwada POS didn\u2019t start as a company. It started as a spreadsheet, then a small app, built to help one family run their grocery shop in Kathmandu, track what was selling, know what to restock, and stop losing track of the day\u2019s cash.',
+    p2: 'Like a lot of small shops, ours ran on memory, paper notebooks, and a calculator. Buying proper POS hardware felt expensive and complicated for what is, at its heart, a simple business: sell things, know what you sold.',
+    p3: 'So we built something that works on the phone already sitting behind the counter. No terminal to buy, no technician to call. After using it in our own shop for a while, we realized other shop owners were asking for the same thing, so we\u2019re opening it up.',
+    p4: 'We\u2019re still a small team, and we\u2019re building this the same way we built the first version, by listening to real shopkeepers, including our own family.',
+    p5: 'Made by shopkeepers, for shopkeepers: built for every generation, from tech-savvy youth to shop owners who have never touched software like this before.',
+    revolutionQuote: 'Let\u2019s revolutionise how we think of shops. Anyone can modernise their shop, for the ease of customers and shopkeepers alike.',
+    closingTitle: 'Want to see it in your own shop?', cta: 'Get Started',
+    values: [
+      { title: 'Honest', desc: 'We\u2019ll tell you plainly what this can and can\u2019t do yet, no overselling.' },
+      { title: 'Practical', desc: 'Every feature exists because a real shop needed it, not because it looked good on a slide.' },
+      { title: 'Built with shopkeepers', desc: 'Tested first in a real shop in Kathmandu, by people who actually stand behind the counter.' }
+    ]
+  },
+  ne: {
+    kicker: 'हाम्रो कथा', title: 'एउटा पसलका लागि बनाइयो। अब तपाईंको पसलका लागि पनि।',
+    p1: 'खटीवाडा POS कुनै कम्पनीका रूपमा सुरु भएको थिएन। यो एउटा स्प्रेडसिट, अनि सानो एप बनेर सुरु भयो, काठमाडौंमा एउटै परिवारलाई आफ्नो किराना पसल चलाउन मद्दत गर्न, के बिक्री भइरहेको छ थाहा पाउन, र दिनभरिको नगद हिसाब नबिर्सन।',
+    p2: 'धेरै साना पसलहरू जस्तै, हाम्रो पसल पनि सम्झना, कागजको खाता, र क्यालकुलेटरमै चलिरहेको थियो। सामान बेच्ने र के बेचियो थाहा पाउने, यति सामान्य कामका लागि ठूलो POS हार्डवेयर किन्नु महँगो र झन्झटिलो लाग्थ्यो।',
+    p3: 'त्यसैले हामीले काउन्टरमा पहिल्यै भइरहेको फोनमै चल्ने कुरा बनायौं। किन्नुपर्ने टर्मिनल छैन, बोलाउनुपर्ने प्राविधिक छैन। आफ्नै पसलमा केही समय प्रयोग गरेपछि, अरू पसल मालिकहरूले पनि यस्तै कुरा खोजिरहेको थाहा पायौं, त्यसैले अब हामी यसलाई सबैका लागि खोल्दैछौं।',
+    p4: 'हामी अझै सानो टिम हौं, र हामीले यसलाई पहिलो संस्करण बनाएकै तरिकाले बनाउँदैछौं, साँचो पसलेहरूको कुरा सुनेर, हाम्रो आफ्नै परिवार सहित।',
+    p5: 'पसलेहरूद्वारा, पसलेहरूकै लागि बनाइएको: पुरानो र नयाँ दुवै पुस्ताका लागि, प्रविधिमा दक्ष युवादेखि पहिलोपटक यस्तो सफ्टवेयर प्रयोग गर्नेसम्म।',
+    revolutionQuote: 'पसलको बारेमा हाम्रो सोच बदलौं। हरेक पसलले आफ्नो पसललाई ग्राहक र पसले दुवैको सजिलोका लागि आधुनिक बनाउन सक्छ।',
+    closingTitle: 'आफ्नै पसलमा प्रयोग गरेर हेर्न चाहनुहुन्छ?', cta: 'सुरु गर्नुहोस्',
+    values: [
+      { title: 'इमानदार', desc: 'यसले अहिले के गर्न सक्छ र के गर्न सक्दैन भनेर स्पष्ट भन्छौं, बढाइचढाइ गर्दैनौं।' },
+      { title: 'व्यावहारिक', desc: 'हरेक सुविधा कुनै वास्तविक पसललाई चाहिएकोले मात्र छ, स्लाइडमा राम्रो देखिनका लागि होइन।' },
+      { title: 'पसलेहरूसँगै निर्मित', desc: 'काठमाडौंको एउटा साँचो पसलमा, काउन्टरमा उभिने मानिसहरूले नै पहिले जाँचेको।' }
+    ]
+  }
+};
+
+class Component extends DCLogic {
+  state = { lang: 'en' };
+  renderVals() {
+    const c = COPY[this.state.lang];
+    return { lang: this.state.lang, setLang: (l) => this.setState({ lang: l }), ...c };
+  }
+}
+</script>
+</body>
+</html>

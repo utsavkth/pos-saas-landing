@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style> body { margin: 0; background: #FBF6ED; -webkit-font-smoothing: antialiased; text-wrap: pretty; } </style>
+</helmet>
+
+<dc-import name="NavBar" current-page="pricing" lang="{{ lang }}" on-set-lang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+<main style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;color:#2B2019">
+  <section style="maxWidth:800px;margin:0 auto;padding:64px 24px 8px;textAlign:center">
+    <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(30px,4vw,44px);fontWeight:800;margin:0 0 16px">{{ pageTitle }}</h1>
+    <p style="fontSize:18px;color:#6B5D4F;margin:0 0 8px">{{ pageSub }}</p>
+    <p style="fontSize:14px;color:#8B7A63;margin:0">{{ placeholderNote }}</p>
+  </section>
+
+  <section style="maxWidth:920px;margin:0 auto;padding:48px 24px 80px;display:flex;gap:28px;flexWrap:wrap;justifyContent:center">
+    <sc-for list="{{ plans }}" as="p" hint-placeholder-count="2">
+      <div style="flex:1 1 340px;maxWidth:400px;background:{{ p.bg }};border:{{ p.border }};borderRadius:24px;padding:36px 32px;display:flex;flexDirection:column">
+        <sc-if value="{{ p.badge }}" hint-placeholder-val="{{ false }}">
+          <div style="align-self:flex-start;background:#B5502C;color:#FFF;fontSize:12px;fontWeight:800;padding:6px 14px;borderRadius:999px;marginBottom:16px">{{ p.badgeText }}</div>
+        </sc-if>
+        <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:26px;fontWeight:700;margin:0 0 6px;color:{{ p.titleColor }}">{{ p.name }}</h2>
+        <p style="fontSize:15px;lineHeight:1.6;color:{{ p.descColor }};margin:0 0 24px">{{ p.desc }}</p>
+        <div style="fontSize:22px;fontWeight:800;color:{{ p.titleColor }};margin:0 0 24px">{{ priceLabel }}</div>
+        <div style="display:flex;flexDirection:column;gap:14px;marginBottom:32px;flex:1 1 auto">
+          <sc-for list="{{ p.bullets }}" as="b" hint-placeholder-count="6">
+            <div style="display:flex;gap:10px;alignItems:flex-start">
+              <svg width="20" height="20" viewBox="0 0 20 20" style="flexShrink:0;marginTop:2px"><circle cx="10" cy="10" r="10" fill="{{ p.checkBg }}"></circle><polyline points="5.5,10.5 8.5,13.5 14.5,6.5" fill="none" stroke="{{ p.checkColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+              <span style="fontSize:15px;lineHeight:1.5;color:{{ p.descColor }}">{{ b }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <a href="Contact.dc.html" style="textDecoration:none;textAlign:center;background:{{ p.btnBg }};color:{{ p.btnColor }};fontWeight:800;fontSize:16px;padding:16px 24px;borderRadius:999px">{{ contactCta }}</a>
+      </div>
+    </sc-for>
+  </section>
+</main>
+
+<dc-import name="Footer" lang="{{ lang }}" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const COPY = {
+  en: {
+    pageTitle: 'Simple pricing, coming soon', pageSub: 'We\u2019re still finalizing plans and pricing for shop owners.',
+    placeholderNote: 'Plan names below are placeholders, final packaging and pricing will be announced soon.',
+    priceLabel: 'Custom pricing', contactCta: 'Contact us for pricing',
+    plans: [
+      { name: 'Starter', desc: 'For a single shop just getting going.', badge: false,
+        bullets: ['Camera barcode scanning', 'Fixed-price & weighted items', 'Bilingual cashier screen', 'Cash + QR payments', 'Basic sales reports', '1 staff login'] },
+      { name: 'Growth', desc: 'For shops with more products and staff.', badge: true, badgeText: 'Most shops choose this',
+        bullets: ['Everything in Starter', 'CSV import & export', 'Product photos', 'Multiple staff logins', 'Advanced sales reports', 'Priority support'] }
+    ]
+  },
+  ne: {
+    pageTitle: 'सरल मूल्य, चाँडै आउँदैछ', pageSub: 'हामी पसल मालिकहरूका लागि योजना र मूल्य अझै तयार गर्दैछौं।',
+    placeholderNote: 'तलका योजनाका नामहरू अस्थायी हुन्, अन्तिम प्याकेजिङ र मूल्य चाँडै घोषणा गरिनेछ।',
+    priceLabel: 'अनुकूलित मूल्य', contactCta: 'मूल्यका लागि सम्पर्क गर्नुहोस्',
+    plans: [
+      { name: 'स्टार्टर', desc: 'भर्खरै सुरु गर्ने एउटा पसलका लागि।', badge: false,
+        bullets: ['क्यामेरा बारकोड स्क्यानिङ', 'निश्चित-मूल्य र तौल गरिने सामान', 'द्विभाषिक क्यासियर स्क्रिन', 'नगद + QR भुक्तानी', 'आधारभूत बिक्री रिपोर्ट', '१ स्टाफ लगइन'] },
+      { name: 'ग्रोथ', desc: 'धेरै प्रोडक्ट र स्टाफ भएका पसलका लागि।', badge: true, badgeText: 'धेरैले रोज्ने',
+        bullets: ['स्टार्टरका सबै सुविधा', 'CSV आयात र निर्यात', 'प्रोडक्टका फोटो', 'धेरै स्टाफ लगइन', 'उन्नत बिक्री रिपोर्ट', 'प्राथमिकता सहयोग'] }
+    ]
+  }
+};
+
+class Component extends DCLogic {
+  state = { lang: 'en' };
+  renderVals() {
+    const c = COPY[this.state.lang];
+    return {
+      lang: this.state.lang,
+      setLang: (l) => this.setState({ lang: l }),
+      pageTitle: c.pageTitle, pageSub: c.pageSub, placeholderNote: c.placeholderNote,
+      priceLabel: c.priceLabel, contactCta: c.contactCta,
+      plans: c.plans.map((p, i) => ({
+        ...p,
+        bg: i === 1 ? '#2F4B3C' : '#FFFFFF',
+        border: i === 1 ? '2px solid #2F4B3C' : '1px solid #E8DDC9',
+        titleColor: i === 1 ? '#FBF6ED' : '#2B2019',
+        descColor: i === 1 ? '#C9D3CB' : '#6B5D4F',
+        checkBg: i === 1 ? '#3E5C4B' : '#F3E3D3',
+        checkColor: i === 1 ? '#8FD6A8' : '#B5502C',
+        btnBg: i === 1 ? '#B5502C' : '#F3E3D3',
+        btnColor: i === 1 ? '#FFFFFF' : '#954025'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

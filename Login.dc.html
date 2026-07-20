@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style> body { margin: 0; background: #FBF6ED; -webkit-font-smoothing: antialiased; text-wrap: pretty; } </style>
+</helmet>
+
+<dc-import name="NavBar" current-page="login" lang="{{ lang }}" on-set-lang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+<main style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;color:#2B2019;padding:56px 24px 80px;display:flex;justifyContent:center">
+  <div style="width:100%;maxWidth:460px">
+
+    <div style="background:#FFFFFF;border:1px solid #E8DDC9;borderRadius:24px;padding:36px 32px;boxShadow:0 12px 32px rgba(43,32,25,0.06)">
+
+      <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+        <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:24px;fontWeight:700;margin:0 0 8px">{{ t.loginTitle }}</h1>
+        <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0 0 24px">{{ t.loginSub }}</p>
+        <form onSubmit="{{ handleLogin }}" style="display:flex;flexDirection:column;gap:20px">
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.storeName }}</span>
+            <input value="{{ loginStore }}" onChange="{{ onLoginStore }}" placeholder="{{ t.storeNamePh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+          </label>
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.password }}</span>
+            <input type="password" value="{{ loginPw }}" onChange="{{ onLoginPw }}" placeholder="{{ t.passwordPh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+          </label>
+          <button type="button" onClick="{{ goForgot }}" style="border:none;background:none;cursor:pointer;alignSelf:flex-end;color:#B5502C;fontWeight:700;fontSize:14px;padding:0;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">{{ t.forgot }}</button>
+          <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;fontWeight:800;fontSize:17px;padding:16px 24px;borderRadius:999px;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;marginTop:4px">{{ t.loginSubmit }}</button>
+        </form>
+        <p style="fontSize:14px;lineHeight:1.6;color:#8B7A63;margin:24px 0 0;textAlign:center">{{ t.newHere }} <a href="Contact.dc.html" style="color:#954025;fontWeight:700;textDecoration:none">{{ t.newHereLink }}</a></p>
+      </sc-if>
+
+      <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ forgotSent }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flexDirection:column;gap:14px;alignItems:flex-start">
+            <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#E4EAE5"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#2F4B3C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+            <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:20px;fontWeight:700;margin:0">{{ t.sentTitle }}</h3>
+            <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0">{{ t.sentSub }}</p>
+            <button type="button" onClick="{{ goLogin }}" style="border:none;background:none;cursor:pointer;color:#B5502C;fontWeight:700;fontSize:15px;padding:0;marginTop:8px;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">{{ t.back }}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ forgotNotSent }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ handleForgot }}" style="display:flex;flexDirection:column;gap:20px">
+            <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:20px;fontWeight:700;margin:0">{{ t.resetTitle }}</h3>
+            <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:-8px 0 0">{{ t.resetSub }}</p>
+            <label style="display:flex;flexDirection:column;gap:8px">
+              <span style="fontSize:14px;fontWeight:700">{{ t.email }}</span>
+              <input type="email" value="{{ forgotEmail }}" onChange="{{ onForgotEmail }}" placeholder="{{ t.emailPh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+            </label>
+            <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;fontWeight:800;fontSize:17px;padding:16px 24px;borderRadius:999px;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">{{ t.resetSubmit }}</button>
+            <button type="button" onClick="{{ goLogin }}" style="border:none;background:none;cursor:pointer;alignSelf:flex-start;color:#6B5D4F;fontWeight:700;fontSize:14px;padding:0;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">{{ t.back }}</button>
+          </form>
+        </sc-if>
+      </sc-if>
+    </div>
+
+    <div style="display:flex;alignItems:center;gap:8px;justifyContent:center;marginTop:20px">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#6B5D4F" stroke-width="1.8"><rect x="4" y="9" width="12" height="8" rx="2"></rect><path d="M6.5 9 V6 a3.5 3.5 0 0 1 7 0 V9"></path></svg>
+      <span style="fontSize:13px;color:#6B5D4F">{{ trustLine }}</span>
+    </div>
+  </div>
+</main>
+
+<dc-import name="Footer" lang="{{ lang }}" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const T = {
+  en: {
+    loginTitle: 'Log in to your shop\u2019s POS', loginSub: 'Enter your store name and password to open your dashboard.',
+    storeName: 'Store name', storeNamePh: 'e.g. Ram Store',
+    email: 'Email address', emailPh: 'you@example.com',
+    password: 'Password', passwordPh: 'Enter your password',
+    forgot: 'Forgot password?', loginSubmit: 'Log In',
+    newHere: 'New to Khatiwada POS?', newHereLink: 'Contact us to get set up',
+    resetTitle: 'Reset your password', resetSub: 'Enter the email linked to your shop account and we\u2019ll send you a reset link.',
+    resetSubmit: 'Send reset link', back: '\u2190 Back to log in',
+    sentTitle: 'Check your email', sentSub: 'If an account exists for that email, we\u2019ve sent a link to reset your password.'
+  },
+  ne: {
+    loginTitle: 'आफ्नो पसलको POS मा लग इन गर्नुहोस्', loginSub: 'आफ्नो ड्यासबोर्ड खोल्न पसलको नाम र पासवर्ड हाल्नुहोस्।',
+    storeName: 'पसलको नाम', storeNamePh: 'जस्तै: राम स्टोर',
+    email: 'इमेल ठेगाना', emailPh: 'you@example.com',
+    password: 'पासवर्ड', passwordPh: 'आफ्नो पासवर्ड लेख्नुहोस्',
+    forgot: 'पासवर्ड बिर्सनुभयो?', loginSubmit: 'लग इन गर्नुहोस्',
+    newHere: 'खटीवाडा POS मा नयाँ हुनुहुन्छ?', newHereLink: 'सेटअपका लागि हामीलाई सम्पर्क गर्नुहोस्',
+    resetTitle: 'पासवर्ड रिसेट गर्नुहोस्', resetSub: 'आफ्नो पसल खातासँग जोडिएको इमेल लेख्नुहोस्, हामी रिसेट लिंक पठाउनेछौं।',
+    resetSubmit: 'रिसेट लिंक पठाउनुहोस्', back: '\u2190 लग इनमा फर्कनुहोस्',
+    sentTitle: 'आफ्नो इमेल जाँच्नुहोस्', sentSub: 'त्यो इमेलमा खाता भएमा, हामीले पासवर्ड रिसेट लिंक पठाएका छौं।'
+  }
+};
+const TRUST = { en: 'Your shop\u2019s data stays private to your account only.', ne: 'तपाईंको पसलको डेटा तपाईंको खातामा मात्र निजी रहन्छ।' };
+
+class Component extends DCLogic {
+  state = {
+    lang: 'en', mode: 'login',
+    loginStore: '', loginPw: '',
+    forgotEmail: '', forgotSent: false
+  };
+
+  renderVals() {
+    const lang = this.state.lang;
+    const t = T[lang];
+    const mode = this.state.mode;
+    return {
+      lang, setLang: (l) => this.setState({ lang: l }),
+      t, trustLine: TRUST[lang],
+      isLogin: mode === 'login', isForgot: mode === 'forgot',
+      forgotSent: this.state.forgotSent, forgotNotSent: !this.state.forgotSent,
+      goLogin: () => this.setState({ mode: 'login', forgotSent: false }),
+      goForgot: () => this.setState({ mode: 'forgot' }),
+      loginStore: this.state.loginStore, onLoginStore: (e) => this.setState({ loginStore: e.target.value }),
+      loginPw: this.state.loginPw, onLoginPw: (e) => this.setState({ loginPw: e.target.value }),
+      forgotEmail: this.state.forgotEmail, onForgotEmail: (e) => this.setState({ forgotEmail: e.target.value }),
+      handleLogin: (e) => { e.preventDefault(); },
+      handleForgot: (e) => { e.preventDefault(); this.setState({ forgotSent: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #FBF6ED; -webkit-font-smoothing: antialiased; text-wrap: pretty; }
+  @keyframes scanline { 0% { top: 14%; opacity: .9; } 50% { top: 78%; opacity: .5; } 100% { top: 14%; opacity: .9; } }
+</style>
+</helmet>
+
+<dc-import name="NavBar" current-page="home" lang="{{ lang }}" on-set-lang="{{ setLang }}" hint-size="100%,72px"></dc-import>
+
+<main style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;color:#2B2019">
+
+  <section style="maxWidth:1280px;margin:0 auto;padding:64px 24px 48px;display:flex;flexWrap:wrap;alignItems:center;gap:48px">
+    <div style="flex:1 1 480px;minWidth:300px">
+      <div style="display:inline-flex;alignItems:center;gap:8px;background:#F3E3D3;color:#954025;fontWeight:800;fontSize:14px;padding:8px 16px;borderRadius:999px;marginBottom:24px">{{ heroKicker }}</div>
+      <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(32px,4.6vw,54px);lineHeight:1.12;fontWeight:800;margin:0 0 20px;color:#2B2019">{{ heroHeadline }}</h1>
+      <p style="fontSize:clamp(17px,2vw,20px);lineHeight:1.65;color:#6B5D4F;margin:0 0 32px;maxWidth:540px">{{ heroSub }}</p>
+      <div style="display:flex;gap:16px;flexWrap:wrap;alignItems:center">
+        <a href="Contact.dc.html" style="textDecoration:none;background:#B5502C;color:#FFF;fontWeight:800;fontSize:18px;padding:18px 36px;borderRadius:999px;boxShadow:0 8px 24px rgba(181,80,44,0.28)">{{ heroCta }}</a>
+        <a href="Features.dc.html" style="textDecoration:none;color:#2F4B3C;fontWeight:800;fontSize:17px;padding:18px 12px">{{ heroSecondary }} →</a>
+      </div>
+    </div>
+
+    <div style="flex:1 1 340px;minWidth:280px;maxWidth:400px;margin:0 auto">
+      <div style="position:relative;background:#2B2019;borderRadius:36px;padding:14px;boxShadow:0 30px 60px rgba(43,32,25,0.22)">
+        <div style="background:#FBF6ED;borderRadius:24px;overflow:hidden;position:relative">
+          <div style="background:#2F4B3C;padding:16px 20px;display:flex;alignItems:center;justifyContent:space-between">
+            <span style="color:#FBF6ED;fontFamily:'Baloo 2',sans-serif;fontWeight:700;fontSize:15px">Ram Store</span>
+            <span style="width:8px;height:8px;borderRadius:50%;background:#8FD6A8"></span>
+          </div>
+          <div style="padding:20px;display:flex;flexDirection:column;gap:16px">
+            <div style="position:relative;background:#FFFFFF;border:2px dashed #C9B99A;borderRadius:16px;height:150px;display:flex;alignItems:center;justifyContent:center;overflow:hidden">
+              <div style="position:absolute;left:14px;top:14%;width:calc(100% - 28px);height:2px;background:#B5502C;borderRadius:2px;animation:scanline 2.4s ease-in-out infinite"></div>
+              <div style="display:flex;gap:3px;alignItems:flex-end">
+                <div style="width:4px;height:44px;background:#2B2019"></div><div style="width:2px;height:30px;background:#2B2019"></div><div style="width:5px;height:44px;background:#2B2019"></div><div style="width:2px;height:20px;background:#2B2019"></div><div style="width:4px;height:44px;background:#2B2019"></div><div style="width:3px;height:36px;background:#2B2019"></div><div style="width:2px;height:44px;background:#2B2019"></div><div style="width:5px;height:24px;background:#2B2019"></div>
+              </div>
+            </div>
+            <div style="display:flex;justifyContent:space-between;alignItems:center;padding:12px 16px;background:#FFFFFF;borderRadius:12px;border:1px solid #E8DDC9">
+              <span style="fontSize:14px;fontWeight:700;color:#2B2019">Basmati Rice (1kg)</span>
+              <span style="fontSize:14px;fontWeight:800;color:#B5502C">Rs 145</span>
+            </div>
+            <div style="display:flex;justifyContent:space-between;alignItems:center;padding:12px 16px;background:#FFFFFF;borderRadius:12px;border:1px solid #E8DDC9">
+              <span style="fontSize:14px;fontWeight:700;color:#2B2019">Cooking Oil (1L)</span>
+              <span style="fontSize:14px;fontWeight:800;color:#B5502C">Rs 320</span>
+            </div>
+            <div style="display:flex;justifyContent:space-between;alignItems:center;padding:16px 18px;background:#2F4B3C;borderRadius:12px">
+              <span style="fontSize:15px;fontWeight:800;color:#FBF6ED">Total</span>
+              <span style="fontSize:18px;fontWeight:800;color:#FBF6ED">Rs 465</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="maxWidth:1080px;margin:0 auto;padding:16px 24px 56px">
+    <div style="background:#FFFFFF;border:1px solid #E8DDC9;borderRadius:24px;padding:40px;display:flex;flexDirection:column;gap:28px">
+      <div>
+        <div style="fontSize:13px;fontWeight:800;letterSpacing:0.06em;textTransform:uppercase;color:#B5502C;marginBottom:10px">{{ anySizeKicker }}</div>
+        <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(24px,3vw,32px);fontWeight:800;margin:0 0 12px">{{ anySizeTitle }}</h2>
+        <p style="fontSize:16px;lineHeight:1.7;color:#6B5D4F;margin:0;maxWidth:640px">{{ anySizeSub }}</p>
+      </div>
+      <div style="display:grid;gridTemplateColumns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+        <div style="display:flex;gap:14px;alignItems:flex-start">
+          <svg width="32" height="32" viewBox="0 0 48 48" style="flexShrink:0"><rect x="4" y="20" width="20" height="24" rx="3" fill="#2F4B3C" opacity="0.35"></rect><rect x="14" y="10" width="24" height="17" rx="3" fill="#2F4B3C" opacity="0.6"></rect><rect x="20" y="4" width="12" height="20" rx="2.5" fill="#2F4B3C"></rect></svg>
+          <div>
+            <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:17px;fontWeight:700;margin:0 0 6px">{{ hw1Title }}</h3>
+            <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0">{{ hw1Desc }}</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;alignItems:flex-start">
+          <svg width="32" height="32" viewBox="0 0 48 48" style="flexShrink:0"><rect x="6" y="14" width="36" height="24" rx="6" fill="#B5502C"></rect><rect x="17" y="8" width="14" height="8" rx="2" fill="#B5502C"></rect><circle cx="24" cy="26" r="8" fill="#F3E3D3"></circle><circle cx="24" cy="26" r="4" fill="#B5502C"></circle></svg>
+          <div>
+            <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:17px;fontWeight:700;margin:0 0 6px">{{ hw2Title }}</h3>
+            <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0">{{ hw2Desc }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="maxWidth:1280px;margin:0 auto;padding:8px 24px 80px">
+    <div style="display:grid;gridTemplateColumns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+      <sc-for list="{{ features }}" as="f" hint-placeholder-count="4">
+        <div style="background:#FFFFFF;border:1px solid #E8DDC9;borderRadius:20px;padding:28px 24px">
+          <div style="width:56px;height:56px;borderRadius:16px;background:{{ f.tint }};display:flex;alignItems:center;justifyContent:center;marginBottom:18px">
+            <sc-if value="{{ f.isCamera }}" hint-placeholder-val="{{ false }}">
+              <svg width="28" height="28" viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="24" rx="6" fill="#B5502C"></rect><rect x="17" y="8" width="14" height="8" rx="2" fill="#B5502C"></rect><circle cx="24" cy="26" r="8" fill="#F3E3D3"></circle><circle cx="24" cy="26" r="4" fill="#B5502C"></circle></svg>
+            </sc-if>
+            <sc-if value="{{ f.isDevice }}" hint-placeholder-val="{{ false }}">
+              <svg width="28" height="28" viewBox="0 0 48 48"><rect x="4" y="20" width="20" height="24" rx="3" fill="#2F4B3C" opacity="0.35"></rect><rect x="14" y="10" width="24" height="17" rx="3" fill="#2F4B3C" opacity="0.6"></rect><rect x="20" y="4" width="12" height="20" rx="2.5" fill="#2F4B3C"></rect></svg>
+            </sc-if>
+            <sc-if value="{{ f.isGlobe }}" hint-placeholder-val="{{ false }}">
+              <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="#B5502C" stroke-width="2.6"><circle cx="24" cy="24" r="17"></circle><ellipse cx="24" cy="24" rx="7" ry="17"></ellipse><line x1="7" y1="24" x2="41" y2="24"></line></svg>
+            </sc-if>
+            <sc-if value="{{ f.isChart }}" hint-placeholder-val="{{ false }}">
+              <svg width="28" height="28" viewBox="0 0 48 48"><rect x="8" y="24" width="8" height="16" rx="2" fill="#2F4B3C"></rect><rect x="20" y="14" width="8" height="26" rx="2" fill="#2F4B3C"></rect><rect x="32" y="20" width="8" height="20" rx="2" fill="#2F4B3C"></rect></svg>
+            </sc-if>
+          </div>
+          <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:19px;fontWeight:700;margin:0 0 8px;color:#2B2019">{{ f.title }}</h3>
+          <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0">{{ f.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#2F4B3C;padding:56px 24px">
+    <div style="maxWidth:1100px;margin:0 auto;display:flex;flexWrap:wrap;gap:16px 40px;justifyContent:center;alignItems:center">
+      <sc-for list="{{ taglines }}" as="tl" hint-placeholder-count="4">
+        <span style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(17px,2vw,21px);fontWeight:700;color:#FBF6ED;textAlign:center">{{ tl }}</span>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#F3E3D3;padding:80px 24px">
+    <div style="maxWidth:1100px;margin:0 auto;textAlign:center">
+      <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(26px,3.4vw,38px);fontWeight:800;margin:0 0 16px;color:#2B2019">{{ howTitle }}</h2>
+      <p style="fontSize:17px;color:#6B5D4F;margin:0 0 48px">{{ howSub }}</p>
+      <div style="display:grid;gridTemplateColumns:repeat(auto-fit,minmax(220px,1fr));gap:32px;textAlign:left">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+          <div style="background:#FBF6ED;borderRadius:20px;padding:28px 24px;border:1px solid #E8DDC9">
+            <div style="width:44px;height:44px;borderRadius:12px;background:#2F4B3C;color:#FBF6ED;fontFamily:'Baloo 2',sans-serif;fontWeight:800;fontSize:19px;display:flex;alignItems:center;justifyContent:center;marginBottom:16px">{{ s.n }}</div>
+            <h3 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:18px;fontWeight:700;margin:0 0 8px;color:#2B2019">{{ s.title }}</h3>
+            <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0">{{ s.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:72px 24px;textAlign:center">
+    <h2 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:clamp(24px,3vw,32px);fontWeight:800;margin:0 0 16px;color:#2B2019">{{ ctaTitle }}</h2>
+    <p style="fontSize:17px;color:#6B5D4F;margin:0 0 28px">{{ ctaSub }}</p>
+    <a href="Contact.dc.html" style="textDecoration:none;background:#B5502C;color:#FFF;fontWeight:800;fontSize:18px;padding:18px 40px;borderRadius:999px;display:inline-block;boxShadow:0 8px 24px rgba(181,80,44,0.28)">{{ heroCta }}</a>
+  </section>
+</main>
+
+<dc-import name="Footer" lang="{{ lang }}" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const COPY = {
+  en: {
+    heroKicker: 'For every shop in Nepal',
+    heroHeadline: 'The POS your shop can start using today, no hardware, no setup.',
+    heroSub: "Open a browser on the phone or tablet you already own, start scanning barcodes, and you're taking sales in minutes.",
+    heroCta: 'Get Started', heroSecondary: 'See all features',
+    anySizeKicker: 'Any shop, any size', anySizeTitle: 'You don\u2019t have to be a big business to run your own POS',
+    anySizeSub: 'Whether you run a one-room corner shop or a growing store, Khatiwada POS scales to you, not the other way around. Every shop is big in its own way, and this is one more addition to help yours grow.',
+    hw1Title: 'Use the hardware you already own', hw1Desc: 'Works on the phone, tablet, or computer you already have, old or new. No extra hardware purchase required.',
+    hw2Title: 'Add a barcode scanner if you want one', hw2Desc: 'Prefer a dedicated scanner? You can pair one in any time, but your phone\u2019s camera works just as well.',
+    taglines: ['हाजमोलादेखि ग्यास सिलिन्डरसम्म, POS को कमाल', 'हामी पनि ठूलो मार्टभन्दा कम छैनौं', 'प्रविधिको सदुपयोग गरौं', 'पुरानो कम्प्युटरदेखि मोबाइलसम्म, सानो पसलदेखि ठूलो पसलसम्म, POS को जादू'],
+    howTitle: 'How it works', howSub: 'Three steps. No technician required.',
+    ctaTitle: 'Ready to try it in your shop?', ctaSub: 'Set up your account in a couple of minutes, no card required to start.',
+    features: [
+      { key: 'camera', title: 'Scan with your camera', desc: 'Turn any phone or tablet camera into a barcode scanner. No extra hardware to buy or plug in.' },
+      { key: 'device', title: 'Works on any device', desc: 'Phone, tablet, or laptop, if it has a browser, it runs your shop.' },
+      { key: 'globe', title: 'Fully bilingual', desc: 'Switch between English and Nepali any time, for you and your staff.' },
+      { key: 'chart', title: 'Reports, built in', desc: 'See daily and monthly sales, spot your best-selling items, and manage products, all from one simple screen.' }
+    ],
+    steps: [
+      { n: 1, title: 'Sign up', desc: "Create your shop's account in about two minutes." },
+      { n: 2, title: 'Open on any phone', desc: 'Log in from any phone, tablet, or computer, nothing to install.' },
+      { n: 3, title: 'Start scanning', desc: 'Point the camera at a barcode and start selling right away.' }
+    ]
+  },
+  ne: {
+    heroKicker: 'नेपालका हरेक पसलका लागि',
+    heroHeadline: 'तपाईंको पसलले आजैबाट प्रयोग गर्न सक्ने POS, न हार्डवेयर, न सेटअप।',
+    heroSub: 'तपाईंसँग भइरहेको फोन वा ट्याब्लेटमा ब्राउजर खोल्नुहोस्, बारकोड स्क्यान गर्न सुरु गर्नुहोस्, र मिनेटभित्रै बिक्री सुरु गर्नुहोस्।',
+    heroCta: 'सुरु गर्नुहोस्', heroSecondary: 'सबै सुविधाहरू हेर्नुहोस्',
+    anySizeKicker: 'जुनसुकै आकारको पसल', anySizeTitle: 'आफ्नै POS चलाउन ठूलो व्यापार हुनु पर्दैन',
+    anySizeSub: 'एक कोठाको छेउको पसल चलाउनुहुन्छ वा बढ्दो पसल, खटीवाडा POS तपाईंअनुसार ढल्छ, उल्टो होइन। हरेक पसल आफ्नै किसिमले ठूलो हो, र यो तपाईंको बढ्दो व्यापारमा थप एउटा साथी हो।',
+    hw1Title: 'तपाईंसँग भइरहेको हार्डवेयर नै प्रयोग गर्नुहोस्', hw1Desc: 'पुरानो होस् वा नयाँ, तपाईंसँग भइरहेको फोन, ट्याब्लेट, वा कम्प्युटरमै चल्छ। थप हार्डवेयर किन्नु पर्दैन।',
+    hw2Title: 'चाहनुभयो भने बारकोड स्क्यानर पनि जोड्नुहोस्', hw2Desc: 'छुट्टै स्क्यानर मन पराउनुहुन्छ भने, जुनसुकै बेला जोड्न सकिन्छ, तर तपाईंको फोनको क्यामेराले पनि उत्तिकै राम्रो काम गर्छ।',
+    taglines: ['हाजमोलादेखि ग्यास सिलिन्डरसम्म, POS को कमाल', 'हामी पनि ठूलो मार्टभन्दा कम छैनौं', 'प्रविधिको सदुपयोग गरौं', 'पुरानो कम्प्युटरदेखि मोबाइलसम्म, सानो पसलदेखि ठूलो पसलसम्म, POS को जादू'],
+    howTitle: 'यसले कसरी काम गर्छ', howSub: 'तीन चरण। कुनै प्राविधिकको आवश्यकता छैन।',
+    ctaTitle: 'आफ्नो पसलमा प्रयोग गरेर हेर्न तयार हुनुहुन्छ?', ctaSub: 'केही मिनेटमा आफ्नो खाता बनाउनुहोस्, सुरु गर्न कार्ड चाहिँदैन।',
+    features: [
+      { key: 'camera', title: 'क्यामेराले स्क्यान गर्नुहोस्', desc: 'कुनै पनि फोन वा ट्याब्लेटको क्यामेरालाई बारकोड स्क्यानर बनाउनुहोस्। थप हार्डवेयर किन्नु पर्दैन।' },
+      { key: 'device', title: 'जुनसुकै डिभाइसमा चल्छ', desc: 'फोन, ट्याब्लेट, वा ल्यापटप, ब्राउजर भएको जुनसुकै डिभाइसमा चल्छ।' },
+      { key: 'globe', title: 'पूर्ण द्विभाषिक', desc: 'तपाईं र तपाईंको स्टाफका लागि जुनसुकै बेला अंग्रेजी र नेपाली बदल्नुहोस्।' },
+      { key: 'chart', title: 'रिपोर्ट सुविधा सामेल', desc: 'दैनिक र मासिक बिक्री हेर्नुहोस्, सबैभन्दा धेरै बिक्री हुने सामान पत्ता लगाउनुहोस्, र एउटै स्क्रिनबाट पसल चलाउनुहोस्।' }
+    ],
+    steps: [
+      { n: 1, title: 'साइन अप गर्नुहोस्', desc: 'लगभग दुई मिनेटमा आफ्नो पसलको खाता बनाउनुहोस्।' },
+      { n: 2, title: 'जुनसुकै फोनमा खोल्नुहोस्', desc: 'फोन, ट्याब्लेट, वा कम्प्युटर जुनसुकैबाट लगइन गर्नुहोस्, केही इन्स्टल गर्नु पर्दैन।' },
+      { n: 3, title: 'स्क्यान गर्न सुरु गर्नुहोस्', desc: 'क्यामेरालाई बारकोडतिर देखाउनुहोस् र तुरुन्तै बेच्न सुरु गर्नुहोस्।' }
+    ]
+  }
+};
+
+class Component extends DCLogic {
+  state = { lang: 'en' };
+  renderVals() {
+    const c = COPY[this.state.lang];
+    const tints = ['#F3E3D3', '#E4EAE5', '#F3E3D3', '#E4EAE5'];
+    return {
+      lang: this.state.lang,
+      setLang: (l) => this.setState({ lang: l }),
+      heroKicker: c.heroKicker, heroHeadline: c.heroHeadline, heroSub: c.heroSub,
+      heroCta: c.heroCta, heroSecondary: c.heroSecondary,
+      anySizeKicker: c.anySizeKicker, anySizeTitle: c.anySizeTitle, anySizeSub: c.anySizeSub,
+      hw1Title: c.hw1Title, hw1Desc: c.hw1Desc, hw2Title: c.hw2Title, hw2Desc: c.hw2Desc,
+      taglines: c.taglines,
+      howTitle: c.howTitle, howSub: c.howSub,
+      ctaTitle: c.ctaTitle, ctaSub: c.ctaSub,
+      features: c.features.map((f, i) => ({ ...f, tint: tints[i], isCamera: f.key === 'camera', isDevice: f.key === 'device', isGlobe: f.key === 'globe', isChart: f.key === 'chart' })),
+      steps: c.steps
+    };
+  }
+}
+</script>
+</body>
+</html>
