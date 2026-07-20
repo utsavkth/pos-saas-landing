@@ -202,13 +202,13 @@ const COPY = {
 };
 
 class Component extends DCLogic {
-  state = { lang: 'en' };
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('khatiwada_lang')) || 'en' };
   renderVals() {
     const c = COPY[this.state.lang];
     const tints = ['#F3E3D3', '#E4EAE5', '#F3E3D3', '#E4EAE5'];
     return {
       lang: this.state.lang,
-      setLang: (l) => this.setState({ lang: l }),
+      setLang: (l) => { try { localStorage.setItem('khatiwada_lang', l); } catch (e) {} this.setState({ lang: l }); },
       heroKicker: c.heroKicker, heroHeadline: c.heroHeadline, heroSub: c.heroSub,
       heroCta: c.heroCta, heroSecondary: c.heroSecondary,
       anySizeKicker: c.anySizeKicker, anySizeTitle: c.anySizeTitle, anySizeSub: c.anySizeSub,
