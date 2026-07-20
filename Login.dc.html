@@ -36,7 +36,38 @@
           <button type="button" onClick="{{ goForgot }}" style="border:none;background:none;cursor:pointer;alignSelf:flex-end;color:#B5502C;fontWeight:700;fontSize:14px;padding:0;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">{{ t.forgot }}</button>
           <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;fontWeight:800;fontSize:17px;padding:16px 24px;borderRadius:999px;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;marginTop:4px">{{ t.loginSubmit }}</button>
         </form>
-        <p style="fontSize:14px;lineHeight:1.6;color:#8B7A63;margin:24px 0 0;textAlign:center">{{ t.newHere }} <a href="/contact" style="color:#954025;fontWeight:700;textDecoration:none">{{ t.newHereLink }}</a></p>
+        <p style="fontSize:14px;lineHeight:1.6;color:#8B7A63;margin:24px 0 0;textAlign:center">{{ t.newHere }} <button type="button" onClick="{{ goSignup }}" style="border:none;background:none;cursor:pointer;color:#954025;fontWeight:700;fontSize:14px;padding:0;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;textDecoration:underline">{{ t.newHereLink }}</button></p>
+      </sc-if>
+
+      <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ false }}">
+        <h1 style="fontFamily:'Baloo 2','Noto Sans Devanagari',sans-serif;fontSize:24px;fontWeight:700;margin:0 0 8px">{{ t.signupTitle }}</h1>
+        <p style="fontSize:15px;lineHeight:1.6;color:#6B5D4F;margin:0 0 24px">{{ t.signupSub }}</p>
+        <form onSubmit="{{ handleSignup }}" style="display:flex;flexDirection:column;gap:20px">
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.storeName }}</span>
+            <input value="{{ signupStore }}" onChange="{{ onSignupStore }}" placeholder="{{ t.storeNamePh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+            <sc-if value="{{ hasSlug }}" hint-placeholder-val="{{ true }}">
+              <span style="fontSize:13px;color:#8B7A63">{{ t.yourUrl }} <strong style="color:#2F4B3C">{{ slugPreview }}</strong></span>
+            </sc-if>
+          </label>
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.email }}</span>
+            <input type="email" value="{{ signupEmail }}" onChange="{{ onSignupEmail }}" placeholder="{{ t.emailPh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+          </label>
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.password }}</span>
+            <input type="password" value="{{ signupPw }}" onChange="{{ onSignupPw }}" placeholder="{{ t.passwordPh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+          </label>
+          <label style="display:flex;flexDirection:column;gap:8px">
+            <span style="fontSize:14px;fontWeight:700">{{ t.confirmPassword }}</span>
+            <input type="password" value="{{ signupPwConfirm }}" onChange="{{ onSignupPwConfirm }}" placeholder="{{ t.confirmPasswordPh }}" style="fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;fontSize:16px;padding:14px 16px;borderRadius:12px;border:1px solid #E8DDC9;background:#FBF6ED;color:#2B2019"></input>
+            <sc-if value="{{ pwMismatch }}" hint-placeholder-val="{{ false }}">
+              <span style="fontSize:13px;color:#B5502C">{{ t.pwMismatch }}</span>
+            </sc-if>
+          </label>
+          <button type="submit" disabled="{{ signupDisabled }}" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;fontWeight:800;fontSize:17px;padding:16px 24px;borderRadius:999px;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;marginTop:4px;opacity:{{ signupOpacity }}">{{ t.signupSubmit }}</button>
+        </form>
+        <p style="fontSize:14px;lineHeight:1.6;color:#8B7A63;margin:24px 0 0;textAlign:center">{{ t.haveAccount }} <button type="button" onClick="{{ goLogin }}" style="border:none;background:none;cursor:pointer;color:#954025;fontWeight:700;fontSize:14px;padding:0;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif;textDecoration:underline">{{ t.haveAccountLink }}</button></p>
       </sc-if>
 
       <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
@@ -80,8 +111,14 @@ const T = {
     storeName: 'Store name', storeNamePh: 'e.g. Ram Store',
     email: 'Email address', emailPh: 'you@example.com',
     password: 'Password', passwordPh: 'Enter your password',
+    confirmPassword: 'Confirm password', confirmPasswordPh: 'Re-enter your password',
+    pwMismatch: 'Passwords don\u2019t match',
     forgot: 'Forgot password?', loginSubmit: 'Log In',
-    newHere: 'New to Khatiwada POS?', newHereLink: 'Contact us to get set up',
+    newHere: 'New to Khatiwada POS?', newHereLink: 'Create your account',
+    signupTitle: 'Create your shop\u2019s account', signupSub: 'Set up your own POS in about two minutes \u2014 no card required to start.',
+    yourUrl: 'Your POS will be at:',
+    signupSubmit: 'Create Account',
+    haveAccount: 'Already have an account?', haveAccountLink: 'Log in',
     resetTitle: 'Reset your password', resetSub: 'Enter the email linked to your shop account and we\u2019ll send you a reset link.',
     resetSubmit: 'Send reset link', back: '\u2190 Back to log in',
     sentTitle: 'Check your email', sentSub: 'If an account exists for that email, we\u2019ve sent a link to reset your password.'
@@ -91,8 +128,14 @@ const T = {
     storeName: 'पसलको नाम', storeNamePh: 'जस्तै: राम स्टोर',
     email: 'इमेल ठेगाना', emailPh: 'you@example.com',
     password: 'पासवर्ड', passwordPh: 'आफ्नो पासवर्ड लेख्नुहोस्',
+    confirmPassword: 'पासवर्ड पुष्टि गर्नुहोस्', confirmPasswordPh: 'पासवर्ड फेरि लेख्नुहोस्',
+    pwMismatch: 'पासवर्डहरू मिलेनन्',
     forgot: 'पासवर्ड बिर्सनुभयो?', loginSubmit: 'लग इन गर्नुहोस्',
-    newHere: 'खटीवाडा POS मा नयाँ हुनुहुन्छ?', newHereLink: 'सेटअपका लागि हामीलाई सम्पर्क गर्नुहोस्',
+    newHere: 'खटीवाडा POS मा नयाँ हुनुहुन्छ?', newHereLink: 'खाता बनाउनुहोस्',
+    signupTitle: 'आफ्नो पसलको खाता बनाउनुहोस्', signupSub: 'लगभग दुई मिनेटमा आफ्नै POS सेटअप गर्नुहोस् \u2014 सुरु गर्न कार्ड आवश्यक छैन।',
+    yourUrl: 'तपाईंको POS यहाँ हुनेछ:',
+    signupSubmit: 'खाता बनाउनुहोस्',
+    haveAccount: 'पहिले नै खाता छ?', haveAccountLink: 'लग इन गर्नुहोस्',
     resetTitle: 'पासवर्ड रिसेट गर्नुहोस्', resetSub: 'आफ्नो पसल खातासँग जोडिएको इमेल लेख्नुहोस्, हामी रिसेट लिंक पठाउनेछौं।',
     resetSubmit: 'रिसेट लिंक पठाउनुहोस्', back: '\u2190 लग इनमा फर्कनुहोस्',
     sentTitle: 'आफ्नो इमेल जाँच्नुहोस्', sentSub: 'त्यो इमेलमा खाता भएमा, हामीले पासवर्ड रिसेट लिंक पठाएका छौं।'
@@ -100,10 +143,13 @@ const T = {
 };
 const TRUST = { en: 'Your shop\u2019s data stays private to your account only.', ne: 'तपाईंको पसलको डेटा तपाईंको खातामा मात्र निजी रहन्छ।' };
 
+const slugify = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '');
+
 class Component extends DCLogic {
   state = {
     lang: 'en', mode: 'login',
     loginStore: '', loginPw: '',
+    signupStore: '', signupEmail: '', signupPw: '', signupPwConfirm: '',
     forgotEmail: '', forgotSent: false
   };
 
@@ -111,17 +157,28 @@ class Component extends DCLogic {
     const lang = this.state.lang;
     const t = T[lang];
     const mode = this.state.mode;
+    const slug = slugify(this.state.signupStore);
+    const pwMismatch = this.state.signupPwConfirm.length > 0 && this.state.signupPw !== this.state.signupPwConfirm;
+    const signupDisabled = !slug || !this.state.signupEmail || !this.state.signupPw || pwMismatch;
     return {
       lang, setLang: (l) => this.setState({ lang: l }),
       t, trustLine: TRUST[lang],
-      isLogin: mode === 'login', isForgot: mode === 'forgot',
+      isLogin: mode === 'login', isSignup: mode === 'signup', isForgot: mode === 'forgot',
       forgotSent: this.state.forgotSent, forgotNotSent: !this.state.forgotSent,
       goLogin: () => this.setState({ mode: 'login', forgotSent: false }),
+      goSignup: () => this.setState({ mode: 'signup' }),
       goForgot: () => this.setState({ mode: 'forgot' }),
       loginStore: this.state.loginStore, onLoginStore: (e) => this.setState({ loginStore: e.target.value }),
       loginPw: this.state.loginPw, onLoginPw: (e) => this.setState({ loginPw: e.target.value }),
+      signupStore: this.state.signupStore, onSignupStore: (e) => this.setState({ signupStore: e.target.value }),
+      signupEmail: this.state.signupEmail, onSignupEmail: (e) => this.setState({ signupEmail: e.target.value }),
+      signupPw: this.state.signupPw, onSignupPw: (e) => this.setState({ signupPw: e.target.value }),
+      signupPwConfirm: this.state.signupPwConfirm, onSignupPwConfirm: (e) => this.setState({ signupPwConfirm: e.target.value }),
+      hasSlug: slug.length > 0, slugPreview: slug + '.khatiwadapos.com',
+      pwMismatch, signupDisabled, signupOpacity: signupDisabled ? 0.6 : 1,
       forgotEmail: this.state.forgotEmail, onForgotEmail: (e) => this.setState({ forgotEmail: e.target.value }),
       handleLogin: (e) => { e.preventDefault(); },
+      handleSignup: (e) => { e.preventDefault(); },
       handleForgot: (e) => { e.preventDefault(); this.setState({ forgotSent: true }); }
     };
   }
