@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Khatiwada POS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="/" class="brand">
+      <svg width="44" height="44" viewBox="0 0 48 48" style="border-radius:12px;background:#2F4B3C;flex-shrink:0">
+        <rect x="10" y="22" width="28" height="16" rx="2" fill="#FBF6ED"></rect>
+        <polygon points="24,9 39,22 9,22" fill="#B5502C"></polygon>
+        <rect x="21" y="27" width="6" height="11" fill="#2F4B3C"></rect>
+      </svg>
+      <span class="brand-name">Khatiwada <span>POS</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link" data-en="Home" data-ne="गृहपृष्ठ">Home</a>
+      <a href="/features.html" class="nav-link" data-en="Features" data-ne="सुविधाहरू">Features</a>
+      <a href="/pricing.html" class="nav-link" data-en="Pricing" data-ne="मूल्य">Pricing</a>
+      <a href="/about.html" class="nav-link" data-en="About" data-ne="हाम्रो बारे">About</a>
+      <a href="/contact.html" class="nav-link active" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+    </div>
+    <div class="nav-right">
+      <div class="lang-switch">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="ne" style="font-family:'Noto Sans Devanagari','Nunito',sans-serif">नेपाली</button>
+      </div>
+      <a href="/login.html" class="btn-primary small nav-cta-desktop" data-en="Log In" data-ne="लग इन">Log In</a>
+      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu">
+    <a href="/" data-en="Home" data-ne="गृहपृष्ठ">Home</a>
+    <a href="/features.html" data-en="Features" data-ne="सुविधाहरू">Features</a>
+    <a href="/pricing.html" data-en="Pricing" data-ne="मूल्य">Pricing</a>
+    <a href="/about.html" data-en="About" data-ne="हाम्रो बारे">About</a>
+    <a href="/contact.html" class="active" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+    <a href="/login.html" class="btn-primary" data-en="Log In" data-ne="लग इन">Log In</a>
+  </div>
+</nav>
+
+<main>
+  <section style="max-width:1080px;margin:0 auto;padding:64px 24px 88px;display:flex;gap:48px;flex-wrap:wrap">
+    <div style="flex:1 1 420px;min-width:280px">
+      <h1 style="font-family:var(--font-heading);font-size:clamp(28px,3.8vw,40px);font-weight:800;margin:0 0 14px" data-en="Get in touch" data-ne="सम्पर्क गर्नुहोस्">Get in touch</h1>
+      <p style="font-size:17px;line-height:1.65;color:var(--brown);margin:0 0 32px" data-en="Questions about Khatiwada POS? We'd love to hear from you." data-ne="खटीवाडा POS बारे प्रश्न छ? हामी तपाईंको कुरा सुन्न चाहन्छौं।">Questions about Khatiwada POS? We'd love to hear from you.</p>
+
+      <div id="contact-success" style="display:none;background:#E4EAE5;border:1px solid #2F4B3C;border-radius:20px;padding:32px;flex-direction:column;gap:10px;align-items:flex-start">
+        <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2F4B3C"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#FBF6ED" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+        <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:6px 0 0" data-en="Message sent" data-ne="सन्देश पठाइयो">Message sent</h3>
+        <p style="font-size:15px;color:#3E4C43;margin:0" data-en="Thanks for reaching out, we'll get back to you soon." data-ne="सम्पर्क गर्नुभएकोमा धन्यवाद, हामी चाँडै जवाफ दिनेछौं।">Thanks for reaching out, we'll get back to you soon.</p>
+      </div>
+
+      <form id="contact-form" style="display:flex;flex-direction:column;gap:20px">
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Name" data-ne="नाम">Name</span>
+          <input name="name" placeholder="Your name" data-en-placeholder="Your name" data-ne-placeholder="तपाईंको नाम" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Email address" data-ne="इमेल ठेगाना">Email address</span>
+          <input type="email" name="email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Message" data-ne="सन्देश">Message</span>
+          <textarea name="message" rows="5" placeholder="Tell us about your shop or ask a question..." data-en-placeholder="Tell us about your shop or ask a question..." data-ne-placeholder="आफ्नो पसल वा प्रश्नको बारेमा लेख्नुहोस्..." style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink);resize:vertical"></textarea>
+        </label>
+        <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;font-weight:800;font-size:17px;padding:16px 24px;border-radius:999px;font-family:var(--font-body)" data-en="Send message" data-ne="सन्देश पठाउनुहोस्">Send message</button>
+      </form>
+    </div>
+
+    <div style="flex:1 1 300px;min-width:260px;max-width:360px">
+      <div style="background:#2F4B3C;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:24px">
+        <h3 style="font-family:var(--font-heading);font-size:18px;font-weight:700;margin:0;color:#FBF6ED" data-en="Other ways to reach us" data-ne="सम्पर्क गर्ने अन्य तरिकाहरू">Other ways to reach us</h3>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Email" data-ne="इमेल">Email</span>
+          <span style="font-size:16px;font-weight:700;color:#FBF6ED">hello@khatiwadapos.com</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Phone" data-ne="फोन">Phone</span>
+          <span style="font-size:16px;font-weight:700;color:#FBF6ED" data-en="Coming soon" data-ne="चाँडै आउँदैछ">Coming soon</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Location" data-ne="ठेगाना">Location</span>
+          <span style="font-size:16px;font-weight:700;color:#FBF6ED" data-en="Kathmandu, Nepal" data-ne="काठमाडौं, नेपाल">Kathmandu, Nepal</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
+    <div style="flex:2 1 260px;max-width:340px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <svg width="36" height="36" viewBox="0 0 48 48" style="border-radius:10px;background:#3E5C4B;flex-shrink:0">
+          <rect x="10" y="22" width="28" height="16" rx="2" fill="#FBF6ED"></rect>
+          <polygon points="24,9 39,22 9,22" fill="#B5502C"></polygon>
+          <rect x="21" y="27" width="6" height="11" fill="#3E5C4B"></rect>
+        </svg>
+        <span style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:#FBF6ED">Khatiwada <span style="color:#D9895F">POS</span></span>
+      </div>
+      <p style="font-size:15px;line-height:1.7;color:#C9D3CB;margin:0" data-en="A simple, honest point-of-sale system built for shops of every size across Nepal." data-ne="नेपालभरका हरेक आकारका पसलहरूका लागि बनाइएको सरल र भरपर्दो पस (POS) प्रणाली।">A simple, honest point-of-sale system built for shops of every size across Nepal.</p>
+    </div>
+    <div style="flex:1 1 140px">
+      <div class="footer-heading" data-en="Company" data-ne="कम्पनी">Company</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="/" data-en="Home" data-ne="गृहपृष्ठ">Home</a>
+        <a href="/about.html" data-en="About Us" data-ne="हाम्रो बारे">About Us</a>
+        <a href="/contact.html" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+      </div>
+    </div>
+    <div style="flex:1 1 140px">
+      <div class="footer-heading" data-en="Product" data-ne="प्रोडक्ट">Product</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="/features.html" data-en="Features" data-ne="सुविधाहरू">Features</a>
+        <a href="/pricing.html" data-en="Pricing" data-ne="मूल्य">Pricing</a>
+        <a href="/login.html" data-en="Log In" data-ne="लग इन">Log In</a>
+      </div>
+    </div>
+    <div style="flex:1 1 160px">
+      <div class="footer-heading" data-en="Legal" data-ne="कानुनी">Legal</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <a href="/privacy.html" data-en="Privacy Policy" data-ne="गोपनीयता नीति">Privacy Policy</a>
+        <span style="color:#8FA298;font-size:14px">hello@khatiwadapos.com</span>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:44px auto 0;padding-top:24px;border-top:1px solid #3E5C4B;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <span style="font-size:13px;color:#8FA298" data-en="© 2026 Khatiwada POS. All rights reserved." data-ne="© २०२६ खटीवाडा पस। सर्वाधिकार सुरक्षित।">© 2026 Khatiwada POS. All rights reserved.</span>
+    <span style="font-size:13px;color:#8FA298" data-en="Built in Kathmandu, for shopkeepers everywhere." data-ne="काठमाडौंमा निर्मित, सबै पसलेहरूका लागि।">Built in Kathmandu, for shopkeepers everywhere.</span>
+  </div>
+</footer>
+
+<script src="/script.js"></script>
+<script>
+  document.getElementById("contact-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    this.style.display = "none";
+    var success = document.getElementById("contact-success");
+    success.style.display = "flex";
+  });
+</script>
+</body>
+</html>
