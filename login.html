@@ -75,36 +75,44 @@
       </div>
 
       <div id="mode-signup" style="display:none">
-        <h1 style="font-family:var(--font-heading);font-size:24px;font-weight:700;margin:0 0 8px" data-en="Create your shop's account" data-ne="आफ्नो पसलको खाता बनाउनुहोस्">Create your shop's account</h1>
-        <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 24px" data-en="Set up your own POS in about two minutes — no card required to start." data-ne="लगभग दुई मिनेटमा आफ्नै POS सेटअप गर्नुहोस् — सुरु गर्न कार्ड आवश्यक छैन।">Set up your own POS in about two minutes — no card required to start.</p>
-        <form id="signup-form">
-          <div class="field">
-            <label data-en="Store name" data-ne="पसलको नाम">Store name</label>
-            <input name="store" id="signup-store" placeholder="e.g. Ram Store" data-en-placeholder="e.g. Ram Store" data-ne-placeholder="जस्तै: राम स्टोर">
-            <span id="slug-preview" class="field-hint" style="display:none">
-              <span data-en="Your POS will be at:" data-ne="तपाईंको POS यहाँ हुनेछ:">Your POS will be at:</span>
-              <strong id="slug-value" style="color:#2F4B3C"></strong>
-            </span>
-          </div>
-          <div class="field">
-            <label data-en="Email address" data-ne="इमेल ठेगाना">Email address</label>
-            <input type="email" name="email" id="signup-email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com">
-          </div>
-          <div class="field">
-            <label data-en="Password" data-ne="पासवर्ड">Password</label>
-            <input type="password" name="password" id="signup-password" placeholder="Enter your password" data-en-placeholder="Enter your password" data-ne-placeholder="आफ्नो पासवर्ड लेख्नुहोस्">
-          </div>
-          <div class="field">
-            <label data-en="Confirm password" data-ne="पासवर्ड पुष्टि गर्नुहोस्">Confirm password</label>
-            <input type="password" name="password_confirm" id="signup-password-confirm" placeholder="Re-enter your password" data-en-placeholder="Re-enter your password" data-ne-placeholder="पासवर्ड फेरि लेख्नुहोस्">
-            <span id="pw-mismatch" class="field-error" style="display:none" data-en="Passwords don't match" data-ne="पासवर्डहरू मिलेनन्">Passwords don't match</span>
-          </div>
-          <button type="submit" id="signup-submit" class="btn-primary" style="width:100%" disabled data-en="Create Account" data-ne="खाता बनाउनुहोस्">Create Account</button>
-        </form>
-        <p style="font-size:14px;line-height:1.6;color:var(--brown-2);margin:24px 0 0;text-align:center">
-          <span data-en="Already have an account?" data-ne="पहिले नै खाता छ?">Already have an account?</span>
-          <button type="button" id="go-login-from-signup" class="btn-text" data-en="Log in" data-ne="लग इन गर्नुहोस्">Log in</button>
-        </p>
+        <div id="signup-form-wrap">
+          <h1 style="font-family:var(--font-heading);font-size:24px;font-weight:700;margin:0 0 8px" data-en="Create your shop's account" data-ne="आफ्नो पसलको खाता बनाउनुहोस्">Create your shop's account</h1>
+          <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 24px" data-en="Set up your own POS in about two minutes — no card required to start." data-ne="लगभग दुई मिनेटमा आफ्नै POS सेटअप गर्नुहोस् — सुरु गर्न कार्ड आवश्यक छैन।">Set up your own POS in about two minutes — no card required to start.</p>
+          <form id="signup-form">
+            <div class="field">
+              <label data-en="Store name" data-ne="पसलको नाम">Store name</label>
+              <input name="store" id="signup-store" placeholder="e.g. Ram Store" data-en-placeholder="e.g. Ram Store" data-ne-placeholder="जस्तै: राम स्टोर">
+              <span id="slug-preview" class="field-hint" style="display:none">
+                <span data-en="Your POS will be at:" data-ne="तपाईंको POS यहाँ हुनेछ:">Your POS will be at:</span>
+                <strong id="slug-value" style="color:#2F4B3C"></strong>
+              </span>
+            </div>
+            <div class="field">
+              <label data-en="Email address" data-ne="इमेल ठेगाना">Email address</label>
+              <input type="email" name="email" id="signup-email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label data-en="Password" data-ne="पासवर्ड">Password</label>
+              <input type="password" name="password" id="signup-password" placeholder="Enter your password" data-en-placeholder="Enter your password" data-ne-placeholder="आफ्नो पासवर्ड लेख्नुहोस्">
+            </div>
+            <div class="field">
+              <label data-en="Confirm password" data-ne="पासवर्ड पुष्टि गर्नुहोस्">Confirm password</label>
+              <input type="password" name="password_confirm" id="signup-password-confirm" placeholder="Re-enter your password" data-en-placeholder="Re-enter your password" data-ne-placeholder="पासवर्ड फेरि लेख्नुहोस्">
+              <span id="pw-mismatch" class="field-error" style="display:none" data-en="Passwords don't match" data-ne="पासवर्डहरू मिलेनन्">Passwords don't match</span>
+            </div>
+            <span id="signup-error" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly." data-ne="तपाईंको अनुरोध पठाउँदा समस्या भयो — फेरि प्रयास गर्नुहोस्, वा hello@khatiwadapos.com मा सिधै इमेल गर्नुहोस्।">Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly.</span>
+            <button type="submit" id="signup-submit" class="btn-primary" style="width:100%" disabled data-en="Create Account" data-ne="खाता बनाउनुहोस्">Create Account</button>
+          </form>
+          <p style="font-size:14px;line-height:1.6;color:var(--brown-2);margin:24px 0 0;text-align:center">
+            <span data-en="Already have an account?" data-ne="पहिले नै खाता छ?">Already have an account?</span>
+            <button type="button" id="go-login-from-signup" class="btn-text" data-en="Log in" data-ne="लग इन गर्नुहोस्">Log in</button>
+          </p>
+        </div>
+        <div id="signup-sent-wrap" style="display:none;flex-direction:column;gap:14px;align-items:flex-start">
+          <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#E4EAE5"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#2F4B3C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0" data-en="Request received" data-ne="अनुरोध प्राप्त भयो">Request received</h3>
+          <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0" data-en="Thanks! We set up new shops by hand right now — we'll email you to finish setting up your account soon." data-ne="धन्यवाद! अहिले हामी पसलहरू म्यानुअल रूपमा सेटअप गर्छौं — तपाईंको खाता पूरा गर्न हामी छिट्टै इमेल गर्नेछौं।">Thanks! We set up new shops by hand right now — we'll email you to finish setting up your account soon.</p>
+        </div>
       </div>
 
       <div id="mode-forgot" style="display:none">
@@ -237,7 +245,32 @@
   });
   updateSignupState();
 
-  document.getElementById("signup-form").addEventListener("submit", function (e) { e.preventDefault(); });
+  var signupErrorEl = document.getElementById("signup-error");
+
+  document.getElementById("signup-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    signupErrorEl.style.display = "none";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+
+    fetch("https://formsubmit.co/ajax/utsavkhatiwada7@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: "New Khatiwada POS signup request",
+        store_name: storeInput.value,
+        requested_subdomain: window.slugify(storeInput.value) + ".khatiwadapos.com",
+        email: emailInput.value
+      })
+    }).then(function (res) {
+      if (!res.ok) { throw new Error("request failed"); }
+      document.getElementById("signup-form-wrap").style.display = "none";
+      document.getElementById("signup-sent-wrap").style.display = "flex";
+    }).catch(function () {
+      signupErrorEl.style.display = "block";
+      updateSignupState();
+    });
+  });
 })();
 </script>
 </body>
