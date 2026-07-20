@@ -91,12 +91,12 @@ const COPY = {
 };
 
 class Component extends DCLogic {
-  state = { lang: 'en', name: '', email: '', message: '', submitted: false };
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('khatiwada_lang')) || 'en', name: '', email: '', message: '', submitted: false };
   renderVals() {
     const c = COPY[this.state.lang];
     return {
       lang: this.state.lang,
-      setLang: (l) => this.setState({ lang: l }),
+      setLang: (l) => { try { localStorage.setItem('khatiwada_lang', l); } catch (e) {} this.setState({ lang: l }); },
       title: c.title, sub: c.sub, successTitle: c.successTitle, successSub: c.successSub,
       panelTitle: c.panelTitle, phoneValue: c.phoneValue, locationValue: c.locationValue,
       labels: c.labels, placeholders: c.placeholders,

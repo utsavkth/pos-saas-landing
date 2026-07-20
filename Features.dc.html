@@ -110,13 +110,13 @@ const COPY = {
 };
 
 class Component extends DCLogic {
-  state = { lang: 'en' };
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('khatiwada_lang')) || 'en' };
   renderVals() {
     const c = COPY[this.state.lang];
     const tints = ['#F3E3D3', '#E4EAE5', '#F3E3D3', '#E4EAE5', '#F3E3D3', '#E4EAE5'];
     return {
       lang: this.state.lang,
-      setLang: (l) => this.setState({ lang: l }),
+      setLang: (l) => { try { localStorage.setItem('khatiwada_lang', l); } catch (e) {} this.setState({ lang: l }); },
       pageTitle: c.pageTitle, pageSub: c.pageSub, cta: c.cta, deviceNote: c.deviceNote, comingSoonLabel: c.comingSoonLabel,
       features: c.features.map((f, i) => ({ ...f, tint: tints[i], dir: i % 2 === 0 ? 'row' : 'row-reverse',
         isCamera: f.key === 'camera', isScale: f.key === 'scale', isGlobe: f.key === 'globe', isAdmin: f.key === 'admin', isQr: f.key === 'qr', isEase: f.key === 'ease' }))

@@ -147,7 +147,7 @@ const slugify = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '');
 
 class Component extends DCLogic {
   state = {
-    lang: 'en', mode: 'login',
+    lang: (typeof localStorage !== 'undefined' && localStorage.getItem('khatiwada_lang')) || 'en', mode: 'login',
     loginStore: '', loginPw: '',
     signupStore: '', signupEmail: '', signupPw: '', signupPwConfirm: '',
     forgotEmail: '', forgotSent: false
@@ -161,7 +161,7 @@ class Component extends DCLogic {
     const pwMismatch = this.state.signupPwConfirm.length > 0 && this.state.signupPw !== this.state.signupPwConfirm;
     const signupDisabled = !slug || !this.state.signupEmail || !this.state.signupPw || pwMismatch;
     return {
-      lang, setLang: (l) => this.setState({ lang: l }),
+      lang, setLang: (l) => { try { localStorage.setItem('khatiwada_lang', l); } catch (e) {} this.setState({ lang: l }); },
       t, trustLine: TRUST[lang],
       isLogin: mode === 'login', isSignup: mode === 'signup', isForgot: mode === 'forgot',
       forgotSent: this.state.forgotSent, forgotNotSent: !this.state.forgotSent,
