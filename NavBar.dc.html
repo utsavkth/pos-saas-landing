@@ -16,7 +16,7 @@
 </helmet>
 <nav style="position:sticky;top:0;z-index:50;background:#FBF6EDE8;backdrop-filter:blur(8px);borderBottom:1px solid #E8DDC9;fontFamily:'Nunito','Noto Sans Devanagari',sans-serif">
   <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;alignItems:center;justifyContent:space-between;gap:16px;flexWrap:wrap">
-    <a href="Home.dc.html" style="display:flex;alignItems:center;gap:12px;textDecoration:none;flexShrink:0">
+    <a href="/" style="display:flex;alignItems:center;gap:12px;textDecoration:none;flexShrink:0">
       <svg width="44" height="44" viewBox="0 0 48 48" style="borderRadius:12px;background:#2F4B3C;flexShrink:0">
         <rect x="10" y="22" width="28" height="16" rx="2" fill="#FBF6ED"></rect>
         <polygon points="24,9 39,22 9,22" fill="#B5502C"></polygon>
@@ -27,11 +27,11 @@
 
     <sc-if value="{{ showFullNav }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;alignItems:center;gap:28px">
-        <a href="Home.dc.html" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ homeColor }};paddingBottom:2px;borderBottom:{{ homeBorder }}">{{ labels.home }}</a>
-        <a href="Features.dc.html" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ featuresColor }};paddingBottom:2px;borderBottom:{{ featuresBorder }}">{{ labels.features }}</a>
-        <a href="Pricing.dc.html" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ pricingColor }};paddingBottom:2px;borderBottom:{{ pricingBorder }}">{{ labels.pricing }}</a>
-        <a href="About.dc.html" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ aboutColor }};paddingBottom:2px;borderBottom:{{ aboutBorder }}">{{ labels.about }}</a>
-        <a href="Contact.dc.html" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ contactColor }};paddingBottom:2px;borderBottom:{{ contactBorder }}">{{ labels.contact }}</a>
+        <a href="/" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ homeColor }};paddingBottom:2px;borderBottom:{{ homeBorder }}">{{ labels.home }}</a>
+        <a href="/features" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ featuresColor }};paddingBottom:2px;borderBottom:{{ featuresBorder }}">{{ labels.features }}</a>
+        <a href="/pricing" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ pricingColor }};paddingBottom:2px;borderBottom:{{ pricingBorder }}">{{ labels.pricing }}</a>
+        <a href="/about" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ aboutColor }};paddingBottom:2px;borderBottom:{{ aboutBorder }}">{{ labels.about }}</a>
+        <a href="/contact" style="fontSize:16px;fontWeight:700;textDecoration:none;color:{{ contactColor }};paddingBottom:2px;borderBottom:{{ contactBorder }}">{{ labels.contact }}</a>
       </div>
     </sc-if>
 
@@ -42,7 +42,7 @@
       </div>
 
       <sc-if value="{{ showFullNav }}" hint-placeholder-val="{{ true }}">
-        <a href="Login.dc.html" style="textDecoration:none;background:#B5502C;color:#FFF;fontFamily:'Nunito',sans-serif;fontWeight:800;fontSize:15px;padding:12px 22px;borderRadius:999px;whiteSpace:nowrap">{{ labels.login }}</a>
+        <a href="/login" style="textDecoration:none;background:#B5502C;color:#FFF;fontFamily:'Nunito',sans-serif;fontWeight:800;fontSize:15px;padding:12px 22px;borderRadius:999px;whiteSpace:nowrap">{{ labels.login }}</a>
       </sc-if>
 
       <sc-if value="{{ showHamburger }}" hint-placeholder-val="{{ false }}">
@@ -57,12 +57,12 @@
 
   <sc-if value="{{ mobileMenuOpen }}" hint-placeholder-val="{{ false }}">
     <div style="borderTop:1px solid #E8DDC9;padding:12px 24px 20px;display:flex;flexDirection:column;gap:4px;background:#FBF6ED">
-      <a href="Home.dc.html" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ homeColor }}">{{ labels.home }}</a>
-      <a href="Features.dc.html" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ featuresColor }}">{{ labels.features }}</a>
-      <a href="Pricing.dc.html" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ pricingColor }}">{{ labels.pricing }}</a>
-      <a href="About.dc.html" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ aboutColor }}">{{ labels.about }}</a>
-      <a href="Contact.dc.html" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ contactColor }}">{{ labels.contact }}</a>
-      <a href="Login.dc.html" style="marginTop:8px;textAlign:center;textDecoration:none;background:#B5502C;color:#FFF;fontFamily:'Nunito',sans-serif;fontWeight:800;fontSize:16px;padding:14px 22px;borderRadius:999px">{{ labels.login }}</a>
+      <a href="/" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ homeColor }}">{{ labels.home }}</a>
+      <a href="/features" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ featuresColor }}">{{ labels.features }}</a>
+      <a href="/pricing" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ pricingColor }}">{{ labels.pricing }}</a>
+      <a href="/about" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ aboutColor }}">{{ labels.about }}</a>
+      <a href="/contact" style="padding:14px 8px;fontSize:17px;fontWeight:700;textDecoration:none;color:{{ contactColor }}">{{ labels.contact }}</a>
+      <a href="/login" style="marginTop:8px;textAlign:center;textDecoration:none;background:#B5502C;color:#FFF;fontFamily:'Nunito',sans-serif;fontWeight:800;fontSize:16px;padding:14px 22px;borderRadius:999px">{{ labels.login }}</a>
     </div>
   </sc-if>
 </nav>
