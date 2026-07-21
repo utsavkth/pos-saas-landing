@@ -100,3 +100,10 @@ img, svg { max-width: 100%; }
 /* ---- Utility ---- */
 .kicker { display: inline-flex; align-items: center; gap: 8px; background: var(--cream-2); color: var(--terracotta-dark); font-weight: 800; font-size: 14px; padding: 8px 16px; border-radius: 999px; margin-bottom: 24px; }
 .section-title { font-family: var(--font-heading); font-weight: 800; margin: 0 0 16px; color: var(--ink); }
+
+/* ---- Mobile tightening (the site is inline-style-heavy, so a few !importants are the pragmatic fix here) ---- */
+@media (max-width: 480px) {
+  .hero-mockup { max-width: 260px !important; }
+  .hero-mockup-body { padding: 14px !important; gap: 12px !important; }
+  .hero-mockup-scan { height: 100px !important; }
+}
