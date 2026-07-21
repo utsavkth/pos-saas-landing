@@ -22,10 +22,10 @@
     </a>
     <div class="nav-links">
       <a href="/" class="nav-link" data-en="Home" data-ne="होम">Home</a>
-      <a href="/features.html" class="nav-link" data-en="Features" data-ne="फिचर्स">Features</a>
-      <a href="/pricing.html" class="nav-link" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
-      <a href="/about.html" class="nav-link" data-en="About" data-ne="हाम्रो बारे">About</a>
-      <a href="/contact.html" class="nav-link" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+      <a href="/features" class="nav-link" data-en="Features" data-ne="फिचर्स">Features</a>
+      <a href="/pricing" class="nav-link" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
+      <a href="/about" class="nav-link" data-en="About" data-ne="हाम्रो बारे">About</a>
+      <a href="/contact" class="nav-link" data-en="Contact" data-ne="सम्पर्क">Contact</a>
     </div>
     <div class="nav-right">
       <div class="lang-switch">
@@ -37,10 +37,10 @@
   </div>
   <div class="mobile-menu">
     <a href="/" data-en="Home" data-ne="होम">Home</a>
-    <a href="/features.html" data-en="Features" data-ne="फिचर्स">Features</a>
-    <a href="/pricing.html" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
-    <a href="/about.html" data-en="About" data-ne="हाम्रो बारे">About</a>
-    <a href="/contact.html" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+    <a href="/features" data-en="Features" data-ne="फिचर्स">Features</a>
+    <a href="/pricing" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
+    <a href="/about" data-en="About" data-ne="हाम्रो बारे">About</a>
+    <a href="/contact" data-en="Contact" data-ne="सम्पर्क">Contact</a>
   </div>
 </nav>
 
@@ -130,6 +130,7 @@
                 <option value="no" data-en="No, this would be my first" data-ne="छैन, यो पहिलोपटक हो">No, this would be my first</option>
               </select>
             </div>
+            <span id="signup-error" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly." data-ne="तपाईंको अनुरोध पठाउँदा समस्या भयो — फेरि प्रयास गर्नुहोस्, वा hello@khatiwadapos.com मा सिधै इमेल गर्नुहोस्।">Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly.</span>
             <button type="submit" id="signup-submit" class="btn-primary" style="width:100%" disabled data-en="Request Access" data-ne="रिक्वेस्ट पठाउनुहोस्">Request Access</button>
           </form>
           <p style="font-size:14px;line-height:1.6;color:var(--brown-2);margin:24px 0 0;text-align:center">
@@ -192,22 +193,22 @@
       <div class="footer-heading" data-en="Company" data-ne="कम्पनी">Company</div>
       <div style="display:flex;flex-direction:column;gap:12px">
         <a href="/" data-en="Home" data-ne="होम">Home</a>
-        <a href="/about.html" data-en="About Us" data-ne="हाम्रो बारे">About Us</a>
-        <a href="/contact.html" data-en="Contact" data-ne="सम्पर्क">Contact</a>
+        <a href="/about" data-en="About Us" data-ne="हाम्रो बारे">About Us</a>
+        <a href="/contact" data-en="Contact" data-ne="सम्पर्क">Contact</a>
       </div>
     </div>
     <div style="flex:1 1 140px">
       <div class="footer-heading" data-en="Product" data-ne="प्रोडक्ट">Product</div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="/features.html" data-en="Features" data-ne="फिचर्स">Features</a>
-        <a href="/pricing.html" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
-        <a href="/login.html" data-en="Log In" data-ne="लग इन">Log In</a>
+        <a href="/features" data-en="Features" data-ne="फिचर्स">Features</a>
+        <a href="/pricing" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
+        <a href="/login" data-en="Log In" data-ne="लग इन">Log In</a>
       </div>
     </div>
     <div style="flex:1 1 160px">
       <div class="footer-heading" data-en="Legal" data-ne="लिगल">Legal</div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <a href="/privacy.html" data-en="Privacy Policy" data-ne="प्राइभेसी पोलिसी">Privacy Policy</a>
+        <a href="/privacy" data-en="Privacy Policy" data-ne="प्राइभेसी पोलिसी">Privacy Policy</a>
         <span style="color:#8FA298;font-size:14px">hello@khatiwadapos.com</span>
       </div>
     </div>
@@ -254,9 +255,15 @@
   var slugPreview = document.getElementById("slug-preview");
   var slugValue = document.getElementById("slug-value");
   var storeInput = document.getElementById("signup-store");
+  var contactNameInput = document.getElementById("signup-contact-name");
   var emailInput = document.getElementById("signup-email");
   var phoneInput = document.getElementById("signup-phone");
+  var cityInput = document.getElementById("signup-city");
+  var shopTypeInput = document.getElementById("signup-shop-type");
+  var staffCountInput = document.getElementById("signup-staff-count");
+  var posFamiliarityInput = document.getElementById("signup-pos-familiarity");
   var submitBtn = document.getElementById("signup-submit");
+  var signupErrorEl = document.getElementById("signup-error");
 
   function updateSignupState() {
     var slug = window.slugify(storeInput.value);
@@ -278,8 +285,35 @@
 
   document.getElementById("signup-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("signup-form-wrap").style.display = "none";
-    document.getElementById("signup-sent-wrap").style.display = "flex";
+    signupErrorEl.style.display = "none";
+    submitBtn.disabled = true;
+    var originalBtnText = submitBtn.textContent;
+    submitBtn.textContent = "...";
+
+    fetch("https://formsubmit.co/ajax/utsavkhatiwada7@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: "New Khatiwada POS signup request",
+        store_name: storeInput.value,
+        requested_subdomain: window.slugify(storeInput.value) + ".khatiwadapos.com",
+        contact_name: contactNameInput.value,
+        phone: phoneInput.value,
+        email: emailInput.value,
+        city: cityInput.value,
+        shop_type: shopTypeInput.value,
+        staff_count: staffCountInput.value,
+        pos_familiarity: posFamiliarityInput.value
+      })
+    }).then(function (res) {
+      if (!res.ok) { throw new Error("request failed"); }
+      document.getElementById("signup-form-wrap").style.display = "none";
+      document.getElementById("signup-sent-wrap").style.display = "flex";
+    }).catch(function () {
+      submitBtn.textContent = originalBtnText;
+      signupErrorEl.style.display = "block";
+      updateSignupState();
+    });
   });
 })();
 </script>
