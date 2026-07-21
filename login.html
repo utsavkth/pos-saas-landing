@@ -86,8 +86,49 @@
               </span>
             </div>
             <div class="field">
+              <label data-en="Your name" data-ne="तपाईंको नाम">Your name</label>
+              <input name="contact_name" id="signup-contact-name" placeholder="e.g. Ram Khatiwada" data-en-placeholder="e.g. Ram Khatiwada" data-ne-placeholder="जस्तै: राम खटीवाडा">
+            </div>
+            <div class="field">
+              <label data-en="Phone number" data-ne="फोन नम्बर">Phone number</label>
+              <input type="tel" name="phone" id="signup-phone" placeholder="98XXXXXXXX" data-en-placeholder="98XXXXXXXX" data-ne-placeholder="98XXXXXXXX">
+            </div>
+            <div class="field">
               <label data-en="Email address" data-ne="इमेल ठेगाना">Email address</label>
               <input type="email" name="email" id="signup-email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com">
+            </div>
+            <div class="field">
+              <label data-en="City / area" data-ne="शहर / ठाउँ">City / area</label>
+              <input name="city" id="signup-city" placeholder="e.g. Kathmandu" data-en-placeholder="e.g. Kathmandu" data-ne-placeholder="जस्तै: काठमाडौं">
+            </div>
+            <div class="field">
+              <label data-en="What kind of shop is it?" data-ne="कस्तो पसल हो?">What kind of shop is it?</label>
+              <select name="shop_type" id="signup-shop-type">
+                <option value="" data-en="Select one" data-ne="एउटा छान्नुहोस्">Select one</option>
+                <option value="grocery" data-en="Grocery / kirana store" data-ne="किराना पसल">Grocery / kirana store</option>
+                <option value="clothing" data-en="Clothing / fashion" data-ne="कपडा पसल">Clothing / fashion</option>
+                <option value="pharmacy" data-en="Pharmacy" data-ne="फार्मेसी">Pharmacy</option>
+                <option value="electronics" data-en="Electronics" data-ne="इलेक्ट्रोनिक्स">Electronics</option>
+                <option value="other" data-en="Other" data-ne="अरू">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label data-en="How many people work there?" data-ne="त्यहाँ कति जना काम गर्छन्?">How many people work there?</label>
+              <select name="staff_count" id="signup-staff-count">
+                <option value="" data-en="Select one" data-ne="एउटा छान्नुहोस्">Select one</option>
+                <option value="1" data-en="Just me" data-ne="म एक्लै">Just me</option>
+                <option value="2-5" data-en="2–5 people" data-ne="२–५ जना">2–5 people</option>
+                <option value="6-10" data-en="6–10 people" data-ne="६–१० जना">6–10 people</option>
+                <option value="10+" data-en="10+ people" data-ne="१०+ जना">10+ people</option>
+              </select>
+            </div>
+            <div class="field">
+              <label data-en="Have you used a POS system before?" data-ne="पहिले कहिल्यै POS प्रयोग गर्नुभएको छ?">Have you used a POS system before?</label>
+              <select name="pos_familiarity" id="signup-pos-familiarity">
+                <option value="" data-en="Select one" data-ne="एउटा छान्नुहोस्">Select one</option>
+                <option value="yes" data-en="Yes, I've used one before" data-ne="हो, प्रयोग गरेको छु">Yes, I've used one before</option>
+                <option value="no" data-en="No, this would be my first" data-ne="छैन, यो पहिलोपटक हो">No, this would be my first</option>
+              </select>
             </div>
             <button type="submit" id="signup-submit" class="btn-primary" style="width:100%" disabled data-en="Request Access" data-ne="रिक्वेस्ट पठाउनुहोस्">Request Access</button>
           </form>
@@ -214,6 +255,7 @@
   var slugValue = document.getElementById("slug-value");
   var storeInput = document.getElementById("signup-store");
   var emailInput = document.getElementById("signup-email");
+  var phoneInput = document.getElementById("signup-phone");
   var submitBtn = document.getElementById("signup-submit");
 
   function updateSignupState() {
@@ -224,12 +266,12 @@
     } else {
       slugPreview.style.display = "none";
     }
-    var disabled = !slug || !emailInput.value;
+    var disabled = !slug || !emailInput.value || !phoneInput.value;
     submitBtn.disabled = disabled;
     submitBtn.style.opacity = disabled ? "0.6" : "1";
   }
 
-  [storeInput, emailInput].forEach(function (el) {
+  [storeInput, emailInput, phoneInput].forEach(function (el) {
     el.addEventListener("input", updateSignupState);
   });
   updateSignupState();
