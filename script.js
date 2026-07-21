@@ -49,8 +49,29 @@
 
     const hamburger = document.querySelector(".hamburger");
     const mobileMenu = document.querySelector(".mobile-menu");
-    if (hamburger && mobileMenu) {
-      hamburger.addEventListener("click", () => mobileMenu.classList.toggle("open"));
+    const mobileMenuClose = document.querySelector(".mobile-menu-close");
+    const mobileMenuBackdrop = document.querySelector(".mobile-menu-backdrop");
+
+    function openMobileMenu() {
+      mobileMenu.classList.add("open");
+      if (mobileMenuBackdrop) mobileMenuBackdrop.classList.add("open");
+      document.body.style.overflow = "hidden";
     }
+    function closeMobileMenu() {
+      mobileMenu.classList.remove("open");
+      if (mobileMenuBackdrop) mobileMenuBackdrop.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener("click", () => {
+        mobileMenu.classList.contains("open") ? closeMobileMenu() : openMobileMenu();
+      });
+    }
+    if (mobileMenuClose) mobileMenuClose.addEventListener("click", closeMobileMenu);
+    if (mobileMenuBackdrop) mobileMenuBackdrop.addEventListener("click", closeMobileMenu);
+    document.querySelectorAll(".mobile-menu a").forEach((link) => {
+      link.addEventListener("click", closeMobileMenu);
+    });
   });
 })();
