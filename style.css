@@ -63,7 +63,7 @@ img, svg { max-width: 100%; }
 .mobile-menu a.active { color: var(--terracotta); }
 .mobile-menu .btn-primary { margin-top: 8px; text-align: center; }
 @media (max-width: 1059px) {
-  .nav-links, .nav-cta-desktop { display: none; }
+  .nav-links, a.nav-cta-desktop.btn-primary { display: none; }
   .hamburger { display: flex; }
   .mobile-menu.open { display: flex; }
 }
