@@ -130,6 +130,15 @@
                 <option value="no" data-en="No, this would be my first" data-ne="छैन, यो पहिलोपटक हो">No, this would be my first</option>
               </select>
             </div>
+            <div class="field">
+              <label data-en="Which plan fits you best?" data-ne="कुन प्लान तपाईंलाई मिल्छ?">Which plan fits you best?</label>
+              <div style="display:flex;gap:8px">
+                <button type="button" class="plan-option selected" data-plan="starter" data-en="Starter" data-ne="स्टार्टर">Starter</button>
+                <button type="button" class="plan-option" data-plan="growth" data-en="Growth" data-ne="ग्रोथ">Growth</button>
+              </div>
+              <input type="hidden" name="plan" id="signup-plan" value="starter">
+              <span class="field-hint"><a href="/pricing" data-en="Not sure? Compare plans →" data-ne="पक्का हुनुहुन्न? प्लानहरू तुलना गर्नुहोस् →">Not sure? Compare plans →</a></span>
+            </div>
             <span id="signup-error" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly." data-ne="तपाईंको अनुरोध पठाउँदा समस्या भयो — फेरि प्रयास गर्नुहोस्, वा hello@khatiwadapos.com मा सिधै इमेल गर्नुहोस्।">Something went wrong sending your request — please try again, or email hello@khatiwadapos.com directly.</span>
             <button type="submit" id="signup-submit" class="btn-primary" style="width:100%" disabled data-en="Request Access" data-ne="रिक्वेस्ट पठाउनुहोस्">Request Access</button>
           </form>
@@ -147,23 +156,39 @@
       </div>
 
       <div id="mode-forgot" style="display:none">
-        <div id="forgot-form-wrap">
-          <form id="forgot-form">
+        <div id="forgot-step1-wrap">
+          <form id="forgot-step1-form">
             <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0 0 8px" data-en="Reset your password" data-ne="पासवर्ड रिसेट गर्नुहोस्">Reset your password</h3>
-            <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 20px" data-en="Enter the email linked to your shop account and we'll send you a reset link." data-ne="आफ्नो पसल खातासँग जोडिएको इमेल लेख्नुहोस्, हामी रिसेट लिंक पठाउनेछौं।">Enter the email linked to your shop account and we'll send you a reset link.</p>
+            <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 20px" data-en="Enter the email linked to your shop account and we'll send you a reset code." data-ne="आफ्नो पसल खातासँग जोडिएको इमेल लेख्नुहोस्, हामी रिसेट कोड पठाउनेछौं।">Enter the email linked to your shop account and we'll send you a reset code.</p>
             <div class="field">
               <label data-en="Email address" data-ne="इमेल ठेगाना">Email address</label>
               <input type="email" name="email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com">
             </div>
-            <button type="submit" class="btn-primary" style="width:100%;margin-bottom:16px" data-en="Send reset link" data-ne="रिसेट लिंक पठाउनुहोस्">Send reset link</button>
+            <button type="submit" class="btn-primary" style="width:100%;margin-bottom:16px" data-en="Send reset code" data-ne="रिसेट कोड पठाउनुहोस्">Send reset code</button>
             <button type="button" id="back-from-forgot" class="btn-text" style="color:var(--brown)" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
           </form>
         </div>
-        <div id="forgot-sent-wrap" style="display:none;flex-direction:column;gap:14px;align-items:flex-start">
+        <div id="forgot-step2-wrap" style="display:none">
+          <form id="forgot-step2-form">
+            <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0 0 8px" data-en="Enter your reset code" data-ne="आफ्नो रिसेट कोड हाल्नुहोस्">Enter your reset code</h3>
+            <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 20px" data-en="We sent a code to your email. Enter it below with your new password." data-ne="हामीले तपाईंको इमेलमा कोड पठाएका छौं। तल कोड र नयाँ पासवर्ड हाल्नुहोस्।">We sent a code to your email. Enter it below with your new password.</p>
+            <div class="field">
+              <label data-en="Code from email" data-ne="इमेलबाट आएको कोड">Code from email</label>
+              <input name="code" placeholder="123456" data-en-placeholder="123456" data-ne-placeholder="123456">
+            </div>
+            <div class="field">
+              <label data-en="New password" data-ne="नयाँ पासवर्ड">New password</label>
+              <input type="password" name="new_password" placeholder="Enter a new password" data-en-placeholder="Enter a new password" data-ne-placeholder="नयाँ पासवर्ड लेख्नुहोस्">
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;margin-bottom:16px" data-en="Set New Password" data-ne="नयाँ पासवर्ड सेट गर्नुहोस्">Set New Password</button>
+            <button type="button" id="back-from-forgot-step2" class="btn-text" style="color:var(--brown)" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
+          </form>
+        </div>
+        <div id="forgot-done-wrap" style="display:none;flex-direction:column;gap:14px;align-items:flex-start">
           <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#E4EAE5"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#2F4B3C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
-          <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0" data-en="Check your email" data-ne="आफ्नो इमेल जाँच्नुहोस्">Check your email</h3>
-          <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0" data-en="If an account exists for that email, we've sent a link to reset your password." data-ne="त्यो इमेलमा खाता भएमा, हामीले पासवर्ड रिसेट लिंक पठाएका छौं।">If an account exists for that email, we've sent a link to reset your password.</p>
-          <button type="button" id="back-from-sent" class="btn-text" style="margin-top:8px" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
+          <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0" data-en="Password updated" data-ne="पासवर्ड अपडेट भयो">Password updated</h3>
+          <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0" data-en="Your password has been reset. Log in with your new password." data-ne="तपाईंको पासवर्ड रिसेट भयो। नयाँ पासवर्डले लग इन गर्नुहोस्।">Your password has been reset. Log in with your new password.</p>
+          <button type="button" id="back-from-forgot-done" class="btn-text" style="margin-top:8px" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
         </div>
       </div>
 
@@ -229,13 +254,19 @@
     Object.keys(modes).forEach(function (k) { modes[k].style.display = k === name ? "block" : "none"; });
   }
 
+  function resetForgotMode() {
+    document.getElementById("forgot-step1-wrap").style.display = "block";
+    document.getElementById("forgot-step2-wrap").style.display = "none";
+    document.getElementById("forgot-done-wrap").style.display = "none";
+  }
+
   document.getElementById("go-signup").addEventListener("click", function () { showMode("signup"); });
-  document.getElementById("go-forgot").addEventListener("click", function () { showMode("forgot"); });
+  document.getElementById("go-forgot").addEventListener("click", function () { resetForgotMode(); showMode("forgot"); });
   document.getElementById("go-login-from-signup").addEventListener("click", function () { showMode("login"); });
   document.getElementById("back-from-forgot").addEventListener("click", function () { showMode("login"); });
-  document.getElementById("back-from-sent").addEventListener("click", function () {
-    document.getElementById("forgot-form-wrap").style.display = "block";
-    document.getElementById("forgot-sent-wrap").style.display = "none";
+  document.getElementById("back-from-forgot-step2").addEventListener("click", function () { showMode("login"); });
+  document.getElementById("back-from-forgot-done").addEventListener("click", function () {
+    resetForgotMode();
     showMode("login");
   });
   document.getElementById("back-from-signup-sent").addEventListener("click", function () {
@@ -246,10 +277,26 @@
 
   document.getElementById("login-form").addEventListener("submit", function (e) { e.preventDefault(); });
 
-  document.getElementById("forgot-form").addEventListener("submit", function (e) {
+  document.getElementById("forgot-step1-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("forgot-form-wrap").style.display = "none";
-    document.getElementById("forgot-sent-wrap").style.display = "flex";
+    document.getElementById("forgot-step1-wrap").style.display = "none";
+    document.getElementById("forgot-step2-wrap").style.display = "block";
+  });
+
+  document.getElementById("forgot-step2-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.getElementById("forgot-step2-wrap").style.display = "none";
+    document.getElementById("forgot-done-wrap").style.display = "flex";
+  });
+
+  var planOptions = document.querySelectorAll(".plan-option");
+  var planInput = document.getElementById("signup-plan");
+  planOptions.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      planOptions.forEach(function (b) { b.classList.remove("selected"); });
+      btn.classList.add("selected");
+      planInput.value = btn.getAttribute("data-plan");
+    });
   });
 
   var slugPreview = document.getElementById("slug-preview");
@@ -303,7 +350,8 @@
         city: cityInput.value,
         shop_type: shopTypeInput.value,
         staff_count: staffCountInput.value,
-        pos_familiarity: posFamiliarityInput.value
+        pos_familiarity: posFamiliarityInput.value,
+        plan: planInput.value
       })
     }).then(function (res) {
       if (!res.ok) { throw new Error("request failed"); }
