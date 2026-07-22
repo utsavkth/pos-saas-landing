@@ -75,6 +75,25 @@
         </p>
       </div>
 
+      <div id="mode-force-reset" style="display:none">
+        <form id="force-reset-form">
+          <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0 0 8px" data-en="Set a new password" data-ne="नयाँ पासवर्ड सेट गर्नुहोस्">Set a new password</h3>
+          <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0 0 20px" data-en="You're still using a temporary password. Set a real one to continue." data-ne="तपाईं अझै अस्थायी पासवर्ड प्रयोग गर्दै हुनुहुन्छ। जारी राख्न वास्तविक पासवर्ड सेट गर्नुहोस्।">You're still using a temporary password. Set a real one to continue.</p>
+          <div class="field">
+            <label data-en="New password" data-ne="नयाँ पासवर्ड">New password</label>
+            <input type="password" name="new_password" placeholder="At least 8 characters" data-en-placeholder="At least 8 characters" data-ne-placeholder="कम्तिमा ८ अक्षर">
+          </div>
+          <div class="field">
+            <label data-en="Confirm new password" data-ne="नयाँ पासवर्ड पुष्टि गर्नुहोस्">Confirm new password</label>
+            <input type="password" name="confirm_password" placeholder="Re-enter the new password" data-en-placeholder="Re-enter the new password" data-ne-placeholder="नयाँ पासवर्ड फेरि लेख्नुहोस्">
+          </div>
+          <span id="force-reset-error-mismatch" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Passwords don't match." data-ne="पासवर्डहरू मिलेनन्।">Passwords don't match.</span>
+          <span id="force-reset-error-short" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Password must be at least 8 characters." data-ne="पासवर्ड कम्तिमा ८ अक्षरको हुनुपर्छ।">Password must be at least 8 characters.</span>
+          <span id="force-reset-error-network" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Couldn't reach the login service. Please try again." data-ne="लग इन सेवासँग जोड्न सकिएन। फेरि प्रयास गर्नुहोस्।">Couldn't reach the login service. Please try again.</span>
+          <button type="submit" class="btn-primary" style="width:100%" data-en="Set Password &amp; Continue" data-ne="पासवर्ड सेट गरी जारी राख्नुहोस्">Set Password &amp; Continue</button>
+        </form>
+      </div>
+
       <div id="mode-signup" style="display:none">
         <div id="signup-form-wrap">
           <h1 style="font-family:var(--font-heading);font-size:24px;font-weight:700;margin:0 0 8px" data-en="Get started with your shop" data-ne="आफ्नो पसलको लागि सुरु गरौं">Get started with your shop</h1>
@@ -251,7 +270,12 @@
 <script>
 (function () {
   "use strict";
-  var modes = { login: document.getElementById("mode-login"), signup: document.getElementById("mode-signup"), forgot: document.getElementById("mode-forgot") };
+  var modes = {
+    login: document.getElementById("mode-login"),
+    signup: document.getElementById("mode-signup"),
+    forgot: document.getElementById("mode-forgot"),
+    forceReset: document.getElementById("mode-force-reset")
+  };
 
   function showMode(name) {
     Object.keys(modes).forEach(function (k) { modes[k].style.display = k === name ? "block" : "none"; });
@@ -298,6 +322,11 @@
     });
   }
 
+  // Held only in memory, only long enough to call /change-password if the
+  // account turns out to still be on a temp password — never stored, never
+  // sent anywhere except that one follow-up request.
+  var pendingReset = { username: null, currentPassword: null };
+
   document.getElementById("login-form").addEventListener("submit", function (e) {
     e.preventDefault();
     var form = e.target;
@@ -305,25 +334,88 @@
     showLoginError(null);
     submitBtn.disabled = true;
 
+    var username = form.elements["store"].value;
+    var password = form.elements["password"].value;
     var body = new FormData();
-    body.append("username", form.elements["store"].value);
-    body.append("password", form.elements["password"].value);
+    body.append("username", username);
+    body.append("password", password);
 
     fetch(ACCOUNTS_API_BASE + "/login", { method: "POST", body: body })
       .then(function (res) {
         return res.json().then(function (data) { return { status: res.status, data: data }; });
       })
       .then(function (result) {
-        if (result.status === 200) {
-          window.location.href = result.data.redirect_url;
+        submitBtn.disabled = false;
+        if (result.status !== 200) {
+          showLoginError(result.status === 403 ? "suspended" : "invalid");
           return;
         }
-        submitBtn.disabled = false;
-        showLoginError(result.status === 403 ? "suspended" : "invalid");
+        if (result.data.must_change_password) {
+          pendingReset.username = username;
+          pendingReset.currentPassword = password;
+          showMode("forceReset");
+          return;
+        }
+        window.location.href = result.data.redirect_url;
       })
       .catch(function () {
         submitBtn.disabled = false;
         showLoginError("network");
+      });
+  });
+
+  var forceResetErrorEls = {
+    mismatch: document.getElementById("force-reset-error-mismatch"),
+    short: document.getElementById("force-reset-error-short"),
+    network: document.getElementById("force-reset-error-network")
+  };
+
+  function showForceResetError(kind) {
+    Object.keys(forceResetErrorEls).forEach(function (k) {
+      forceResetErrorEls[k].style.display = k === kind ? "block" : "none";
+    });
+  }
+
+  document.getElementById("force-reset-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var submitBtn = form.querySelector("button[type=submit]");
+    showForceResetError(null);
+
+    var newPassword = form.elements["new_password"].value;
+    var confirmPassword = form.elements["confirm_password"].value;
+    if (newPassword.length < 8) {
+      showForceResetError("short");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showForceResetError("mismatch");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    var body = new FormData();
+    body.append("username", pendingReset.username);
+    body.append("current_password", pendingReset.currentPassword);
+    body.append("new_password", newPassword);
+
+    fetch(ACCOUNTS_API_BASE + "/change-password", { method: "POST", body: body })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (result) {
+        submitBtn.disabled = false;
+        if (result.status !== 200) {
+          showForceResetError("network");
+          return;
+        }
+        pendingReset.username = null;
+        pendingReset.currentPassword = null;
+        window.location.href = result.data.redirect_url;
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        showForceResetError("network");
       });
   });
 
