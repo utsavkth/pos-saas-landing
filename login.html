@@ -64,6 +64,9 @@
           <div style="display:flex;justify-content:flex-end;margin:-12px 0 4px">
             <button type="button" id="go-forgot" class="btn-text" style="color:#B5502C" data-en="Forgot password?" data-ne="पासवर्ड बिर्सनुभयो?">Forgot password?</button>
           </div>
+          <span id="login-error-invalid" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Invalid store name or password." data-ne="पसलको नाम वा पासवर्ड मिलेन।">Invalid store name or password.</span>
+          <span id="login-error-suspended" class="field-error" style="display:none;margin:-4px 0 16px" data-en="This account is suspended. Please contact support." data-ne="यो खाता निलम्बित छ। कृपया सहयोगलाई सम्पर्क गर्नुहोस्।">This account is suspended. Please contact support.</span>
+          <span id="login-error-network" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Couldn't reach the login service. Please try again." data-ne="लग इन सेवासँग जोड्न सकिएन। फेरि प्रयास गर्नुहोस्।">Couldn't reach the login service. Please try again.</span>
           <button type="submit" class="btn-primary" style="width:100%" data-en="Log In" data-ne="लग इन">Log In</button>
         </form>
         <p style="font-size:14px;line-height:1.6;color:var(--brown-2);margin:24px 0 0;text-align:center">
@@ -275,7 +278,51 @@
     showMode("login");
   });
 
-  document.getElementById("login-form").addEventListener("submit", function (e) { e.preventDefault(); });
+  // Points at the pos-saas-accounts backend. Local dev only for now — this
+  // becomes a same-origin relative path (or the real domain) once the
+  // landing site and that backend are actually deployed together.
+  var ACCOUNTS_API_BASE = "http://127.0.0.1:5090";
+
+  var loginErrorEls = {
+    invalid: document.getElementById("login-error-invalid"),
+    suspended: document.getElementById("login-error-suspended"),
+    network: document.getElementById("login-error-network")
+  };
+
+  function showLoginError(kind) {
+    Object.keys(loginErrorEls).forEach(function (k) {
+      loginErrorEls[k].style.display = k === kind ? "block" : "none";
+    });
+  }
+
+  document.getElementById("login-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var submitBtn = form.querySelector("button[type=submit]");
+    showLoginError(null);
+    submitBtn.disabled = true;
+
+    var body = new FormData();
+    body.append("username", form.elements["store"].value);
+    body.append("password", form.elements["password"].value);
+
+    fetch(ACCOUNTS_API_BASE + "/login", { method: "POST", body: body })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (result) {
+        if (result.status === 200) {
+          window.location.href = result.data.redirect_url;
+          return;
+        }
+        submitBtn.disabled = false;
+        showLoginError(result.status === 403 ? "suspended" : "invalid");
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        showLoginError("network");
+      });
+  });
 
   document.getElementById("forgot-step1-form").addEventListener("submit", function (e) {
     e.preventDefault();
