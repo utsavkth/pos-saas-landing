@@ -278,10 +278,13 @@
     showMode("login");
   });
 
-  // Points at the pos-saas-accounts backend. Local dev only for now — this
-  // becomes a same-origin relative path (or the real domain) once the
-  // landing site and that backend are actually deployed together.
-  var ACCOUNTS_API_BASE = "http://127.0.0.1:5090";
+  // Points at the pos-saas-accounts backend. On localhost (dev), that's a
+  // separate port; everywhere else, a relative path — Caddy reverse-proxies
+  // /login on the same origin to that backend, so no CORS is needed live.
+  var ACCOUNTS_API_BASE =
+    (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://127.0.0.1:5090"
+      : "";
 
   var loginErrorEls = {
     invalid: document.getElementById("login-error-invalid"),
