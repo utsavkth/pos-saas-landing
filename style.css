@@ -106,12 +106,12 @@ img, svg { max-width: 100%; }
 /* ---- FAQ chat bot ---- */
 #faq-bot-launcher {
   position: fixed; right: 18px; bottom: 18px; z-index: 60;
-  width: 88px; height: 114px; border: none; background: none; cursor: pointer; padding: 0;
+  width: 78px; height: 144px; border: none; background: none; cursor: pointer; padding: 0;
   filter: drop-shadow(0 10px 22px rgba(43,32,25,0.22));
   animation: faqbot-bob 3.4s ease-in-out infinite;
 }
 #faq-bot-launcher:hover, #faq-bot-launcher:focus-visible { animation-play-state: paused; transform: translateY(-4px); outline: none; }
-#faq-bot-launcher svg { width: 100%; height: 100%; display: block; }
+#faq-bot-launcher img { width: 100%; height: 100%; display: block; object-fit: contain; }
 @keyframes faqbot-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .faq-bot-hint {
   position: absolute; top: 2px; right: 82px; background: var(--white); border: 1px solid var(--tan-border);
@@ -126,8 +126,8 @@ img, svg { max-width: 100%; }
 }
 #faq-bot-panel[hidden] { display: none; }
 .faq-bot-header { background: var(--green); color: var(--cream); padding: 14px 12px 14px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.faq-bot-header .faq-bot-avatar { width: 34px; height: 34px; flex-shrink: 0; }
-.faq-bot-header .faq-bot-avatar svg { width: 100%; height: 100%; display: block; }
+.faq-bot-header .faq-bot-avatar { width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; overflow: hidden; }
+.faq-bot-header .faq-bot-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
 .faq-bot-header .faq-bot-title { font-family: var(--font-heading); font-weight: 700; font-size: 15px; flex: 1; line-height: 1.3; }
 .faq-bot-header .faq-bot-sub { display: block; font-family: var(--font-body); font-weight: 400; font-size: 11.5px; color: #C9D3CB; }
 #faq-bot-close {
@@ -146,7 +146,7 @@ img, svg { max-width: 100%; }
 }
 .faq-bot-chip:hover { background: #FFFFFF; border-color: var(--terracotta); }
 @media (max-width: 480px) {
-  #faq-bot-launcher { right: 10px; bottom: 10px; width: 70px; height: 91px; }
+  #faq-bot-launcher { right: 10px; bottom: 10px; width: 62px; height: 114px; }
   .faq-bot-hint { display: none; }
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
 }

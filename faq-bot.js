@@ -49,76 +49,17 @@
            ne: "Contact पेजमा गएर हामीलाई सन्देश पठाउनुहोस् — हामी सबै सन्देश पढ्छौं।" } }
   ];
 
-  // A Newari girl in traditional haku patasi dress — designed in Claude
-  // Design (see the "Khatiwada POS Chat Mascot" project) rather than
-  // hand-coded here, since that tool renders live and this file's author
-  // can't visually preview it directly. Black blouse, gold shawl, red skirt
-  // with black bands, white sash + pink tassel, single front braid with a
-  // gold tie, bangles, bindi, gold hoop earrings.
-  var MASCOT_SVG =
-    '<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">' +
-    '<path d="M66,70 Q62,20 100,14 Q138,20 134,70 L134,95 Q100,110 66,95 Z" fill="#1A1A1A"/>' +
-    '<ellipse cx="100" cy="55" rx="27" ry="32" fill="#D9A066"/>' +
-    '<circle cx="100" cy="42" r="3" fill="#C1272D"/>' +
-    '<ellipse cx="87" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
-    '<ellipse cx="113" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
-    '<path d="M86,64 Q100,76 114,64" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>' +
-    '<ellipse cx="78" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
-    '<ellipse cx="122" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
-    '<circle cx="73" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
-    '<circle cx="127" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
-    '<rect x="90" y="82" width="20" height="14" rx="2" fill="#D9A066"/>' +
-    '<path d="M62,150 L62,100 Q62,90 75,86 L125,86 Q138,90 138,100 L138,150 Z" fill="#1A1A1A"/>' +
-    '<ellipse cx="58" cy="100" rx="14" ry="18" fill="#1A1A1A"/>' +
-    '<ellipse cx="142" cy="100" rx="14" ry="18" fill="#1A1A1A"/>' +
-    '<polygon points="78,88 92,88 100,152 90,152" fill="#F4C542"/>' +
-    '<polygon points="122,88 108,88 100,152 110,152" fill="#F4C542"/>' +
-    '<path d="M60,150 L140,150 L165,260 L35,260 Z" fill="#C1272D"/>' +
-    '<polygon points="55.45,170 144.55,170 146.36,178 53.64,178" fill="#1A1A1A"/>' +
-    '<polygon points="49.77,195 150.23,195 152.05,203 47.95,203" fill="#1A1A1A"/>' +
-    '<polygon points="44.09,220 155.91,220 157.73,228 42.27,228" fill="#1A1A1A"/>' +
-    '<polygon points="38.41,245 161.59,245 163.41,253 36.59,253" fill="#1A1A1A"/>' +
-    '<path d="M55,146 L145,146 L148,160 L52,160 Z" fill="#FFFDF8"/>' +
-    '<line x1="55" y1="146.5" x2="145" y2="146.5" stroke="#F4C542" stroke-width="1"/>' +
-    '<polygon points="126,158 138,158 132,182" fill="#E58AA0"/>' +
-    '<line x1="126" y1="158" x2="138" y2="158" stroke="#B5502C" stroke-width="2"/>' +
-    '<path d="M94,88 L106,88 L104,235 Q100,242 96,235 Z" fill="#1A1A1A"/>' +
-    '<line x1="97" y1="100" x2="103" y2="100" stroke="#3A3A3A" stroke-width="2"/>' +
-    '<line x1="97" y1="130" x2="103" y2="130" stroke="#3A3A3A" stroke-width="2"/>' +
-    '<line x1="96.5" y1="160" x2="103.5" y2="160" stroke="#3A3A3A" stroke-width="2"/>' +
-    '<line x1="96" y1="190" x2="104" y2="190" stroke="#3A3A3A" stroke-width="2"/>' +
-    '<line x1="96" y1="215" x2="104" y2="215" stroke="#3A3A3A" stroke-width="2"/>' +
-    '<rect x="94" y="228" width="12" height="6" rx="3" fill="#F4C542"/>' +
-    '<path d="M64,105 L84,140 L92,146 L70,110 Z" fill="#D9A066"/>' +
-    '<path d="M136,105 L116,140 L108,146 L130,110 Z" fill="#D9A066"/>' +
-    '<path d="M100,126 Q86,130 84,148 Q84,160 100,163 Q116,160 116,148 Q114,130 100,126 Z" fill="#D9A066"/>' +
-    '<line x1="100" y1="128" x2="100" y2="161" stroke="#B8794A" stroke-width="1.5"/>' +
-    '<path d="M90,132 Q88,124 92,120" stroke="#B8794A" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-    '<path d="M110,132 Q112,124 108,120" stroke="#B8794A" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-    '<ellipse cx="78" cy="132" rx="9" ry="3" fill="none" stroke="#FFFFFF" stroke-width="3"/>' +
-    '<ellipse cx="78" cy="137" rx="9" ry="3" fill="none" stroke="#9FCBDB" stroke-width="3"/>' +
-    '<ellipse cx="78" cy="142" rx="9" ry="3" fill="none" stroke="#B9A6DC" stroke-width="3"/>' +
-    '<ellipse cx="122" cy="132" rx="9" ry="3" fill="none" stroke="#FFFFFF" stroke-width="3"/>' +
-    '<ellipse cx="122" cy="137" rx="9" ry="3" fill="none" stroke="#9FCBDB" stroke-width="3"/>' +
-    '<ellipse cx="122" cy="142" rx="9" ry="3" fill="none" stroke="#B9A6DC" stroke-width="3"/>' +
-    "</svg>";
+  // A Newari girl in traditional haku patasi dress — the actual image the
+  // user picked (Gemini-generated, saved as mascot.png), not a hand-coded
+  // or Claude-Design SVG recreation. Its "transparent" background was
+  // actually a baked-in checkerboard (fully opaque pixels), so it was
+  // flood-filled to real alpha transparency and cropped to content before
+  // being added here — see the commit message for the processing steps.
+  var MASCOT_IMG = '<img src="/mascot.png" alt="" width="98" height="181">';
 
-  // Tighter head-only crop of the same character (hair, face, bindi, eyes,
-  // smile, blush, earrings, neck), for the chat panel header.
-  var AVATAR_SVG =
-    '<svg viewBox="55 8 90 92" xmlns="http://www.w3.org/2000/svg">' +
-    '<path d="M66,70 Q62,20 100,14 Q138,20 134,70 L134,95 Q100,110 66,95 Z" fill="#1A1A1A"/>' +
-    '<ellipse cx="100" cy="55" rx="27" ry="32" fill="#D9A066"/>' +
-    '<circle cx="100" cy="42" r="3" fill="#C1272D"/>' +
-    '<ellipse cx="87" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
-    '<ellipse cx="113" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
-    '<path d="M86,64 Q100,76 114,64" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>' +
-    '<ellipse cx="78" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
-    '<ellipse cx="122" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
-    '<circle cx="73" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
-    '<circle cx="127" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
-    '<rect x="90" y="82" width="20" height="14" rx="2" fill="#D9A066"/>' +
-    "</svg>";
+  // Same image, cropped via CSS (object-fit/object-position) to just the
+  // head for the chat panel header avatar.
+  var AVATAR_IMG = '<img src="/mascot.png" alt="">';
 
   function lang() {
     return (window.KhatiwadaLang && window.KhatiwadaLang.getLang()) || "en";
@@ -129,7 +70,7 @@
     launcher.id = "faq-bot-launcher";
     launcher.type = "button";
     launcher.setAttribute("aria-label", "Chat with us");
-    launcher.innerHTML = MASCOT_SVG +
+    launcher.innerHTML = MASCOT_IMG +
       '<span class="faq-bot-hint" data-en="Need help?" data-ne="सहयोग चाहियो?">Need help?</span>';
 
     var panel = document.createElement("div");
@@ -137,7 +78,7 @@
     panel.hidden = true;
     panel.innerHTML =
       '<div class="faq-bot-header">' +
-        '<span class="faq-bot-avatar">' + AVATAR_SVG + "</span>" +
+        '<span class="faq-bot-avatar">' + AVATAR_IMG + "</span>" +
         '<span class="faq-bot-title" data-en="Khatiwada POS Help" data-ne="खटीवाडा POS सहयोग">Khatiwada POS Help' +
           '<span class="faq-bot-sub" data-en="Tap a question below" data-ne="तलबाट प्रश्न छान्नुहोस्">Tap a question below</span>' +
         "</span>" +
