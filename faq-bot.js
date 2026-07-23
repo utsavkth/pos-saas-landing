@@ -94,10 +94,21 @@
     var menuEl = panel.querySelector("#faq-bot-menu");
     var greeted = false;
 
-    function addMessage(text, who) {
+    // Accepts either a plain string, or a {en, ne} pair. A pair gets
+    // data-en/data-ne attributes, so the site's existing language-toggle
+    // mechanism (script.js's applyLang, which re-queries every [data-en]
+    // element on each toggle) keeps it updated automatically -- including
+    // messages already sent before the visitor switched languages.
+    function addMessage(textOrPair, who) {
       var el = document.createElement("div");
       el.className = "faq-bot-msg " + who;
-      el.textContent = text;
+      if (typeof textOrPair === "object") {
+        el.setAttribute("data-en", textOrPair.en);
+        el.setAttribute("data-ne", textOrPair.ne);
+        el.textContent = textOrPair[lang()];
+      } else {
+        el.textContent = textOrPair;
+      }
       messagesEl.appendChild(el);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -108,25 +119,27 @@
         var chip = document.createElement("button");
         chip.type = "button";
         chip.className = "faq-bot-chip";
+        chip.setAttribute("data-en", faq.q.en);
+        chip.setAttribute("data-ne", faq.q.ne);
         chip.textContent = faq.q[lang()];
         chip.addEventListener("click", function () {
-          addMessage(faq.q[lang()], "user");
-          addMessage(faq.a[lang()], "bot");
+          addMessage(faq.q, "user");
+          addMessage(faq.a, "bot");
         });
         menuEl.appendChild(chip);
       });
     }
 
+    var GREETING = {
+      en: "Hi! I can help answer questions about Khatiwada POS. Pick one below.",
+      ne: "नमस्ते! म खटीवाडा POS को बारेमा प्रश्नहरूमा सहयोग गर्न सक्छु। तलबाट एउटा छान्नुहोस्।"
+    };
+
     function open() {
       panel.hidden = false;
       launcher.style.display = "none";
       if (!greeted) {
-        addMessage(
-          lang() === "ne"
-            ? "नमस्ते! म खटीवाडा POS को बारेमा प्रश्नहरूमा सहयोग गर्न सक्छु। तलबाट एउटा छान्नुहोस्।"
-            : "Hi! I can help answer questions about Khatiwada POS. Pick one below.",
-          "bot"
-        );
+        addMessage(GREETING, "bot");
         greeted = true;
       }
       renderMenu();
@@ -139,14 +152,6 @@
 
     launcher.addEventListener("click", open);
     panel.querySelector("#faq-bot-close").addEventListener("click", close);
-
-    // Menu labels re-render in the new language on toggle; already-sent
-    // messages stay in whichever language they were asked in.
-    document.querySelectorAll(".lang-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        if (!panel.hidden) renderMenu();
-      });
-    });
   }
 
   document.addEventListener("DOMContentLoaded", build);
