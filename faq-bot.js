@@ -49,75 +49,75 @@
            ne: "Contact पेजमा गएर हामीलाई सन्देश पठाउनुहोस् — हामी सबै सन्देश पढ्छौं।" } }
   ];
 
-  // A Newari girl in traditional haku patasi dress: black blouse, gold
-  // shawl, joined hands in greeting, bangles, red/black patterned skirt
-  // with a white sash, single front braid, bindi, and gold hoop earrings.
+  // A Newari girl in traditional haku patasi dress — designed in Claude
+  // Design (see the "Khatiwada POS Chat Mascot" project) rather than
+  // hand-coded here, since that tool renders live and this file's author
+  // can't visually preview it directly. Black blouse, gold shawl, red skirt
+  // with black bands, white sash + pink tassel, single front braid with a
+  // gold tie, bangles, bindi, gold hoop earrings.
   var MASCOT_SVG =
-    '<svg viewBox="0 0 200 320" xmlns="http://www.w3.org/2000/svg">' +
-    // skirt (patasi)
-    '<path d="M55 210 Q40 262 30 320 L170 320 Q160 262 145 210 Z" fill="#B5202A"/>' +
-    '<path d="M62 230 Q100 240 138 230 L133 250 Q100 258 67 250 Z" fill="#17140f"/>' +
-    '<path d="M50 275 Q100 286 150 275 L146 292 Q100 300 54 292 Z" fill="#17140f"/>' +
-    '<circle cx="78" cy="262" r="4.5" fill="#7EC8E3"/><circle cx="122" cy="262" r="4.5" fill="#E27CA0"/>' +
-    '<circle cx="65" cy="305" r="4.5" fill="#E27CA0"/><circle cx="135" cy="305" r="4.5" fill="#7EC8E3"/>' +
-    // sash + tassel
-    '<path d="M50 196 Q100 208 150 196 L150 214 Q100 224 50 214 Z" fill="#F8F3E8"/>' +
-    '<circle cx="57" cy="210" r="5" fill="#B5202A"/>' +
-    '<path d="M55 214 Q49 236 44 258" stroke="#E56B78" stroke-width="6" fill="none" stroke-linecap="round"/>' +
-    // blouse + sleeves
-    '<path d="M65 110 Q100 100 135 110 L145 140 Q150 170 145 200 L55 200 Q50 170 55 140 Z" fill="#17140f"/>' +
-    '<path d="M56 118 Q40 124 37 146 Q45 152 59 141 Z" fill="#17140f"/>' +
-    '<path d="M144 118 Q160 124 163 146 Q155 152 141 141 Z" fill="#17140f"/>' +
-    // neck (drawn before the shawl/hands that sit in front of it)
-    '<path d="M90 95 L110 95 L112 112 L88 112 Z" fill="#F0C39E"/>' +
-    // gold shawl
-    '<path d="M78 107 Q100 120 122 107 Q108 100 100 100 Q92 100 78 107 Z" fill="#F4C542"/>' +
-    '<path d="M86 109 L100 158 L114 109 Z" fill="#F4C542"/>' +
-    // braid (in front, over blouse and skirt)
-    '<path d="M70 96 Q58 160 63 222 Q66 262 74 300 L86 298 Q80 262 78 222 Q75 160 84 98 Z" fill="#1A1410"/>' +
-    '<line x1="68" y1="140" x2="82" y2="138" stroke="#000" stroke-width="1.4" opacity="0.35"/>' +
-    '<line x1="67" y1="180" x2="81" y2="179" stroke="#000" stroke-width="1.4" opacity="0.35"/>' +
-    '<line x1="68" y1="222" x2="80" y2="222" stroke="#000" stroke-width="1.4" opacity="0.35"/>' +
-    // forearms + bangles + joined hands (namaste)
-    '<path d="M45 130 Q55 145 71 151 L76 145 Q61 135 51 124 Z" fill="#F0C39E"/>' +
-    '<path d="M155 130 Q145 145 129 151 L124 145 Q139 135 149 124 Z" fill="#F0C39E"/>' +
-    '<ellipse cx="72" cy="148" rx="10" ry="4" fill="#FFFFFF"/><ellipse cx="72" cy="154" rx="10" ry="4" fill="#7EC8E3"/><ellipse cx="72" cy="160" rx="10" ry="4" fill="#B39DDB"/>' +
-    '<ellipse cx="128" cy="148" rx="10" ry="4" fill="#FFFFFF"/><ellipse cx="128" cy="154" rx="10" ry="4" fill="#7EC8E3"/><ellipse cx="128" cy="160" rx="10" ry="4" fill="#B39DDB"/>' +
-    '<path d="M85 130 Q90 110 100 108 Q95 130 92 156 Q88 156 85 145 Z" fill="#F0C39E"/>' +
-    '<path d="M115 130 Q110 110 100 108 Q105 130 108 156 Q112 156 115 145 Z" fill="#F0C39E"/>' +
-    '<line x1="100" y1="112" x2="100" y2="152" stroke="#D9A87A" stroke-width="1.5"/>' +
-    // side hair framing face
-    '<path d="M68 55 Q64 90 70 116 L80 116 Q75 85 76 58 Z" fill="#1A1410"/>' +
-    '<path d="M132 55 Q136 90 130 116 L120 116 Q125 85 124 58 Z" fill="#1A1410"/>' +
-    // face
-    '<ellipse cx="100" cy="65" rx="32" ry="36" fill="#F0C39E"/>' +
-    // hair cap
-    '<path d="M68 60 Q65 20 100 15 Q135 20 132 60 Q132 45 100 40 Q68 45 68 60 Z" fill="#1A1410"/>' +
-    // bindi, brows, eyes, lips
-    '<circle cx="100" cy="48" r="3" fill="#C0392B"/>' +
-    '<path d="M82 60 Q88 56 94 60" fill="none" stroke="#1A1410" stroke-width="2.5" stroke-linecap="round"/>' +
-    '<path d="M106 60 Q112 56 118 60" fill="none" stroke="#1A1410" stroke-width="2.5" stroke-linecap="round"/>' +
-    '<ellipse cx="88" cy="66" rx="3.2" ry="4" fill="#1A1410"/><ellipse cx="112" cy="66" rx="3.2" ry="4" fill="#1A1410"/>' +
-    '<path d="M89 81 Q100 89 111 81 Q100 85 89 81 Z" fill="#7B2D3E"/>' +
-    // gold hoop earrings
-    '<circle cx="68" cy="78" r="6" fill="none" stroke="#E8B84B" stroke-width="3"/>' +
-    '<circle cx="132" cy="78" r="6" fill="none" stroke="#E8B84B" stroke-width="3"/>' +
+    '<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M66,70 Q62,20 100,14 Q138,20 134,70 L134,95 Q100,110 66,95 Z" fill="#1A1A1A"/>' +
+    '<ellipse cx="100" cy="55" rx="27" ry="32" fill="#D9A066"/>' +
+    '<circle cx="100" cy="42" r="3" fill="#C1272D"/>' +
+    '<ellipse cx="87" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
+    '<ellipse cx="113" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
+    '<path d="M86,64 Q100,76 114,64" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="78" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
+    '<ellipse cx="122" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
+    '<circle cx="73" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
+    '<circle cx="127" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
+    '<rect x="90" y="82" width="20" height="14" rx="2" fill="#D9A066"/>' +
+    '<path d="M62,150 L62,100 Q62,90 75,86 L125,86 Q138,90 138,100 L138,150 Z" fill="#1A1A1A"/>' +
+    '<ellipse cx="58" cy="100" rx="14" ry="18" fill="#1A1A1A"/>' +
+    '<ellipse cx="142" cy="100" rx="14" ry="18" fill="#1A1A1A"/>' +
+    '<polygon points="78,88 92,88 100,152 90,152" fill="#F4C542"/>' +
+    '<polygon points="122,88 108,88 100,152 110,152" fill="#F4C542"/>' +
+    '<path d="M60,150 L140,150 L165,260 L35,260 Z" fill="#C1272D"/>' +
+    '<polygon points="55.45,170 144.55,170 146.36,178 53.64,178" fill="#1A1A1A"/>' +
+    '<polygon points="49.77,195 150.23,195 152.05,203 47.95,203" fill="#1A1A1A"/>' +
+    '<polygon points="44.09,220 155.91,220 157.73,228 42.27,228" fill="#1A1A1A"/>' +
+    '<polygon points="38.41,245 161.59,245 163.41,253 36.59,253" fill="#1A1A1A"/>' +
+    '<path d="M55,146 L145,146 L148,160 L52,160 Z" fill="#FFFDF8"/>' +
+    '<line x1="55" y1="146.5" x2="145" y2="146.5" stroke="#F4C542" stroke-width="1"/>' +
+    '<polygon points="126,158 138,158 132,182" fill="#E58AA0"/>' +
+    '<line x1="126" y1="158" x2="138" y2="158" stroke="#B5502C" stroke-width="2"/>' +
+    '<path d="M94,88 L106,88 L104,235 Q100,242 96,235 Z" fill="#1A1A1A"/>' +
+    '<line x1="97" y1="100" x2="103" y2="100" stroke="#3A3A3A" stroke-width="2"/>' +
+    '<line x1="97" y1="130" x2="103" y2="130" stroke="#3A3A3A" stroke-width="2"/>' +
+    '<line x1="96.5" y1="160" x2="103.5" y2="160" stroke="#3A3A3A" stroke-width="2"/>' +
+    '<line x1="96" y1="190" x2="104" y2="190" stroke="#3A3A3A" stroke-width="2"/>' +
+    '<line x1="96" y1="215" x2="104" y2="215" stroke="#3A3A3A" stroke-width="2"/>' +
+    '<rect x="94" y="228" width="12" height="6" rx="3" fill="#F4C542"/>' +
+    '<path d="M64,105 L84,140 L92,146 L70,110 Z" fill="#D9A066"/>' +
+    '<path d="M136,105 L116,140 L108,146 L130,110 Z" fill="#D9A066"/>' +
+    '<path d="M100,126 Q86,130 84,148 Q84,160 100,163 Q116,160 116,148 Q114,130 100,126 Z" fill="#D9A066"/>' +
+    '<line x1="100" y1="128" x2="100" y2="161" stroke="#B8794A" stroke-width="1.5"/>' +
+    '<path d="M90,132 Q88,124 92,120" stroke="#B8794A" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M110,132 Q112,124 108,120" stroke="#B8794A" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="78" cy="132" rx="9" ry="3" fill="none" stroke="#FFFFFF" stroke-width="3"/>' +
+    '<ellipse cx="78" cy="137" rx="9" ry="3" fill="none" stroke="#9FCBDB" stroke-width="3"/>' +
+    '<ellipse cx="78" cy="142" rx="9" ry="3" fill="none" stroke="#B9A6DC" stroke-width="3"/>' +
+    '<ellipse cx="122" cy="132" rx="9" ry="3" fill="none" stroke="#FFFFFF" stroke-width="3"/>' +
+    '<ellipse cx="122" cy="137" rx="9" ry="3" fill="none" stroke="#9FCBDB" stroke-width="3"/>' +
+    '<ellipse cx="122" cy="142" rx="9" ry="3" fill="none" stroke="#B9A6DC" stroke-width="3"/>' +
     "</svg>";
 
-  // Tighter head-only crop of the same character, for the chat panel header.
+  // Tighter head-only crop of the same character (hair, face, bindi, eyes,
+  // smile, blush, earrings, neck), for the chat panel header.
   var AVATAR_SVG =
-    '<svg viewBox="60 0 80 120" xmlns="http://www.w3.org/2000/svg">' +
-    '<path d="M68 55 Q64 90 70 116 L80 116 Q75 85 76 58 Z" fill="#1A1410"/>' +
-    '<path d="M132 55 Q136 90 130 116 L120 116 Q125 85 124 58 Z" fill="#1A1410"/>' +
-    '<ellipse cx="100" cy="65" rx="32" ry="36" fill="#F0C39E"/>' +
-    '<path d="M68 60 Q65 20 100 15 Q135 20 132 60 Q132 45 100 40 Q68 45 68 60 Z" fill="#1A1410"/>' +
-    '<circle cx="100" cy="48" r="3" fill="#C0392B"/>' +
-    '<path d="M82 60 Q88 56 94 60" fill="none" stroke="#1A1410" stroke-width="2.5" stroke-linecap="round"/>' +
-    '<path d="M106 60 Q112 56 118 60" fill="none" stroke="#1A1410" stroke-width="2.5" stroke-linecap="round"/>' +
-    '<ellipse cx="88" cy="66" rx="3.2" ry="4" fill="#1A1410"/><ellipse cx="112" cy="66" rx="3.2" ry="4" fill="#1A1410"/>' +
-    '<path d="M89 81 Q100 89 111 81 Q100 85 89 81 Z" fill="#7B2D3E"/>' +
-    '<circle cx="68" cy="78" r="6" fill="none" stroke="#E8B84B" stroke-width="3"/>' +
-    '<circle cx="132" cy="78" r="6" fill="none" stroke="#E8B84B" stroke-width="3"/>' +
+    '<svg viewBox="55 8 90 92" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M66,70 Q62,20 100,14 Q138,20 134,70 L134,95 Q100,110 66,95 Z" fill="#1A1A1A"/>' +
+    '<ellipse cx="100" cy="55" rx="27" ry="32" fill="#D9A066"/>' +
+    '<circle cx="100" cy="42" r="3" fill="#C1272D"/>' +
+    '<ellipse cx="87" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
+    '<ellipse cx="113" cy="52" rx="3.5" ry="5" fill="#1A1A1A"/>' +
+    '<path d="M86,64 Q100,76 114,64" stroke="#1A1A1A" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="78" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
+    '<ellipse cx="122" cy="62" rx="8" ry="5" fill="#B5502C" opacity="0.25"/>' +
+    '<circle cx="73" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
+    '<circle cx="127" cy="68" r="7" fill="none" stroke="#F4C542" stroke-width="3"/>' +
+    '<rect x="90" y="82" width="20" height="14" rx="2" fill="#D9A066"/>' +
     "</svg>";
 
   function lang() {

@@ -106,7 +106,7 @@ img, svg { max-width: 100%; }
 /* ---- FAQ chat bot ---- */
 #faq-bot-launcher {
   position: fixed; right: 18px; bottom: 18px; z-index: 60;
-  width: 84px; height: 134px; border: none; background: none; cursor: pointer; padding: 0;
+  width: 88px; height: 114px; border: none; background: none; cursor: pointer; padding: 0;
   filter: drop-shadow(0 10px 22px rgba(43,32,25,0.22));
   animation: faqbot-bob 3.4s ease-in-out infinite;
 }
@@ -146,7 +146,7 @@ img, svg { max-width: 100%; }
 }
 .faq-bot-chip:hover { background: #FFFFFF; border-color: var(--terracotta); }
 @media (max-width: 480px) {
-  #faq-bot-launcher { right: 10px; bottom: 10px; width: 68px; height: 108px; }
+  #faq-bot-launcher { right: 10px; bottom: 10px; width: 70px; height: 91px; }
   .faq-bot-hint { display: none; }
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
 }
