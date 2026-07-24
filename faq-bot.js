@@ -85,13 +85,10 @@
     return best;
   }
 
-  // A Newari girl in traditional haku patasi dress — the actual image the
-  // user picked (Gemini-generated, saved as mascot.png), not a hand-coded
-  // or Claude-Design SVG recreation. Its "transparent" background was
-  // actually a baked-in checkerboard (fully opaque pixels), so it was
-  // flood-filled to real alpha transparency and cropped to content before
-  // being added here — see the commit message for the processing steps.
-  var MASCOT_IMG = '<img src="/mascot.png" alt="" width="98" height="181">';
+  // A Newari girl in traditional haku patasi dress, waving — regenerated
+  // and background-removed as part of the site-wide image rebrand
+  // (logo/mascot/hero/feature icons), saved as mascot.png.
+  var MASCOT_IMG = '<img src="/mascot.png" alt="" width="98" height="176">';
 
   // Same image, cropped via CSS (object-fit/object-position) to just the
   // head for the chat panel header avatar.
