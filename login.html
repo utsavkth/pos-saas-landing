@@ -190,6 +190,7 @@
               <label data-en="Email address" data-ne="इमेल ठेगाना">Email address</label>
               <input type="email" name="email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com">
             </div>
+            <span id="forgot-step1-error-network" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Couldn't reach the login service. Please try again." data-ne="लग इन सेवासँग जोड्न सकिएन। फेरि प्रयास गर्नुहोस्।">Couldn't reach the login service. Please try again.</span>
             <button type="submit" class="btn-primary" style="width:100%;margin-bottom:16px" data-en="Send reset code" data-ne="रिसेट कोड पठाउनुहोस्">Send reset code</button>
             <button type="button" id="back-from-forgot" class="btn-text" style="color:var(--brown)" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
           </form>
@@ -206,6 +207,10 @@
               <label data-en="New password" data-ne="नयाँ पासवर्ड">New password</label>
               <input type="password" name="new_password" placeholder="Enter a new password" data-en-placeholder="Enter a new password" data-ne-placeholder="नयाँ पासवर्ड लेख्नुहोस्">
             </div>
+            <span id="forgot-step2-error-invalid" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Invalid or expired code. Please check the code or request a new one." data-ne="कोड मिलेन वा म्याद सकियो। कोड जाँच्नुहोस् वा नयाँ अनुरोध गर्नुहोस्।">Invalid or expired code. Please check the code or request a new one.</span>
+            <span id="forgot-step2-error-suspended" class="field-error" style="display:none;margin:-4px 0 16px" data-en="This account is suspended. Please contact support." data-ne="यो खाता निलम्बित छ। कृपया सहयोगलाई सम्पर्क गर्नुहोस्।">This account is suspended. Please contact support.</span>
+            <span id="forgot-step2-error-short" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Password must be at least 8 characters." data-ne="पासवर्ड कम्तिमा ८ अक्षरको हुनुपर्छ।">Password must be at least 8 characters.</span>
+            <span id="forgot-step2-error-network" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Couldn't reach the login service. Please try again." data-ne="लग इन सेवासँग जोड्न सकिएन। फेरि प्रयास गर्नुहोस्।">Couldn't reach the login service. Please try again.</span>
             <button type="submit" class="btn-primary" style="width:100%;margin-bottom:16px" data-en="Set New Password" data-ne="नयाँ पासवर्ड सेट गर्नुहोस्">Set New Password</button>
             <button type="button" id="back-from-forgot-step2" class="btn-text" style="color:var(--brown)" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
           </form>
@@ -290,6 +295,9 @@
     document.getElementById("forgot-step1-wrap").style.display = "block";
     document.getElementById("forgot-step2-wrap").style.display = "none";
     document.getElementById("forgot-done-wrap").style.display = "none";
+    document.getElementById("forgot-step1-form").reset();
+    document.getElementById("forgot-step2-form").reset();
+    pendingForgotEmail = null;
   }
 
   document.getElementById("go-signup").addEventListener("click", function () { showMode("signup"); });
@@ -424,16 +432,99 @@
       });
   });
 
+  // Held only in memory so step 2 can submit it alongside the code — never
+  // stored, never sent anywhere except the one /reset-password request.
+  var pendingForgotEmail = null;
+
+  var forgotStep1ErrorEls = {
+    network: document.getElementById("forgot-step1-error-network")
+  };
+  function showForgotStep1Error(kind) {
+    Object.keys(forgotStep1ErrorEls).forEach(function (k) {
+      forgotStep1ErrorEls[k].style.display = k === kind ? "block" : "none";
+    });
+  }
+
   document.getElementById("forgot-step1-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("forgot-step1-wrap").style.display = "none";
-    document.getElementById("forgot-step2-wrap").style.display = "block";
+    var form = e.target;
+    var submitBtn = form.querySelector("button[type=submit]");
+    showForgotStep1Error(null);
+    submitBtn.disabled = true;
+
+    var email = form.elements["email"].value;
+    var body = new FormData();
+    body.append("email", email);
+
+    fetch(ACCOUNTS_API_BASE + "/forgot-password", { method: "POST", body: body })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (result) {
+        submitBtn.disabled = false;
+        if (result.status !== 200) {
+          showForgotStep1Error("network");
+          return;
+        }
+        pendingForgotEmail = email;
+        document.getElementById("forgot-step1-wrap").style.display = "none";
+        document.getElementById("forgot-step2-wrap").style.display = "block";
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        showForgotStep1Error("network");
+      });
   });
+
+  var forgotStep2ErrorEls = {
+    invalid: document.getElementById("forgot-step2-error-invalid"),
+    suspended: document.getElementById("forgot-step2-error-suspended"),
+    short: document.getElementById("forgot-step2-error-short"),
+    network: document.getElementById("forgot-step2-error-network")
+  };
+  function showForgotStep2Error(kind) {
+    Object.keys(forgotStep2ErrorEls).forEach(function (k) {
+      forgotStep2ErrorEls[k].style.display = k === kind ? "block" : "none";
+    });
+  }
 
   document.getElementById("forgot-step2-form").addEventListener("submit", function (e) {
     e.preventDefault();
-    document.getElementById("forgot-step2-wrap").style.display = "none";
-    document.getElementById("forgot-done-wrap").style.display = "flex";
+    var form = e.target;
+    var submitBtn = form.querySelector("button[type=submit]");
+    showForgotStep2Error(null);
+
+    var code = form.elements["code"].value;
+    var newPassword = form.elements["new_password"].value;
+    if (newPassword.length < 8) {
+      showForgotStep2Error("short");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    var body = new FormData();
+    body.append("email", pendingForgotEmail);
+    body.append("code", code);
+    body.append("new_password", newPassword);
+
+    fetch(ACCOUNTS_API_BASE + "/reset-password", { method: "POST", body: body })
+      .then(function (res) {
+        return res.json().then(function (data) { return { status: res.status, data: data }; });
+      })
+      .then(function (result) {
+        submitBtn.disabled = false;
+        if (result.status !== 200) {
+          showForgotStep2Error(result.status === 403 ? "suspended" : "invalid");
+          return;
+        }
+        pendingForgotEmail = null;
+        document.getElementById("forgot-step2-wrap").style.display = "none";
+        document.getElementById("forgot-done-wrap").style.display = "flex";
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        showForgotStep2Error("network");
+      });
   });
 
   var planOptions = document.querySelectorAll(".plan-option");
