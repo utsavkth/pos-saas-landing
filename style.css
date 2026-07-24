@@ -151,6 +151,19 @@ img, svg { max-width: 100%; }
   font-family: var(--font-body);
 }
 .faq-bot-chip:hover { background: #FFFFFF; border-color: var(--terracotta); }
+#faq-bot-input-form {
+  display: flex; gap: 8px; padding: 10px 14px; background: var(--white);
+  border-top: 1px solid var(--tan-border); flex-shrink: 0;
+}
+#faq-bot-input {
+  flex: 1; min-width: 0; font-family: var(--font-body); font-size: 13.5px;
+  padding: 9px 12px; border-radius: 10px; border: 1px solid var(--tan-border); background: var(--cream);
+}
+#faq-bot-input-form button {
+  border: none; cursor: pointer; background: var(--terracotta); color: #fff; font-weight: 700;
+  font-size: 13px; font-family: var(--font-body); border-radius: 10px; padding: 0 16px; flex-shrink: 0;
+}
+#faq-bot-input-form button:hover { background: var(--terracotta-dark); }
 @media (max-width: 480px) {
   #faq-bot-launcher { right: 10px; bottom: 10px; width: 62px; height: 114px; }
   .faq-bot-hint { display: none; }
