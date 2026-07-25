@@ -142,13 +142,17 @@ img, svg { max-width: 100%; }
   box-shadow: 0 2px 8px rgba(43,32,25,0.18);
 }
 #faq-bot-dismiss:hover { background: var(--cream-2); color: var(--terracotta-dark); }
-/* Brief "I'll be here if you need me!" bubble -- shown by faq-bot.js's
-   showPeekMessage() for a few seconds whenever the mascot becomes (or
-   loads already) peeking, then fades out and removes itself. Positioned
-   near her head in the peeking pose, unlike the persistent .faq-bot-hint
-   which only shows in the full (non-peeking) state. */
+/* Brief "I'll be here if you need me!" bubble -- shown once by
+   faq-bot.js's showPeekMessage() right when she's dismissed to peeking,
+   then fades out and removes itself. Sits ABOVE the peeking box entirely
+   (bottom: 100%) rather than over her head/face -- she's a child of
+   #faq-bot-launcher, which itself shifts right:-22px (desktop) while
+   peeking, so `right: 22px` here cancels that shift back out and lands
+   the bubble's edge on the real viewport edge instead of drifting
+   off-screen with the rest of the launcher. */
 .faq-bot-peek-msg {
-  position: absolute; top: 6px; right: 55px; background: var(--white); border: 1px solid var(--tan-border);
+  position: absolute; bottom: 100%; margin-bottom: 10px; right: 22px;
+  background: var(--white); border: 1px solid var(--tan-border);
   border-radius: 14px 14px 4px 14px; padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--ink);
   white-space: nowrap; box-shadow: 0 6px 16px rgba(43,32,25,0.12);
   opacity: 0; transform: translateY(4px); transition: opacity 0.35s ease, transform 0.35s ease; pointer-events: none;
@@ -211,7 +215,7 @@ img, svg { max-width: 100%; }
   #faq-bot-launcher { right: 10px; bottom: 10px; width: 108px; height: 194px; }
   #faq-bot-launcher.peeking { width: 130px; height: 173px; right: -17px; }
   .faq-bot-hint { font-size: 11.5px; padding: 6px 10px; right: 96px; }
-  .faq-bot-peek-msg { font-size: 11.5px; padding: 6px 10px; right: 40px; }
+  .faq-bot-peek-msg { font-size: 11.5px; padding: 6px 10px; right: 17px; }
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
 }
 

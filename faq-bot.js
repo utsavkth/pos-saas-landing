@@ -115,9 +115,11 @@
     try { localStorage.setItem(DISMISSED_KEY, "1"); } catch (e) {}
   }
 
-  // Brief reassurance bubble shown for a few seconds whenever the mascot is
-  // (or becomes) peeking -- unlike .faq-bot-hint in the full state, this one
-  // isn't meant to stay up, just a quick "still here" before it fades.
+  // Brief reassurance bubble shown once, right at the moment she's
+  // dismissed to peeking -- deliberately NOT re-shown on every later page
+  // load/refresh while she's already peeking (that got repetitive fast),
+  // and unlike .faq-bot-hint in the full state, this one isn't meant to
+  // stay up, just a quick "still here" before it fades.
   var PEEK_MESSAGE = {
     en: "I'll be here if you need me!",
     ne: "चाहिएमा म यहीं हुनेछु!"
@@ -193,8 +195,6 @@
 
     document.body.appendChild(launcher);
     document.body.appendChild(panel);
-
-    if (startDismissed) showPeekMessage(launcher);
 
     var messagesEl = panel.querySelector("#faq-bot-messages");
     var menuEl = panel.querySelector("#faq-bot-menu");
