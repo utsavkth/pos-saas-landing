@@ -115,6 +115,35 @@
     try { localStorage.setItem(DISMISSED_KEY, "1"); } catch (e) {}
   }
 
+  // Brief reassurance bubble shown for a few seconds whenever the mascot is
+  // (or becomes) peeking -- unlike .faq-bot-hint in the full state, this one
+  // isn't meant to stay up, just a quick "still here" before it fades.
+  var PEEK_MESSAGE = {
+    en: "I'll be here if you need me!",
+    ne: "चाहिएमा म यहीं हुनेछु!"
+  };
+
+  function showPeekMessage(launcher) {
+    var existing = launcher.querySelector(".faq-bot-peek-msg");
+    if (existing) existing.remove();
+    var msg = document.createElement("span");
+    msg.className = "faq-bot-peek-msg";
+    msg.setAttribute("data-en", PEEK_MESSAGE.en);
+    msg.setAttribute("data-ne", PEEK_MESSAGE.ne);
+    msg.textContent = PEEK_MESSAGE[lang()];
+    launcher.appendChild(msg);
+    // Two rAFs so the browser commits the initial (invisible) state as its
+    // own paint before the "visible" class is added -- otherwise the two
+    // class changes can get batched into one frame and the fade never shows.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { msg.classList.add("visible"); });
+    });
+    setTimeout(function () {
+      msg.classList.remove("visible");
+      setTimeout(function () { msg.remove(); }, 400);
+    }, 2800);
+  }
+
   function build() {
     // A wrapper div, not a button itself -- it holds two separate real
     // buttons (open chat / dismiss to peeking), and a button can't
@@ -164,6 +193,8 @@
 
     document.body.appendChild(launcher);
     document.body.appendChild(panel);
+
+    if (startDismissed) showPeekMessage(launcher);
 
     var messagesEl = panel.querySelector("#faq-bot-messages");
     var menuEl = panel.querySelector("#faq-bot-menu");
@@ -235,6 +266,7 @@
       launcher.classList.add("peeking");
       openBtn.querySelector("#faq-bot-mascot-img").src = MASCOT_PEEKING_SRC;
       setDismissed();
+      showPeekMessage(launcher);
     });
 
     inputForm.addEventListener("submit", function (e) {
