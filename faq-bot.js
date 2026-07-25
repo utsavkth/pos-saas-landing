@@ -101,18 +101,34 @@
     return (window.KhatiwadaLang && window.KhatiwadaLang.getLang()) || "en";
   }
 
-  // Persists across the whole site (every page reads this on load), same
-  // localStorage convention as script.js's language toggle. Once a visitor
-  // dismisses the mascot to its "peeking" state, it stays peeking on every
-  // page from then on -- still clickable, just out of the way.
-  var DISMISSED_KEY = "khatiwada_mascot_dismissed";
+  // Three states, persisted site-wide (every page reads this on load), same
+  // localStorage convention as script.js's language toggle:
+  //   "full"    -- the standing/waving mascot + "Need help?" bubble
+  //   "peeking" -- tucked at the screen edge, still one tap from the chat
+  //   "hidden"  -- gone entirely; only the nav "Help" button brings her back
+  // Commercial chat widgets (Intercom/Drift/Zendesk) deliberately don't offer
+  // that last state -- the launcher always comes back. Offering a real "go
+  // away" is a deliberate difference, asked for directly by a real user.
+  var STATE_KEY = "khatiwada_mascot_state";
+  var LEGACY_DISMISSED_KEY = "khatiwada_mascot_dismissed";
+  var STATES = ["full", "peeking", "hidden"];
 
-  function isDismissed() {
-    try { return localStorage.getItem(DISMISSED_KEY) === "1"; } catch (e) { return false; }
+  function getState() {
+    try {
+      var stored = localStorage.getItem(STATE_KEY);
+      if (STATES.indexOf(stored) !== -1) return stored;
+      // Migrate anyone still carrying the old boolean key from before this
+      // was a three-state thing -- they'd previously "dismissed" to peeking.
+      if (localStorage.getItem(LEGACY_DISMISSED_KEY) === "1") return "peeking";
+    } catch (e) {}
+    return "full";
   }
 
-  function setDismissed() {
-    try { localStorage.setItem(DISMISSED_KEY, "1"); } catch (e) {}
+  function saveState(state) {
+    try {
+      localStorage.setItem(STATE_KEY, state);
+      localStorage.removeItem(LEGACY_DISMISSED_KEY);
+    } catch (e) {}
   }
 
   // Brief reassurance bubble shown once, right at the moment she's
@@ -148,12 +164,10 @@
 
   function build() {
     // A wrapper div, not a button itself -- it holds two separate real
-    // buttons (open chat / dismiss to peeking), and a button can't
-    // validly contain another button.
+    // buttons (open chat / dismiss), and a button can't validly contain
+    // another button.
     var launcher = document.createElement("div");
     launcher.id = "faq-bot-launcher";
-    var startDismissed = isDismissed();
-    if (startDismissed) launcher.classList.add("peeking");
 
     var openBtn = document.createElement("button");
     openBtn.id = "faq-bot-open";
@@ -161,15 +175,16 @@
     openBtn.setAttribute("aria-label", "Chat with us");
     openBtn.innerHTML = MASCOT_IMG +
       '<span class="faq-bot-hint" data-en="Need help?" data-ne="सहयोग चाहियो?">Need help?</span>';
-    if (startDismissed) {
-      openBtn.querySelector("#faq-bot-mascot-img").src = MASCOT_PEEKING_SRC;
-    }
 
+    // The visible circle is a nested span, so the button itself can be a
+    // full 44x44 touch target (Apple HIG minimum; Material says 48) while
+    // still *looking* small. The previous version was a 24x24 button sitting
+    // on top of the mascot -- roughly half the minimum, and near-misses hit
+    // her and opened the chat instead, which is exactly what got reported.
     var dismissBtn = document.createElement("button");
     dismissBtn.id = "faq-bot-dismiss";
     dismissBtn.type = "button";
-    dismissBtn.setAttribute("aria-label", "Dismiss");
-    dismissBtn.innerHTML = "&times;";
+    dismissBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
 
     launcher.appendChild(openBtn);
     launcher.appendChild(dismissBtn);
@@ -195,6 +210,27 @@
 
     document.body.appendChild(launcher);
     document.body.appendChild(panel);
+
+    // "Help" buttons that only exist while she's fully hidden -- the only way
+    // back. Injected here rather than hand-added to all 7 pages so there's
+    // one source of truth. Two of them, because the nav is already tight on
+    // phones (the language toggle had to be moved into the dropdown earlier
+    // for exactly this reason) -- CSS shows the header one on desktop and the
+    // dropdown one on mobile, never both.
+    var navButtons = [];
+    function makeNavButton(className, parent) {
+      if (!parent) return;
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "faq-bot-restore " + className;
+      btn.setAttribute("data-en", "Help");
+      btn.setAttribute("data-ne", "सहयोग");
+      btn.textContent = lang() === "ne" ? "सहयोग" : "Help";
+      parent.appendChild(btn);
+      navButtons.push(btn);
+    }
+    makeNavButton("faq-bot-restore-desktop", document.querySelector(".nav-right"));
+    makeNavButton("faq-bot-restore-mobile", document.querySelector(".mobile-menu"));
 
     var messagesEl = panel.querySelector("#faq-bot-messages");
     var menuEl = panel.querySelector("#faq-bot-menu");
@@ -243,6 +279,28 @@
       ne: "नमस्ते! म खटीवाडा POS को बारेमा प्रश्नहरूमा सहयोग गर्न सक्छु। तलबाट एउटा छान्नुहोस्।"
     };
 
+    var state = getState();
+    var mascotImg = openBtn.querySelector("#faq-bot-mascot-img");
+
+    // Single place that reconciles the DOM with the current state, so the
+    // first paint on page load and every later transition go through exactly
+    // the same code path -- no separate "set up initial state" branch to
+    // drift out of sync with the transition handlers.
+    function applyState(newState, opts) {
+      state = newState;
+      launcher.classList.toggle("peeking", state === "peeking");
+      launcher.classList.toggle("hidden", state === "hidden");
+      mascotImg.src = state === "peeking" ? MASCOT_PEEKING_SRC : MASCOT_SRC;
+      dismissBtn.setAttribute(
+        "aria-label", state === "peeking" ? "Hide the help assistant" : "Tuck the help assistant aside"
+      );
+      navButtons.forEach(function (btn) { btn.classList.toggle("visible", state === "hidden"); });
+      if (opts && opts.persist) saveState(state);
+      if (opts && opts.announce && state === "peeking") showPeekMessage(launcher);
+    }
+
+    applyState(state);
+
     function open() {
       panel.hidden = false;
       launcher.style.display = "none";
@@ -261,12 +319,26 @@
     openBtn.addEventListener("click", open);
     panel.querySelector("#faq-bot-close").addEventListener("click", close);
 
+    // Same button, two meanings depending on where she currently is:
+    // full -> tuck her to the edge, peeking -> hide her completely.
     dismissBtn.addEventListener("click", function (e) {
       e.stopPropagation();
-      launcher.classList.add("peeking");
-      openBtn.querySelector("#faq-bot-mascot-img").src = MASCOT_PEEKING_SRC;
-      setDismissed();
-      showPeekMessage(launcher);
+      if (state === "peeking") {
+        applyState("hidden", { persist: true });
+      } else {
+        applyState("peeking", { persist: true, announce: true });
+      }
+    });
+
+    navButtons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        applyState("full", { persist: true });
+        // Coming back from hidden while the mobile dropdown is open would
+        // otherwise leave the menu sitting over her -- close it so she's
+        // actually visible again.
+        var menu = document.querySelector(".mobile-menu");
+        if (menu) menu.classList.remove("open");
+      });
     });
 
     inputForm.addEventListener("submit", function (e) {

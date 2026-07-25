@@ -114,13 +114,21 @@ img, svg { max-width: 100%; }
    real buttons, #faq-bot-open and #faq-bot-dismiss, and a button can't
    validly contain another button). Position/size/animation/the peeking
    slide all live here; the buttons inside just fill it. */
+/* One height drives everything, and both widths derive from their own art's
+   aspect ratio at that height -- so the two states always render at the same
+   scale (only her pose changes) and it stays proportionate across phones,
+   tablets, and desktops without a pile of per-breakpoint pixel values.
+   Ratios: standing/waving art is 300x538 (0.5576), peeking art is 373x619
+   (0.6027 -- wider because the edge she grips is drawn into it). */
 #faq-bot-launcher {
+  --mascot-h: clamp(150px, 21vh, 222px);
   position: fixed; right: 18px; bottom: 18px; z-index: 60;
-  width: 124px; height: 222px;
+  height: var(--mascot-h); width: calc(var(--mascot-h) * 0.5576);
   filter: drop-shadow(0 10px 22px rgba(43,32,25,0.22));
   animation: faqbot-bob 3.4s ease-in-out infinite;
-  transition: right 0.25s ease;
+  transition: right 0.25s ease, opacity 0.2s ease;
 }
+#faq-bot-launcher.hidden { display: none; }
 #faq-bot-launcher:hover, #faq-bot-launcher:focus-within { animation-play-state: paused; transform: translateY(-4px); }
 #faq-bot-open {
   display: block; width: 100%; height: 100%; position: relative;
@@ -133,25 +141,39 @@ img, svg { max-width: 100%; }
   border-radius: 14px 14px 4px 14px; padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--ink);
   white-space: nowrap; box-shadow: 0 6px 16px rgba(43,32,25,0.12);
 }
+/* The BUTTON is a full 44x44 touch target (Apple HIG minimum; Material
+   says 48) but draws nothing itself -- the visible 26px circle is the inner
+   span. Previously this was a 24x24 button sitting directly on top of the
+   mascot: about half the minimum target, so on phones a near-miss landed on
+   her and opened the chat instead of dismissing. Sits above the artwork
+   (bottom:100%) rather than overlapping it, so a miss hits empty page. */
 #faq-bot-dismiss {
-  position: absolute; top: -4px; right: -4px; z-index: 2;
-  width: 24px; height: 24px; border-radius: 50%;
+  position: absolute; bottom: 100%; right: 0; z-index: 2;
+  width: 44px; height: 44px; padding: 0; margin: 0 0 2px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+#faq-bot-dismiss span {
+  width: 26px; height: 26px; border-radius: 50%;
   background: var(--white); border: 1px solid var(--tan-border); color: var(--brown);
-  font-size: 15px; line-height: 1; padding: 0; cursor: pointer;
+  font-size: 16px; line-height: 1;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 2px 8px rgba(43,32,25,0.18);
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
-#faq-bot-dismiss:hover { background: var(--cream-2); color: var(--terracotta-dark); }
+#faq-bot-dismiss:hover span, #faq-bot-dismiss:focus-visible span {
+  background: var(--cream-2); color: var(--terracotta-dark); transform: scale(1.12);
+}
+/* While peeking she sits partly off-screen to the right, so the button has
+   to be pulled back inward or it'd hang off the edge with her. */
+#faq-bot-launcher.peeking #faq-bot-dismiss { right: 18px; }
 /* Brief "I'll be here if you need me!" bubble -- shown once by
-   faq-bot.js's showPeekMessage() right when she's dismissed to peeking,
-   then fades out and removes itself. Sits ABOVE the peeking box entirely
-   (bottom: 100%) rather than over her head/face -- she's a child of
-   #faq-bot-launcher, which itself shifts right:-22px (desktop) while
-   peeking, so `right: 22px` here cancels that shift back out and lands
-   the bubble's edge on the real viewport edge instead of drifting
-   off-screen with the rest of the launcher. */
+   faq-bot.js's showPeekMessage() right when she's tucked aside, then fades
+   out and removes itself. Sits above her rather than over her face, and
+   stacked clear of the dismiss button (which also lives above her now) so
+   the two never overlap during the couple of seconds it's up. */
 .faq-bot-peek-msg {
-  position: absolute; bottom: 100%; margin-bottom: 10px; right: 22px;
+  position: absolute; bottom: 100%; margin-bottom: 50px; right: 18px;
   background: var(--white); border: 1px solid var(--tan-border);
   border-radius: 14px 14px 4px 14px; padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--ink);
   white-space: nowrap; box-shadow: 0 6px 16px rgba(43,32,25,0.12);
@@ -170,12 +192,32 @@ img, svg { max-width: 100%; }
    with her fingertips curling slightly past it to 87.1% -- right is set so
    that point lands exactly on the viewport's real right edge, so she reads
    as gripping the actual browser edge rather than a floating box. Persisted
-   site-wide via localStorage (see DISMISSED_KEY in faq-bot.js), so once
-   dismissed she stays peeking on every page, not just the one she was
-   dismissed on. */
-#faq-bot-launcher.peeking { width: 134px; height: 222px; right: -17px; }
-#faq-bot-launcher.peeking .faq-bot-hint,
-#faq-bot-launcher.peeking #faq-bot-dismiss { display: none; }
+   site-wide via localStorage (see STATE_KEY in faq-bot.js), so once tucked
+   aside she stays peeking on every page, not just the one it happened on.
+   The `right` offset is derived, not hand-tuned: it keeps that grip point a
+   fixed ~10px inside the viewport at any --mascot-h (0.208 is how far the
+   pole sits from the art's right edge, x its 0.6027 aspect ratio). */
+#faq-bot-launcher.peeking {
+  width: calc(var(--mascot-h) * 0.6027);
+  right: calc(10px - var(--mascot-h) * 0.1254);
+}
+#faq-bot-launcher.peeking .faq-bot-hint { display: none; }
+
+/* "Help" button in the nav -- the only way back once she's fully hidden, so
+   it's display:none until then rather than permanently occupying nav space
+   (the header row is already tight on phones). Desktop uses the one in
+   .nav-right, mobile the one in the dropdown; never both at once. */
+.faq-bot-restore {
+  display: none; cursor: pointer; font-family: var(--font-body); font-weight: 700;
+  background: var(--cream-2); color: var(--terracotta-dark);
+  border: 1px solid var(--tan-border); border-radius: 999px;
+  padding: 8px 16px; font-size: 14px;
+}
+.faq-bot-restore:hover { background: var(--white); border-color: var(--terracotta); }
+.faq-bot-restore-desktop.visible { display: inline-flex; align-items: center; }
+.faq-bot-restore-mobile.visible { display: block; width: 100%; text-align: center; }
+@media (max-width: 1059px) { .faq-bot-restore-desktop.visible { display: none; } }
+@media (min-width: 1060px) { .faq-bot-restore-mobile.visible { display: none; } }
 #faq-bot-panel {
   position: fixed; right: 18px; bottom: 18px; z-index: 61;
   width: min(340px, calc(100vw - 36px)); max-height: min(500px, calc(100vh - 36px));
@@ -217,10 +259,16 @@ img, svg { max-width: 100%; }
 }
 #faq-bot-input-form button:hover { background: var(--terracotta-dark); }
 @media (max-width: 480px) {
-  #faq-bot-launcher { right: 10px; bottom: 10px; width: 108px; height: 194px; }
-  #faq-bot-launcher.peeking { width: 117px; height: 194px; right: -15px; }
-  .faq-bot-hint { font-size: 11.5px; padding: 6px 10px; right: 96px; }
-  .faq-bot-peek-msg { font-size: 11.5px; padding: 6px 10px; right: 17px; }
+  /* No width/height overrides here any more -- --mascot-h's clamp() scales
+     her smoothly across devices, and both states derive their width from it,
+     so a per-breakpoint pixel override would just reintroduce the drift
+     between states that had to be fixed once already. */
+  #faq-bot-launcher { right: 10px; bottom: 10px; }
+  #faq-bot-launcher.peeking { right: calc(4px - var(--mascot-h) * 0.1254); }
+  .faq-bot-hint { font-size: 11.5px; padding: 6px 10px; right: calc(var(--mascot-h) * 0.44); }
+  .faq-bot-peek-msg { font-size: 11.5px; padding: 6px 10px; right: 12px; }
+  #faq-bot-dismiss { width: 48px; height: 48px; }
+  #faq-bot-launcher.peeking #faq-bot-dismiss { right: 12px; }
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
 }
 
