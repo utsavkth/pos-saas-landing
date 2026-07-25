@@ -85,14 +85,17 @@
     return best;
   }
 
-  // A Newari girl in traditional haku patasi dress, waving — regenerated
-  // and background-removed as part of the site-wide image rebrand
-  // (logo/mascot/hero/feature icons), saved as mascot.png.
-  var MASCOT_IMG = '<img src="/mascot.png" alt="" width="98" height="176">';
+  // Same Newari-dress character across all three appearances on the site
+  // (chat launcher, About page, and peeking here) -- generated from one
+  // locked character description so they read as the same mascot instead
+  // of three different-looking illustrations.
+  var MASCOT_SRC = "/mascot.png";
+  var MASCOT_PEEKING_SRC = "/mascot-peeking.png";
+  var MASCOT_IMG = '<img id="faq-bot-mascot-img" src="' + MASCOT_SRC + '" alt="" width="98" height="176">';
 
-  // Same image, cropped via CSS (object-fit/object-position) to just the
-  // head for the chat panel header avatar.
-  var AVATAR_IMG = '<img src="/mascot.png" alt="">';
+  // Same waving image, cropped via CSS (object-fit/object-position) to
+  // just the head for the chat panel header avatar.
+  var AVATAR_IMG = '<img src="' + MASCOT_SRC + '" alt="">';
 
   function lang() {
     return (window.KhatiwadaLang && window.KhatiwadaLang.getLang()) || "en";
@@ -118,7 +121,8 @@
     // validly contain another button.
     var launcher = document.createElement("div");
     launcher.id = "faq-bot-launcher";
-    if (isDismissed()) launcher.classList.add("peeking");
+    var startDismissed = isDismissed();
+    if (startDismissed) launcher.classList.add("peeking");
 
     var openBtn = document.createElement("button");
     openBtn.id = "faq-bot-open";
@@ -126,6 +130,9 @@
     openBtn.setAttribute("aria-label", "Chat with us");
     openBtn.innerHTML = MASCOT_IMG +
       '<span class="faq-bot-hint" data-en="Need help?" data-ne="सहयोग चाहियो?">Need help?</span>';
+    if (startDismissed) {
+      openBtn.querySelector("#faq-bot-mascot-img").src = MASCOT_PEEKING_SRC;
+    }
 
     var dismissBtn = document.createElement("button");
     dismissBtn.id = "faq-bot-dismiss";
@@ -226,6 +233,7 @@
     dismissBtn.addEventListener("click", function (e) {
       e.stopPropagation();
       launcher.classList.add("peeking");
+      openBtn.querySelector("#faq-bot-mascot-img").src = MASCOT_PEEKING_SRC;
       setDismissed();
     });
 
