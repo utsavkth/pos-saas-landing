@@ -62,17 +62,40 @@ img, svg { max-width: 100%; }
 .mobile-menu a { padding: 14px 8px; font-size: 17px; font-weight: 700; text-decoration: none; color: var(--ink); }
 .mobile-menu a.active { color: var(--terracotta); }
 .mobile-menu .btn-primary { margin-top: 8px; text-align: center; }
+.lang-abbr { display: none; }
+
 @media (max-width: 1059px) {
   .nav-links, a.nav-cta-desktop.btn-primary { display: none; }
   .hamburger { display: flex; }
   .mobile-menu.open { display: flex; }
-  /* The header row only has room for the logo + hamburger at phone widths
-     (logo text + full language pill + hamburger doesn't fit and was
-     wrapping onto its own left-aligned line) -- the language toggle moves
-     into the mobile menu drawer instead, see .mobile-lang-switch below. */
-  .nav-right .lang-switch { display: none; }
+  /* The language toggle stays in the header row on mobile rather than being
+     tucked into the drawer. It only fits because everything here is trimmed
+     to make room -- measured at 375px there's ~327px of usable width, and
+     the untouched layout (brand 202 + full pill 127 + hamburger 44 + gaps)
+     needs ~385px, which is what used to push the pill onto its own line.
+     With these values the row holds on a single line down to 320px.
+     Don't restore the full-size values without re-measuring. */
+  .site-nav-inner { padding-left: 14px; padding-right: 14px; }
+  .nav-right { gap: 8px; }
+  .brand-name { font-size: 19px; }
+  .brand img { width: 38px; height: 38px; }
+  .lang-btn { padding: 6px 10px; }
+  /* "नेपाली" -> "ने" (same first syllable, like EN for English): the full
+     word is ~40px wider, which is most of the headroom on a 360px phone. */
+  .lang-full { display: none; }
+  .lang-abbr { display: inline; }
 }
-.mobile-lang-switch { align-self: flex-start; margin-bottom: 10px; }
+
+/* Very narrow phones (~320px, older/compact devices). The values above still
+   overflow by ~11px here, so trim once more rather than let the row wrap. */
+@media (max-width: 360px) {
+  .site-nav-inner { padding-left: 12px; padding-right: 12px; }
+  .nav-right { gap: 6px; }
+  .brand { gap: 8px; }
+  .brand-name { font-size: 17px; }
+  .brand img { width: 34px; height: 34px; }
+  .lang-btn { padding: 6px 9px; font-size: 13px; }
+}
 
 /* ---- Buttons ---- */
 .btn-primary {
