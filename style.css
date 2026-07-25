@@ -110,20 +110,48 @@ img, svg { max-width: 100%; }
 .footer-heading { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #8FA298; margin-bottom: 16px; }
 
 /* ---- FAQ chat bot ---- */
+/* #faq-bot-launcher is a plain wrapper div (not a button -- it holds two
+   real buttons, #faq-bot-open and #faq-bot-dismiss, and a button can't
+   validly contain another button). Position/size/animation/the peeking
+   slide all live here; the buttons inside just fill it. */
 #faq-bot-launcher {
   position: fixed; right: 18px; bottom: 18px; z-index: 60;
-  width: 124px; height: 222px; border: none; background: none; cursor: pointer; padding: 0;
+  width: 124px; height: 222px;
   filter: drop-shadow(0 10px 22px rgba(43,32,25,0.22));
   animation: faqbot-bob 3.4s ease-in-out infinite;
+  transition: right 0.25s ease;
 }
-#faq-bot-launcher:hover, #faq-bot-launcher:focus-visible { animation-play-state: paused; transform: translateY(-4px); outline: none; }
-#faq-bot-launcher img { width: 100%; height: 100%; display: block; object-fit: contain; }
+#faq-bot-launcher:hover, #faq-bot-launcher:focus-within { animation-play-state: paused; transform: translateY(-4px); }
+#faq-bot-open {
+  display: block; width: 100%; height: 100%; position: relative;
+  border: none; background: none; padding: 0; cursor: pointer; outline: none;
+}
+#faq-bot-open img { width: 100%; height: 100%; display: block; object-fit: contain; }
 @keyframes faqbot-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 .faq-bot-hint {
   position: absolute; top: 2px; right: 82px; background: var(--white); border: 1px solid var(--tan-border);
   border-radius: 14px 14px 4px 14px; padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--ink);
   white-space: nowrap; box-shadow: 0 6px 16px rgba(43,32,25,0.12);
 }
+#faq-bot-dismiss {
+  position: absolute; top: -4px; right: -4px; z-index: 2;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--white); border: 1px solid var(--tan-border); color: var(--brown);
+  font-size: 15px; line-height: 1; padding: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(43,32,25,0.18);
+}
+#faq-bot-dismiss:hover { background: var(--cream-2); color: var(--terracotta-dark); }
+/* Dismissed state: mascot slides mostly off-screen to the right, just a
+   sliver peeking in -- still fully clickable (that sliver is still part of
+   the full-size #faq-bot-open button underneath), still bobs gently to
+   read as "here if you need me." Persisted site-wide via localStorage
+   (see DISMISSED_KEY in faq-bot.js), so once dismissed it stays peeking
+   on every page, not just the one it was dismissed on. */
+#faq-bot-launcher.peeking { right: -80px; }
+#faq-bot-launcher.peeking:hover { right: -40px; }
+#faq-bot-launcher.peeking .faq-bot-hint,
+#faq-bot-launcher.peeking #faq-bot-dismiss { display: none; }
 #faq-bot-panel {
   position: fixed; right: 18px; bottom: 18px; z-index: 61;
   width: min(340px, calc(100vw - 36px)); max-height: min(500px, calc(100vh - 36px));
@@ -166,6 +194,7 @@ img, svg { max-width: 100%; }
 #faq-bot-input-form button:hover { background: var(--terracotta-dark); }
 @media (max-width: 480px) {
   #faq-bot-launcher { right: 10px; bottom: 10px; width: 108px; height: 194px; }
+  #faq-bot-launcher.peeking { right: -68px; }
   .faq-bot-hint { font-size: 11.5px; padding: 6px 10px; right: 96px; }
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
 }

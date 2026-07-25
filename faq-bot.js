@@ -98,13 +98,43 @@
     return (window.KhatiwadaLang && window.KhatiwadaLang.getLang()) || "en";
   }
 
+  // Persists across the whole site (every page reads this on load), same
+  // localStorage convention as script.js's language toggle. Once a visitor
+  // dismisses the mascot to its "peeking" state, it stays peeking on every
+  // page from then on -- still clickable, just out of the way.
+  var DISMISSED_KEY = "khatiwada_mascot_dismissed";
+
+  function isDismissed() {
+    try { return localStorage.getItem(DISMISSED_KEY) === "1"; } catch (e) { return false; }
+  }
+
+  function setDismissed() {
+    try { localStorage.setItem(DISMISSED_KEY, "1"); } catch (e) {}
+  }
+
   function build() {
-    var launcher = document.createElement("button");
+    // A wrapper div, not a button itself -- it holds two separate real
+    // buttons (open chat / dismiss to peeking), and a button can't
+    // validly contain another button.
+    var launcher = document.createElement("div");
     launcher.id = "faq-bot-launcher";
-    launcher.type = "button";
-    launcher.setAttribute("aria-label", "Chat with us");
-    launcher.innerHTML = MASCOT_IMG +
+    if (isDismissed()) launcher.classList.add("peeking");
+
+    var openBtn = document.createElement("button");
+    openBtn.id = "faq-bot-open";
+    openBtn.type = "button";
+    openBtn.setAttribute("aria-label", "Chat with us");
+    openBtn.innerHTML = MASCOT_IMG +
       '<span class="faq-bot-hint" data-en="Need help?" data-ne="सहयोग चाहियो?">Need help?</span>';
+
+    var dismissBtn = document.createElement("button");
+    dismissBtn.id = "faq-bot-dismiss";
+    dismissBtn.type = "button";
+    dismissBtn.setAttribute("aria-label", "Dismiss");
+    dismissBtn.innerHTML = "&times;";
+
+    launcher.appendChild(openBtn);
+    launcher.appendChild(dismissBtn);
 
     var panel = document.createElement("div");
     panel.id = "faq-bot-panel";
@@ -190,8 +220,14 @@
       launcher.style.display = "";
     }
 
-    launcher.addEventListener("click", open);
+    openBtn.addEventListener("click", open);
     panel.querySelector("#faq-bot-close").addEventListener("click", close);
+
+    dismissBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      launcher.classList.add("peeking");
+      setDismissed();
+    });
 
     inputForm.addEventListener("submit", function (e) {
       e.preventDefault();
