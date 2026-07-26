@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Khatiwada POS: The POS your shop can start using today</title>
+<meta name="description" content="Khatiwada POS is a cloud point-of-sale for retail shops in Nepal — billing, barcode scanning, stock tracking, and daily sales reports from any phone, tablet, or computer.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Khatiwada POS">
+<meta property="og:title" content="Khatiwada POS: The POS your shop can start using today">
+<meta property="og:description" content="Billing, barcode scanning, stock tracking, and daily sales reports from any phone, tablet, or computer — no hardware, no setup.">
+<meta property="og:url" content="https://possaas.chickenkiller.com/">
+<meta property="og:image" content="https://possaas.chickenkiller.com/hero-shopfront.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
@@ -36,10 +43,10 @@
         <button class="lang-btn" data-lang="ne"><span class="lang-full">नेपाली</span><span class="lang-abbr">ने</span></button>
       </div>
       <a href="/login" class="btn-primary small nav-cta-desktop" data-en="Log In" data-ne="लग इन">Log In</a>
-      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="mobile-menu">
+  <div class="mobile-menu" id="mobile-menu">
     <a href="/" class="active" data-en="Home" data-ne="होम">Home</a>
     <a href="/features" data-en="Features" data-ne="फिचर्स">Features</a>
     <a href="/pricing" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
@@ -54,15 +61,18 @@
     <div style="flex:1 1 480px;min-width:300px">
       <div class="kicker" data-en="For every shop in Nepal" data-ne="नेपालका हरेक पसलका लागि">For every shop in Nepal</div>
       <h1 style="font-family:var(--font-heading);font-size:clamp(32px,4.6vw,54px);line-height:1.12;font-weight:800;margin:0 0 20px;color:var(--ink)"
-          data-en="The POS your shop can start using today, no hardware, no setup."
-          data-ne="तपाईंको पसलले आजैबाट प्रयोग गर्न सक्ने POS, न हार्डवेयर, न सेटअप।">The POS your shop can start using today, no hardware, no setup.</h1>
-      <p style="font-size:clamp(17px,2vw,20px);line-height:1.65;color:var(--brown);margin:0 0 32px;max-width:540px"
-         data-en="Open a browser on the phone or tablet you already own, start scanning barcodes, and you're taking sales in minutes."
-         data-ne="तपाईंसँग भइरहेको फोन वा ट्याब्लेटमा ब्राउजर खोल्नुहोस्, बारकोड स्क्यान गर्न सुरु गर्नुहोस्, र मिनेटभित्रै बिक्री सुरु गर्नुहोस्।">Open a browser on the phone or tablet you already own, start scanning barcodes, and you're taking sales in minutes.</p>
+          data-en="Cloud POS for shops across Nepal"
+          data-ne="नेपालभरका पसलका लागि क्लाउड POS">Cloud POS for shops across Nepal</h1>
+      <p style="font-size:clamp(17px,2vw,20px);line-height:1.65;color:var(--brown);margin:0 0 20px;max-width:540px"
+         data-en="Create bills in seconds, scan barcodes with your phone's camera, and keep stock and daily sales in one place."
+         data-ne="मिनेटभित्रै बिल बनाउनुहोस्, फोनको क्यामेराले बारकोड स्क्यान गर्नुहोस्, र स्टक तथा दैनिक बिक्री एकै ठाउँमा राख्नुहोस्।">Create bills in seconds, scan barcodes with your phone's camera, and keep stock and daily sales in one place.</p>
       <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
         <a href="/login" class="btn-primary" data-en="Get Started" data-ne="सुरु गर्नुहोस्">Get Started</a>
         <a href="/features" class="btn-secondary"><span data-en="See all features" data-ne="सबै सुविधाहरू हेर्नुहोस्">See all features</span> →</a>
       </div>
+      <p style="font-size:14px;color:var(--brown-2);margin:16px 0 0;font-weight:600"
+         data-en="Works on the phone, tablet, or computer you already have."
+         data-ne="तपाईंसँग भइरहेको फोन, ट्याब्लेट, वा कम्प्युटरमै चल्छ।">Works on the phone, tablet, or computer you already have.</p>
     </div>
 
     <div class="hero-mockup" style="flex:1 1 340px;min-width:280px;max-width:400px;margin:0 auto">
@@ -166,6 +176,25 @@
     </div>
   </section>
 
+  <section style="max-width:1180px;margin:0 auto;padding:clamp(32px, 8vw, 56px) 24px">
+    <h2 class="section-title" style="font-size:clamp(26px,3.4vw,38px);text-align:center;margin:0 0 12px" data-en="See it in action" data-ne="वास्तविक प्रयोगमा हेर्नुहोस्">See it in action</h2>
+    <p style="font-size:17px;color:var(--brown);margin:0 0 40px;text-align:center" data-en="Real screens from a real shop running Khatiwada POS today." data-ne="आज खटीवाडा POS चलाइरहेको वास्तविक पसलका वास्तविक स्क्रिनहरू।">Real screens from a real shop running Khatiwada POS today.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+      <figure style="margin:0;background:var(--white);border:1px solid var(--tan-border);border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(43,32,25,0.08)">
+        <img src="/screenshot-cashier.jpg" alt="Khatiwada POS cashier screen mid-sale, showing four items and a running total" style="display:block;width:100%;height:auto">
+        <figcaption style="padding:14px 18px;font-size:14.5px;font-weight:700;color:var(--ink)" data-en="Cashier screen — ring up a sale in seconds" data-ne="क्यासियर स्क्रिन — सेकेन्डभित्रै बिक्री गर्नुहोस्">Cashier screen — ring up a sale in seconds</figcaption>
+      </figure>
+      <figure style="margin:0;background:var(--white);border:1px solid var(--tan-border);border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(43,32,25,0.08)">
+        <img src="/screenshot-products.jpg" alt="Khatiwada POS product list showing item names, barcodes, categories, prices, and stock status" style="display:block;width:100%;height:auto">
+        <figcaption style="padding:14px 18px;font-size:14.5px;font-weight:700;color:var(--ink)" data-en="Products & stock, kept in one place" data-ne="प्रोडक्ट र स्टक, एकै ठाउँमा">Products &amp; stock, kept in one place</figcaption>
+      </figure>
+      <figure style="margin:0;background:var(--white);border:1px solid var(--tan-border);border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(43,32,25,0.08)">
+        <img src="/screenshot-reports.jpg" alt="Khatiwada POS sales reports showing daily, weekly, and monthly totals" style="display:block;width:100%;height:auto">
+        <figcaption style="padding:14px 18px;font-size:14.5px;font-weight:700;color:var(--ink)" data-en="Sales reports, built in" data-ne="बिक्री रिपोर्ट, पहिल्यै तयार">Sales reports, built in</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section style="background:#F3E3D3;padding:clamp(32px, 8vw, 80px) 24px">
     <div style="max-width:1100px;margin:0 auto;text-align:center">
       <h2 class="section-title" style="font-size:clamp(26px,3.4vw,38px)" data-en="How it works" data-ne="यसले कसरी काम गर्छ">How it works</h2>
@@ -190,12 +219,71 @@
     </div>
   </section>
 
+  <section style="max-width:1000px;margin:0 auto;padding:clamp(32px, 8vw, 56px) 24px">
+    <h2 class="section-title" style="font-size:clamp(26px,3.4vw,38px);text-align:center;margin:0 0 12px" data-en="Why shops switch to Khatiwada POS" data-ne="पसलहरू किन खटीवाडा POS मा सर्छन्">Why shops switch to Khatiwada POS</h2>
+    <p style="font-size:17px;color:var(--brown);margin:0 0 40px;text-align:center" data-en="The same shop, run a little differently." data-ne="उही पसल, अलि फरक तरिकाले चलाइएको।">The same shop, run a little differently.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border:1px solid var(--tan-border);border-radius:20px;overflow:hidden">
+      <div style="background:#FBF6ED;padding:28px">
+        <div style="font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:var(--brown-2);margin-bottom:20px" data-en="With notebooks or a basic register" data-ne="कापी वा साधारण क्यास मेसिनमा">With notebooks or a basic register</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <p style="font-size:15.5px;line-height:1.6;color:var(--brown);margin:0" data-en="Billing is handwritten or entered one line at a time, slow, and easy to get wrong." data-ne="बिल हातैले वा एक-एक लाइन गरी लेखिन्छ, ढिलो हुन्छ, र गल्ती हुने सम्भावना धेरै हुन्छ।">Billing is handwritten or entered one line at a time, slow, and easy to get wrong.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--brown);margin:0" data-en="Stock is tracked by memory or on paper, items go missing without anyone noticing." data-ne="स्टक सम्झना वा कागजमा राखिन्छ, सामान हराए पनि थाहै हुँदैन।">Stock is tracked by memory or on paper, items go missing without anyone noticing.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--brown);margin:0" data-en="Old sales are hard to look back on, there's no simple way to check last month's numbers." data-ne="पुरानो बिक्री हेर्न गाह्रो हुन्छ, गएको महिनाको तथ्याङ्क जाँच्ने सजिलो तरिका हुँदैन।">Old sales are hard to look back on, there's no simple way to check last month's numbers.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:var(--brown);margin:0" data-en="Usually only the owner really understands how everything is organized." data-ne="प्रायः पसल मालिकले मात्र सबै कुरा कसरी मिलाइएको छ भन्ने बुझेका हुन्छन्।">Usually only the owner really understands how everything is organized.</p>
+        </div>
+      </div>
+      <div style="background:var(--green);padding:28px">
+        <div style="font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:#8FD6A8;margin-bottom:20px" data-en="With Khatiwada POS" data-ne="खटीवाडा POS सँग">With Khatiwada POS</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <p style="font-size:15.5px;line-height:1.6;color:#FBF6ED;margin:0" data-en="Scan a barcode and the item, price, and running total are added in seconds." data-ne="बारकोड स्क्यान गर्नुहोस्, सामान, मूल्य, र जम्मा रकम सेकेन्डभित्रै थपिन्छ।">Scan a barcode and the item, price, and running total are added in seconds.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:#FBF6ED;margin:0" data-en="Stock updates automatically with every sale, so you always know what's left." data-ne="हरेक बिक्रीसँगै स्टक आफै अपडेट हुन्छ, तपाईंलाई सधैं थाहा हुन्छ कति बाँकी छ।">Stock updates automatically with every sale, so you always know what's left.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:#FBF6ED;margin:0" data-en="Every sale is recorded automatically, check any day's or month's numbers anytime." data-ne="हरेक बिक्री स्वतः रेकर्ड हुन्छ, जुनसुकै दिन वा महिनाको तथ्याङ्क जुनसुकै बेला हेर्न सकिन्छ।">Every sale is recorded automatically, check any day's or month's numbers anytime.</p>
+          <p style="font-size:15.5px;line-height:1.6;color:#FBF6ED;margin:0" data-en="Any staff member can use it comfortably, in English or Nepali." data-ne="जुनसुकै स्टाफले सजिलैसँग प्रयोग गर्न सक्छन्, अंग्रेजी वा नेपालीमा।">Any staff member can use it comfortably, in English or Nepali.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:760px;margin:0 auto;padding:clamp(32px, 8vw, 56px) 24px">
+    <h2 class="section-title" style="font-size:clamp(26px,3.4vw,38px);text-align:center;margin:0 0 40px" data-en="Frequently asked questions" data-ne="बारम्बार सोधिने प्रश्नहरू">Frequently asked questions</h2>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="What is Khatiwada POS?" data-ne="खटीवाडा POS के हो?">What is Khatiwada POS?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="Khatiwada POS is a simple point-of-sale system that runs on the phone or tablet you already have. No special hardware to buy. Scan barcodes with your camera, and manage sales, stock, and reports from one place." data-ne="खटीवाडा POS एउटा सजिलो पसल बिक्री प्रणाली हो, जुन तपाईंसँग भइरहेको फोन वा ट्याब्लेटमा नै चल्छ। छुट्टै हार्डवेयर किन्नु पर्दैन। क्यामेराले बारकोड स्क्यान गर्नुहोस्, र बिक्री, स्टक, रिपोर्ट सबै एकै ठाउँबाट व्यवस्थापन गर्नुहोस्।">Khatiwada POS is a simple point-of-sale system that runs on the phone or tablet you already have. No special hardware to buy. Scan barcodes with your camera, and manage sales, stock, and reports from one place.</p>
+      </details>
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="Do I need to buy any special hardware?" data-ne="के मैले कुनै विशेष हार्डवेयर किन्नु पर्छ?">Do I need to buy any special hardware?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="No. Any phone, tablet, or laptop with a camera and a browser is enough. You can pair a dedicated barcode scanner if you already have one, but it's never required." data-ne="पर्दैन। क्यामेरा र ब्राउजर भएको फोन, ट्याब्लेट, वा ल्यापटप भए पुग्छ। तपाईंसँग पहिल्यै बारकोड स्क्यानर छ भने त्यो पनि जोड्न सकिन्छ, तर त्यो कहिल्यै आवश्यक छैन।">No. Any phone, tablet, or laptop with a camera and a browser is enough. You can pair a dedicated barcode scanner if you already have one, but it's never required.</p>
+      </details>
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="How much does it cost?" data-ne="यसको मूल्य कति हो?">How much does it cost?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="We have Starter and Growth plans, but pricing isn't finalized yet. We're still working that out. Reach out via the Contact page and we'll talk you through it." data-ne="हामीसँग Starter र Growth दुई प्लान छन्, तर मूल्य अझै टुंगिएको छैन। हामी त्यसमा काम गरिरहेका छौं। Contact पेजबाट सम्पर्क गर्नुहोस्, हामी विस्तारमा कुरा गर्छौं।">We have Starter and Growth plans, but pricing isn't finalized yet. We're still working that out. Reach out via the Contact page and we'll talk you through it.</p>
+      </details>
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="Does it work in Nepali?" data-ne="के यो नेपालीमा चल्छ?">Does it work in Nepali?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="Yes, one tap switches the entire cashier screen between English and Nepali, so every staff member can use it comfortably." data-ne="हो, एउटा ट्यापले पूरै क्यासियर स्क्रिन अंग्रेजी र नेपाली बीच बदलिन्छ, ताकि हरेक स्टाफले सजिलै प्रयोग गर्न सकून्।">Yes, one tap switches the entire cashier screen between English and Nepali, so every staff member can use it comfortably.</p>
+      </details>
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="Is my shop's data private?" data-ne="मेरो पसलको डेटा सुरक्षित छ?">Is my shop's data private?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="Yes, your shop's data stays private to your account only. It's not shared with or visible to other shops using Khatiwada POS." data-ne="हो, तपाईंको पसलको डेटा तपाईंको खातामा मात्र निजी रहन्छ। यो खटीवाडा POS प्रयोग गर्ने अरू पसलहरूसँग साझा हुँदैन।">Yes, your shop's data stays private to your account only. It's not shared with or visible to other shops using Khatiwada POS.</p>
+      </details>
+      <details style="background:#FBF6ED;border:1px solid var(--tan-border);border-radius:16px;padding:18px 22px">
+        <summary style="cursor:pointer;font-family:var(--font-heading);font-weight:700;font-size:16.5px;color:var(--ink)" data-en="How do I get started?" data-ne="कसरी सुरु गर्ने?">How do I get started?</summary>
+        <p style="font-size:15.5px;line-height:1.7;color:var(--brown);margin:14px 0 0" data-en="Tap “Get Started” or “Log In” on any page, then “Create your account.” Fill in a few details about your shop and one of our team will reach out to set everything up." data-ne="जुनसुकै पेजमा “Get Started” वा “Log In” थिच्नुहोस्, त्यसपछि “Create your account.” आफ्नो पसलको बारेमा केही जानकारी भर्नुहोस्, हाम्रो टिमले चाँडै सम्पर्क गरेर सबै सेटअप गरिदिनेछ।">Tap “Get Started” or “Log In” on any page, then “Create your account.” Fill in a few details about your shop and one of our team will reach out to set everything up.</p>
+      </details>
+    </div>
+  </section>
+
   <section style="padding:clamp(32px, 8vw, 72px) 24px;text-align:center">
     <h2 class="section-title" style="font-size:clamp(24px,3vw,32px)" data-en="Ready to try it in your shop?" data-ne="आफ्नो पसलमा प्रयोग गरेर हेर्न तयार हुनुहुन्छ?">Ready to try it in your shop?</h2>
     <p style="font-size:17px;color:var(--brown);margin:0 0 28px" data-en="Set up your account in a couple of minutes, no card required to start." data-ne="केही मिनेटमा आफ्नो खाता बनाउनुहोस्, सुरु गर्न कार्ड चाहिँदैन।">Set up your account in a couple of minutes, no card required to start.</p>
     <a href="/login" class="btn-primary" data-en="Get Started" data-ne="सुरु गर्नुहोस्">Get Started</a>
   </section>
 </main>
+
+<div class="sticky-mobile-cta">
+  <a href="/login" class="btn-primary" data-en="Get Started" data-ne="सुरु गर्नुहोस्">Get Started</a>
+</div>
 
 <footer class="site-footer">
   <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between">
