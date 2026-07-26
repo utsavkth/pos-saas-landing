@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Log In: Khatiwada POS</title>
+<meta name="description" content="Log in to your Khatiwada POS shop dashboard, or create a new account to get started.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Khatiwada POS">
+<meta property="og:title" content="Log In: Khatiwada POS">
+<meta property="og:description" content="Log in to your Khatiwada POS shop dashboard, or create a new account to get started.">
+<meta property="og:url" content="https://possaas.chickenkiller.com/login">
+<meta property="og:image" content="https://possaas.chickenkiller.com/hero-shopfront.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
@@ -32,10 +39,10 @@
         <button class="lang-btn" data-lang="en">EN</button>
         <button class="lang-btn" data-lang="ne"><span class="lang-full">नेपाली</span><span class="lang-abbr">ने</span></button>
       </div>
-      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="mobile-menu">
+  <div class="mobile-menu" id="mobile-menu">
     <a href="/" data-en="Home" data-ne="होम">Home</a>
     <a href="/features" data-en="Features" data-ne="फिचर्स">Features</a>
     <a href="/pricing" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
@@ -567,31 +574,28 @@
     var originalBtnText = submitBtn.textContent;
     submitBtn.textContent = "...";
 
-    fetch("https://formsubmit.co/ajax/khatiwadastore@gmail.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        _subject: "New Khatiwada POS signup request",
-        store_name: storeInput.value,
-        requested_subdomain: window.slugify(storeInput.value) + ".khatiwadapos.com",
-        contact_name: contactNameInput.value,
-        phone: phoneInput.value,
-        email: emailInput.value,
-        city: cityInput.value,
-        shop_type: shopTypeInput.value,
-        staff_count: staffCountInput.value,
-        pos_familiarity: posFamiliarityInput.value,
-        plan: planInput.value
-      })
-    }).then(function (res) {
-      if (!res.ok) { throw new Error("request failed"); }
-      document.getElementById("signup-form-wrap").style.display = "none";
-      document.getElementById("signup-sent-wrap").style.display = "flex";
-    }).catch(function () {
-      submitBtn.textContent = originalBtnText;
-      signupErrorEl.style.display = "block";
-      updateSignupState();
-    });
+    var signupBody = new FormData();
+    signupBody.append("store_name", storeInput.value);
+    signupBody.append("requested_subdomain", window.slugify(storeInput.value) + ".khatiwadapos.com");
+    signupBody.append("contact_name", contactNameInput.value);
+    signupBody.append("phone", phoneInput.value);
+    signupBody.append("email", emailInput.value);
+    signupBody.append("city", cityInput.value);
+    signupBody.append("shop_type", shopTypeInput.value);
+    signupBody.append("staff_count", staffCountInput.value);
+    signupBody.append("pos_familiarity", posFamiliarityInput.value);
+    signupBody.append("plan", planInput.value);
+
+    fetch(ACCOUNTS_API_BASE + "/signup-request", { method: "POST", body: signupBody })
+      .then(function (res) {
+        if (!res.ok) { throw new Error("request failed"); }
+        document.getElementById("signup-form-wrap").style.display = "none";
+        document.getElementById("signup-sent-wrap").style.display = "flex";
+      }).catch(function () {
+        submitBtn.textContent = originalBtnText;
+        signupErrorEl.style.display = "block";
+        updateSignupState();
+      });
   });
 })();
 </script>

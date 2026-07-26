@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact: Khatiwada POS</title>
+<meta name="description" content="Get in touch with the Khatiwada POS team — questions about pricing, features, or setting up your shop are welcome.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Khatiwada POS">
+<meta property="og:title" content="Contact: Khatiwada POS">
+<meta property="og:description" content="Get in touch with the Khatiwada POS team — questions about pricing, features, or setting up your shop are welcome.">
+<meta property="og:url" content="https://possaas.chickenkiller.com/contact">
+<meta property="og:image" content="https://possaas.chickenkiller.com/hero-shopfront.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
@@ -33,10 +40,10 @@
         <button class="lang-btn" data-lang="ne"><span class="lang-full">नेपाली</span><span class="lang-abbr">ने</span></button>
       </div>
       <a href="/login" class="btn-primary small nav-cta-desktop" data-en="Log In" data-ne="लग इन">Log In</a>
-      <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="mobile-menu">
+  <div class="mobile-menu" id="mobile-menu">
     <a href="/" data-en="Home" data-ne="होम">Home</a>
     <a href="/features" data-en="Features" data-ne="फिचर्स">Features</a>
     <a href="/pricing" data-en="Pricing" data-ne="प्राइसिङ">Pricing</a>
@@ -61,16 +68,17 @@
       <form id="contact-form" style="display:flex;flex-direction:column;gap:20px">
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Name" data-ne="नाम">Name</span>
-          <input name="name" placeholder="Your name" data-en-placeholder="Your name" data-ne-placeholder="तपाईंको नाम" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+          <input name="name" required placeholder="Your name" data-en-placeholder="Your name" data-ne-placeholder="तपाईंको नाम" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
         </label>
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Email address" data-ne="इमेल ठेगाना">Email address</span>
-          <input type="email" name="email" placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+          <input type="email" name="email" required placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
         </label>
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Message" data-ne="सन्देश">Message</span>
-          <textarea name="message" rows="5" placeholder="Tell us about your shop or ask a question..." data-en-placeholder="Tell us about your shop or ask a question..." data-ne-placeholder="आफ्नो पसल वा प्रश्नको बारेमा लेख्नुहोस्..." style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink);resize:vertical"></textarea>
+          <textarea name="message" required rows="5" placeholder="Tell us about your shop or ask a question..." data-en-placeholder="Tell us about your shop or ask a question..." data-ne-placeholder="आफ्नो पसल वा प्रश्नको बारेमा लेख्नुहोस्..." style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink);resize:vertical"></textarea>
         </label>
+        <span id="contact-error" style="display:none;font-size:14px;color:#B5502C" data-en="Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com." data-ne="केही समस्या भयो। फेरि प्रयास गर्नुहोस्, वा हामीलाई सिधै hello@khatiwadapos.com मा इमेल गर्नुहोस्।">Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com.</span>
         <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;font-weight:800;font-size:17px;padding:16px 24px;border-radius:999px;font-family:var(--font-body)" data-en="Send message" data-ne="सन्देश पठाउनुहोस्">Send message</button>
       </form>
     </div>
@@ -137,11 +145,37 @@
 <script src="/script.js"></script>
 <script src="/faq-bot.js"></script>
 <script>
-  document.getElementById("contact-form").addEventListener("submit", function (e) {
+  // Points at the pos-saas-accounts backend. On localhost (dev), that's a
+  // separate port; everywhere else, a relative path — Caddy reverse-proxies
+  // /contact on the same origin to that backend, so no CORS is needed live.
+  var ACCOUNTS_API_BASE =
+    (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://127.0.0.1:5090"
+      : "";
+
+  var contactForm = document.getElementById("contact-form");
+  var contactErrorEl = document.getElementById("contact-error");
+
+  contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    this.style.display = "none";
-    var success = document.getElementById("contact-success");
-    success.style.display = "flex";
+    contactErrorEl.style.display = "none";
+    var submitBtn = contactForm.querySelector("button[type=submit]");
+    var originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+
+    var body = new FormData(contactForm);
+    fetch(ACCOUNTS_API_BASE + "/contact", { method: "POST", body: body })
+      .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        if (!result.ok) { throw new Error(result.data.error || "request failed"); }
+        contactForm.style.display = "none";
+        document.getElementById("contact-success").style.display = "flex";
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        contactErrorEl.style.display = "block";
+      });
   });
 </script>
 </body>
