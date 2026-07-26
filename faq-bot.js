@@ -90,7 +90,11 @@
   // locked character description so they read as the same mascot instead
   // of three different-looking illustrations.
   var MASCOT_SRC = "/mascot.png";
-  var MASCOT_PEEKING_SRC = "/mascot-peeking.png";
+  // Two separate peeking illustrations rather than one CSS-mirrored image:
+  // her saree is asymmetric (the red pallu drapes over one shoulder), as is
+  // the hair parting, so transform: scaleX(-1) would put the pallu on the
+  // wrong shoulder and quietly stop matching the waving/basket poses.
+  var MASCOT_PEEKING_SRC = { right: "/mascot-peeking.png", left: "/mascot-peeking-left.png" };
   var MASCOT_IMG = '<img id="faq-bot-mascot-img" src="' + MASCOT_SRC + '" alt="" width="98" height="176">';
 
   // Same waving image, cropped via CSS (object-fit/object-position) to
@@ -129,6 +133,20 @@
       localStorage.setItem(STATE_KEY, state);
       localStorage.removeItem(LEGACY_DISMISSED_KEY);
     } catch (e) {}
+  }
+
+  // Which edge she lives on. Right is the default and stays the default --
+  // moving her is an opt-in the visitor performs by dragging, not something
+  // that ever happens on its own.
+  var SIDE_KEY = "khatiwada_mascot_side";
+
+  function getSide() {
+    try { return localStorage.getItem(SIDE_KEY) === "left" ? "left" : "right"; }
+    catch (e) { return "right"; }
+  }
+
+  function saveSide(side) {
+    try { localStorage.setItem(SIDE_KEY, side); } catch (e) {}
   }
 
   // Brief reassurance bubble shown once, right at the moment she's
@@ -280,6 +298,7 @@
     };
 
     var state = getState();
+    var side = getSide();
     var mascotImg = openBtn.querySelector("#faq-bot-mascot-img");
 
     // Single place that reconciles the DOM with the current state, so the
@@ -290,7 +309,9 @@
       state = newState;
       launcher.classList.toggle("peeking", state === "peeking");
       launcher.classList.toggle("hidden", state === "hidden");
-      mascotImg.src = state === "peeking" ? MASCOT_PEEKING_SRC : MASCOT_SRC;
+      launcher.classList.toggle("side-left", side === "left");
+      panel.classList.toggle("side-left", side === "left");
+      mascotImg.src = state === "peeking" ? MASCOT_PEEKING_SRC[side] : MASCOT_SRC;
       dismissBtn.setAttribute(
         "aria-label", state === "peeking" ? "Hide the help assistant" : "Tuck the help assistant aside"
       );
@@ -340,6 +361,65 @@
         if (menu) menu.classList.remove("open");
       });
     });
+
+    // ---- Drag her to the other edge ----------------------------------
+    // She defaults to the right and only ever moves because the visitor
+    // dragged her there. Pointer events rather than mouse+touch pairs so
+    // one code path covers finger, mouse, and stylus.
+    //
+    // The fiddly part is that the thing you drag is also the button that
+    // opens the chat: a tap must still open it, but a drag must not. So
+    // movement is measured against a small threshold, and only a real drag
+    // suppresses the click that the browser fires afterwards.
+    var DRAG_THRESHOLD = 8;
+    var drag = null;
+
+    launcher.addEventListener("pointerdown", function (e) {
+      if (state === "hidden" || e.target.closest("#faq-bot-dismiss")) return;
+      drag = { startX: e.clientX, startY: e.clientY, moved: false, pointerId: e.pointerId };
+      launcher.setPointerCapture(e.pointerId);
+    });
+
+    launcher.addEventListener("pointermove", function (e) {
+      if (!drag || e.pointerId !== drag.pointerId) return;
+      var dx = e.clientX - drag.startX;
+      var dy = e.clientY - drag.startY;
+      if (!drag.moved && Math.abs(dx) + Math.abs(dy) < DRAG_THRESHOLD) return;
+      drag.moved = true;
+      launcher.classList.add("dragging");
+      // Follow the finger 1:1 while held. This is a transform on top of
+      // whatever the current side/state CSS already positions, so nothing
+      // here has to know about those offsets.
+      launcher.style.transform = "translate(" + dx + "px, " + dy + "px)";
+    });
+
+    function endDrag(e) {
+      if (!drag || e.pointerId !== drag.pointerId) return;
+      var wasDrag = drag.moved;
+      var dropX = e.clientX;
+      drag = null;
+      launcher.classList.remove("dragging");
+      launcher.style.transform = "";
+      if (!wasDrag) return;
+
+      // Snap to whichever half of the screen she was let go in.
+      var newSide = dropX < window.innerWidth / 2 ? "left" : "right";
+      if (newSide !== side) {
+        side = newSide;
+        saveSide(side);
+        applyState(state);
+      }
+      // Swallow the click the browser fires after the pointer sequence, so
+      // dragging her doesn't also pop the chat open.
+      launcher.addEventListener("click", function swallow(ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        launcher.removeEventListener("click", swallow, true);
+      }, true);
+    }
+
+    launcher.addEventListener("pointerup", endDrag);
+    launcher.addEventListener("pointercancel", endDrag);
 
     inputForm.addEventListener("submit", function (e) {
       e.preventDefault();

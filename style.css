@@ -149,10 +149,25 @@ img, svg { max-width: 100%; }
   height: var(--mascot-h); width: calc(var(--mascot-h) * 0.5576);
   filter: drop-shadow(0 10px 22px rgba(43,32,25,0.22));
   animation: faqbot-bob 3.4s ease-in-out infinite;
-  transition: right 0.25s ease, opacity 0.2s ease;
+  transition: right 0.25s ease, left 0.25s ease, opacity 0.2s ease;
+  /* Stops the browser claiming the gesture for scrolling before the drag
+     handler sees it -- without this, dragging her on a phone just scrolls. */
+  touch-action: none;
 }
 #faq-bot-launcher.hidden { display: none; }
 #faq-bot-launcher:hover, #faq-bot-launcher:focus-within { animation-play-state: paused; transform: translateY(-4px); }
+/* While actually being dragged: no bob, no hover-lift, no position easing --
+   all three would fight the inline transform that follows the pointer. */
+#faq-bot-launcher.dragging,
+#faq-bot-launcher.dragging:hover {
+  animation: none; transition: none; cursor: grabbing;
+  filter: drop-shadow(0 16px 30px rgba(43,32,25,0.32));
+}
+#faq-bot-open { cursor: grab; }
+#faq-bot-launcher.dragging #faq-bot-open { cursor: grabbing; }
+/* Moved to the left edge by dragging. `right: auto` matters -- without it
+   both offsets apply and she'd stretch across the viewport. */
+#faq-bot-launcher.side-left { right: auto; left: 18px; }
 #faq-bot-open {
   display: block; width: 100%; height: 100%; position: relative;
   border: none; background: none; padding: 0; cursor: pointer; outline: none;
@@ -163,6 +178,11 @@ img, svg { max-width: 100%; }
   position: absolute; top: 2px; right: 82px; background: var(--white); border: 1px solid var(--tan-border);
   border-radius: 14px 14px 4px 14px; padding: 7px 13px; font-size: 12.5px; font-weight: 700; color: var(--ink);
   white-space: nowrap; box-shadow: 0 6px 16px rgba(43,32,25,0.12);
+}
+/* On the left edge the bubble flips to her other side, and the tail corner
+   flips with it so it still points back toward her. */
+#faq-bot-launcher.side-left .faq-bot-hint {
+  right: auto; left: 82px; border-radius: 14px 14px 14px 4px;
 }
 /* The BUTTON is a full 44x44 touch target (Apple HIG minimum; Material
    says 48) but draws nothing itself -- the visible 26px circle is the inner
@@ -190,6 +210,8 @@ img, svg { max-width: 100%; }
 /* While peeking she sits partly off-screen to the right, so the button has
    to be pulled back inward or it'd hang off the edge with her. */
 #faq-bot-launcher.peeking #faq-bot-dismiss { right: 18px; }
+#faq-bot-launcher.side-left #faq-bot-dismiss { right: auto; left: 0; }
+#faq-bot-launcher.side-left.peeking #faq-bot-dismiss { right: auto; left: 18px; }
 /* Brief "I'll be here if you need me!" bubble -- shown once by
    faq-bot.js's showPeekMessage() right when she's tucked aside, then fades
    out and removes itself. Sits above her rather than over her face, and
@@ -203,6 +225,9 @@ img, svg { max-width: 100%; }
   opacity: 0; transform: translateY(4px); transition: opacity 0.35s ease, transform 0.35s ease; pointer-events: none;
 }
 .faq-bot-peek-msg.visible { opacity: 1; transform: translateY(0); }
+#faq-bot-launcher.side-left .faq-bot-peek-msg {
+  right: auto; left: 18px; border-radius: 14px 14px 14px 4px;
+}
 /* Dismissed state: swaps to a dedicated "peeking around the edge" pose
    (mascot-peeking.png -- same character, hands gripping a vertical edge,
    drawn into the art itself) instead of just cropping the standing/waving
@@ -223,6 +248,15 @@ img, svg { max-width: 100%; }
 #faq-bot-launcher.peeking {
   width: calc(var(--mascot-h) * 0.6027);
   right: calc(10px - var(--mascot-h) * 0.1254);
+}
+/* Mirrored for the left edge -- and it really is a mirror: the left-facing
+   artwork puts its pole at 20.6% from ITS left, the exact reflection of
+   79.2% from the right, so the same derived offset works on both sides.
+   (A separate illustration, not transform: scaleX(-1) -- flipping would put
+   her saree's red pallu on the wrong shoulder, see faq-bot.js.) */
+#faq-bot-launcher.side-left.peeking {
+  right: auto;
+  left: calc(10px - var(--mascot-h) * 0.1254);
 }
 #faq-bot-launcher.peeking .faq-bot-hint { display: none; }
 
@@ -248,6 +282,10 @@ img, svg { max-width: 100%; }
   box-shadow: 0 24px 60px rgba(43,32,25,0.28); display: flex; flex-direction: column; overflow: hidden;
 }
 #faq-bot-panel[hidden] { display: none; }
+/* The panel follows her to whichever edge she was dragged to -- opening a
+   chat on the opposite side from the thing you just tapped reads as a
+   different, unrelated element. */
+#faq-bot-panel.side-left { right: auto; left: 18px; }
 .faq-bot-header { background: var(--green); color: var(--cream); padding: 14px 12px 14px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .faq-bot-header .faq-bot-avatar { width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; overflow: hidden; }
 .faq-bot-header .faq-bot-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
@@ -287,12 +325,21 @@ img, svg { max-width: 100%; }
      so a per-breakpoint pixel override would just reintroduce the drift
      between states that had to be fixed once already. */
   #faq-bot-launcher { right: 10px; bottom: 10px; }
+  #faq-bot-launcher.side-left { right: auto; left: 10px; }
   #faq-bot-launcher.peeking { right: calc(4px - var(--mascot-h) * 0.1254); }
+  #faq-bot-launcher.side-left.peeking { right: auto; left: calc(4px - var(--mascot-h) * 0.1254); }
   .faq-bot-hint { font-size: 11.5px; padding: 6px 10px; right: calc(var(--mascot-h) * 0.44); }
+  #faq-bot-launcher.side-left .faq-bot-hint { right: auto; left: calc(var(--mascot-h) * 0.44); }
   .faq-bot-peek-msg { font-size: 11.5px; padding: 6px 10px; right: 12px; }
+  #faq-bot-launcher.side-left .faq-bot-peek-msg { right: auto; left: 12px; }
   #faq-bot-dismiss { width: 48px; height: 48px; }
   #faq-bot-launcher.peeking #faq-bot-dismiss { right: 12px; }
+  #faq-bot-launcher.side-left.peeking #faq-bot-dismiss { right: auto; left: 12px; }
+  /* Panel already spans edge-to-edge here (left AND right both set), so it
+     needs no side variant -- and .side-left's `right: auto` would actually
+     break that, hence resetting it back. */
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
+  #faq-bot-panel.side-left { right: 8px; left: 8px; }
 }
 
 /* ---- Utility ---- */
