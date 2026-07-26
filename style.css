@@ -23,6 +23,18 @@
 }
 
 * { box-sizing: border-box; }
+
+/* Keyboard-only focus ring. Scoped to :focus-visible (not :focus) so a mouse
+   click doesn't show it -- only Tab navigation does. Without this, every
+   button/link/field on the site was keyboard-invisible (no focus-visible
+   rule existed anywhere except two narrow ones on the FAQ mascot widget). */
+a, button, input, textarea, select {
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
 body {
   margin: 0;
   background: var(--cream);
@@ -351,4 +363,19 @@ img, svg { max-width: 100%; }
   .hero-mockup { max-width: 260px !important; }
   .hero-mockup-body { padding: 14px !important; gap: 12px !important; }
   .hero-mockup-scan { height: 100px !important; }
+}
+
+/* ---- Sticky mobile CTA (homepage only) ---- */
+.sticky-mobile-cta { display: none; }
+@media (max-width: 680px) {
+  .sticky-mobile-cta {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
+    background: var(--cream); border-top: 1px solid var(--tan-border);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 16px rgba(43,32,25,0.08);
+  }
+  .sticky-mobile-cta .btn-primary { display: block; width: 100%; text-align: center; }
+  /* Keeps the mascot from sitting behind the new bottom bar -- scoped to
+     :has() so it only shifts up on pages that actually have the bar. */
+  body:has(.sticky-mobile-cta) #faq-bot-launcher { bottom: calc(70px + env(safe-area-inset-bottom)); }
 }

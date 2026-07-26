@@ -50,7 +50,26 @@
     const hamburger = document.querySelector(".hamburger");
     const mobileMenu = document.querySelector(".mobile-menu");
     if (hamburger && mobileMenu) {
-      hamburger.addEventListener("click", () => mobileMenu.classList.toggle("open"));
+      const setOpen = (open) => {
+        mobileMenu.classList.toggle("open", open);
+        hamburger.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      hamburger.addEventListener("click", () => setOpen(!mobileMenu.classList.contains("open")));
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && mobileMenu.classList.contains("open")) setOpen(false);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          mobileMenu.classList.contains("open") &&
+          !mobileMenu.contains(e.target) &&
+          !hamburger.contains(e.target)
+        ) {
+          setOpen(false);
+        }
+      });
     }
   });
 })();
