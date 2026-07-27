@@ -337,7 +337,18 @@
       launcher.style.display = "";
     }
 
-    openBtn.addEventListener("click", open);
+    // suppressNextClick is set by a real drag (see below) and checked here,
+    // instead of dynamically adding/removing a one-time listener per drag --
+    // that pattern left stray state behind when a drag was quickly followed
+    // by a tap, the cause of a "need two taps after dragging" report.
+    var suppressNextClick = false;
+    openBtn.addEventListener("click", function () {
+      if (suppressNextClick) {
+        suppressNextClick = false;
+        return;
+      }
+      open();
+    });
     panel.querySelector("#faq-bot-close").addEventListener("click", close);
 
     // Same button, two meanings depending on where she currently is:
@@ -386,6 +397,9 @@
 
     launcher.addEventListener("pointerdown", function (e) {
       if (state === "hidden" || e.target.closest("#faq-bot-dismiss")) return;
+      // Defensive reset: a fresh gesture should never inherit suppression
+      // state left over from an earlier one.
+      suppressNextClick = false;
       drag = { startX: e.clientX, startY: e.clientY, moved: false, pointerId: e.pointerId };
       launcher.setPointerCapture(e.pointerId);
     });
@@ -419,13 +433,10 @@
         saveSide(side);
         applyState(state);
       }
-      // Swallow the click the browser fires after the pointer sequence, so
-      // dragging her doesn't also pop the chat open.
-      launcher.addEventListener("click", function swallow(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        launcher.removeEventListener("click", swallow, true);
-      }, true);
+      // The browser fires a click after this pointer sequence even though
+      // the visitor was dragging, not tapping. Flag it so the very next
+      // click on the open button is skipped instead of opening the chat.
+      suppressNextClick = true;
     }
 
     launcher.addEventListener("pointerup", endDrag);
