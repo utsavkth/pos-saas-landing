@@ -369,9 +369,19 @@
     //
     // The fiddly part is that the thing you drag is also the button that
     // opens the chat: a tap must still open it, but a drag must not. So
-    // movement is measured against a small threshold, and only a real drag
+    // movement is measured against a threshold, and only a real drag
     // suppresses the click that the browser fires afterwards.
-    var DRAG_THRESHOLD = 8;
+    //
+    // This threshold was originally 8px and broke plain clicking entirely
+    // on real desktop mice/trackpads -- ordinary click jitter (a few px of
+    // movement between mousedown and mouseup, common on trackpads) crossed
+    // it almost every time, so nearly every click got classified as a drag
+    // and swallowed. Automated testing during development used simulated
+    // pointer events with zero jitter, so this never showed up until a real
+    // user reported clicking not opening the chat at all. 32px stays far
+    // below any real drag (which crosses a meaningful chunk of the screen)
+    // while comfortably absorbing normal click jitter.
+    var DRAG_THRESHOLD = 32;
     var drag = null;
 
     launcher.addEventListener("pointerdown", function (e) {
