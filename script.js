@@ -1,4 +1,4 @@
-/* Khatiwada POS — shared vanilla JS. No framework, no build step, no CDN.
+/* Khatiwada POS shared vanilla JS. No framework, no build step, no CDN.
    i18n: elements carry both languages via data-en/data-ne (and the
    -html/-placeholder variants); toggling just swaps which one is shown and
    persists the choice to localStorage so it survives real page loads

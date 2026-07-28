@@ -315,7 +315,7 @@
   });
 
   // Points at the pos-saas-accounts backend. On localhost (dev), that's a
-  // separate port; everywhere else, a relative path — Caddy reverse-proxies
+  // separate port; everywhere else, a relative path. Caddy reverse-proxies
   // /login on the same origin to that backend, so no CORS is needed live.
   var ACCOUNTS_API_BASE =
     (location.hostname === "localhost" || location.hostname === "127.0.0.1")
@@ -335,7 +335,7 @@
   }
 
   // Held only in memory, only long enough to call /change-password if the
-  // account turns out to still be on a temp password — never stored, never
+  // account turns out to still be on a temp password, never stored, never
   // sent anywhere except that one follow-up request.
   var pendingReset = { username: null, currentPassword: null };
 
@@ -431,7 +431,7 @@
       });
   });
 
-  // Held only in memory so step 2 can submit it alongside the code — never
+  // Held only in memory so step 2 can submit it alongside the code, never
   // stored, never sent anywhere except the one /reset-password request.
   var pendingForgotEmail = null;
 

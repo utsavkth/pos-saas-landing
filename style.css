@@ -1,8 +1,8 @@
-/* Khatiwada POS — shared design system.
+/* Khatiwada POS shared design system.
    CSS custom properties for the palette/type scale, plus the component
    classes reused across pages (nav, buttons, cards, form fields). One-off
    layout styles stay inline on the element (plain CSS syntax, not a
-   framework) — this file is the shared vocabulary, not everything. */
+   framework). This file is the shared vocabulary, not everything. */
 
 :root {
   --cream: #FBF6ED;
