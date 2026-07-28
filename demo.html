@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://possaas.chickenkiller.com/demo">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
@@ -192,10 +192,10 @@
 <body>
 
 <div class="demo-watermark" aria-hidden="true">
-  <span>This is a demo of what your POS system will look like</span>
-  <span>This is a demo of what your POS system will look like</span>
-  <span>This is a demo of what your POS system will look like</span>
-  <span>This is a demo of what your POS system will look like</span>
+  <span data-en="This is a demo of what your POS system will look like" data-ne="तपाईंको POS सिस्टम कस्तो देखिन्छ भन्ने यो डेमोले देखाउँछ">This is a demo of what your POS system will look like</span>
+  <span data-en="This is a demo of what your POS system will look like" data-ne="तपाईंको POS सिस्टम कस्तो देखिन्छ भन्ने यो डेमोले देखाउँछ">This is a demo of what your POS system will look like</span>
+  <span data-en="This is a demo of what your POS system will look like" data-ne="तपाईंको POS सिस्टम कस्तो देखिन्छ भन्ने यो डेमोले देखाउँछ">This is a demo of what your POS system will look like</span>
+  <span data-en="This is a demo of what your POS system will look like" data-ne="तपाईंको POS सिस्टम कस्तो देखिन्छ भन्ने यो डेमोले देखाउँछ">This is a demo of what your POS system will look like</span>
 </div>
 
 <header class="demo-header">
@@ -204,13 +204,19 @@
       <img src="/logo.png" alt="Khatiwada POS" width="34" height="34">
       <span style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--ink)">Khatiwada <span style="color:var(--terracotta)">POS</span></span>
     </a>
-    <span class="demo-badge">Demo</span>
+    <span class="demo-badge" data-en="Demo" data-ne="डेमो">Demo</span>
   </div>
   <div class="demo-tabs" role="tablist">
-    <button class="demo-tab active" data-view="cashier" role="tab">Cashier</button>
-    <button class="demo-tab" data-view="products" role="tab">Products</button>
+    <button class="demo-tab active" data-view="cashier" role="tab" data-en="Cashier" data-ne="क्यासियर">Cashier</button>
+    <button class="demo-tab" data-view="products" role="tab" data-en="Products" data-ne="प्रोडक्ट">Products</button>
   </div>
-  <a href="/" class="btn-text">Exit demo</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="ne"><span class="lang-full">नेपाली</span><span class="lang-abbr">ने</span></button>
+    </div>
+    <a href="/" class="btn-text" data-en="Exit demo" data-ne="डेमोबाट बाहिर निस्कनुहोस्">Exit demo</a>
+  </div>
 </header>
 
 <main class="demo-main">
@@ -219,20 +225,21 @@
     <div class="demo-cashier-layout">
       <div class="demo-products-col">
         <div class="demo-toolbar">
-          <input type="text" class="demo-search" id="demo-search" placeholder="Search item…" autocomplete="off">
-          <button type="button" class="demo-scan-btn" id="demo-scan-open">📷 Scan</button>
+          <input type="text" class="demo-search" id="demo-search" autocomplete="off"
+                 data-en-placeholder="Search item…" data-ne-placeholder="सामान खोज्नुहोस्…" placeholder="Search item…">
+          <button type="button" class="demo-scan-btn" id="demo-scan-open">📷 <span data-en="Scan" data-ne="स्क्यान">Scan</span></button>
         </div>
         <div class="demo-product-grid" id="demo-product-grid"></div>
       </div>
       <div class="demo-cart-col">
         <div class="demo-cart">
-          <h2>Current sale</h2>
+          <h2 data-en="Current sale" data-ne="हालको बिक्री">Current sale</h2>
           <div id="demo-cart-items"></div>
           <div class="demo-cart-total">
-            <span>Total</span>
+            <span data-en="Total" data-ne="जम्मा">Total</span>
             <span id="demo-cart-total">Rs 0</span>
           </div>
-          <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout">Complete sale</button>
+          <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout" data-en="Complete sale" data-ne="बिक्री पूरा गर्नुहोस्">Complete sale</button>
         </div>
       </div>
     </div>
@@ -240,12 +247,16 @@
 
   <section id="demo-view-products" class="demo-view">
     <div class="demo-products-header">
-      <h1 class="section-title" style="font-size:22px;margin:0">Products</h1>
-      <button type="button" class="btn-primary small" id="demo-add-product-open">+ Add product</button>
+      <h1 class="section-title" style="font-size:22px;margin:0" data-en="Products" data-ne="प्रोडक्टहरू">Products</h1>
+      <button type="button" class="btn-primary small" id="demo-add-product-open" data-en="+ Add product" data-ne="+ प्रोडक्ट थप्नुहोस्">+ Add product</button>
     </div>
     <table class="demo-products-table">
       <thead>
-        <tr><th>Name</th><th>Category</th><th>Price</th></tr>
+        <tr>
+          <th data-en="Name" data-ne="नाम">Name</th>
+          <th data-en="Category" data-ne="श्रेणी">Category</th>
+          <th data-en="Price" data-ne="मूल्य">Price</th>
+        </tr>
       </thead>
       <tbody id="demo-products-tbody"></tbody>
     </table>
@@ -255,19 +266,21 @@
 
 <div class="demo-modal-backdrop" id="demo-add-modal" hidden>
   <div class="demo-modal">
-    <h2>Add a product</h2>
+    <h2 data-en="Add a product" data-ne="प्रोडक्ट थप्नुहोस्">Add a product</h2>
     <form id="demo-add-form">
       <div class="field">
-        <label for="demo-add-name">Product name</label>
-        <input type="text" id="demo-add-name" required placeholder="e.g. Instant noodles">
+        <label for="demo-add-name" data-en="Product name" data-ne="प्रोडक्टको नाम">Product name</label>
+        <input type="text" id="demo-add-name" required
+               data-en-placeholder="e.g. Instant noodles" data-ne-placeholder="जस्तै: इन्स्ट्यान्ट नुडल्स" placeholder="e.g. Instant noodles">
       </div>
       <div class="field">
-        <label for="demo-add-price">Price (Rs)</label>
-        <input type="number" id="demo-add-price" required min="1" placeholder="e.g. 45">
+        <label for="demo-add-price" data-en="Price (Rs)" data-ne="मूल्य (रु)">Price (Rs)</label>
+        <input type="number" id="demo-add-price" required min="1"
+               data-en-placeholder="e.g. 45" data-ne-placeholder="जस्तै: ४५" placeholder="e.g. 45">
       </div>
       <div class="demo-modal-actions">
-        <button type="button" class="demo-cancel-btn" id="demo-add-cancel">Cancel</button>
-        <button type="submit" class="btn-primary">Add product</button>
+        <button type="button" class="demo-cancel-btn" id="demo-add-cancel" data-en="Cancel" data-ne="रद्द गर्नुहोस्">Cancel</button>
+        <button type="submit" class="btn-primary" data-en="Add product" data-ne="प्रोडक्ट थप्नुहोस्">Add product</button>
       </div>
     </form>
   </div>
@@ -275,21 +288,25 @@
 
 <div class="demo-modal-backdrop" id="demo-scan-modal" hidden>
   <div class="demo-modal">
-    <h2>Scanning…</h2>
+    <h2 data-en="Scanning…" data-ne="स्क्यान गर्दै…">Scanning…</h2>
     <div class="demo-scan-frame">
       <video class="demo-scan-video" id="demo-scan-video" autoplay playsinline muted hidden></video>
-      <div class="demo-scan-no-camera" id="demo-scan-no-camera"><span class="icon">📷</span><span>Simulating a scan…</span></div>
+      <div class="demo-scan-no-camera" id="demo-scan-no-camera">
+        <span class="icon">📷</span>
+        <span data-en="Simulating a scan…" data-ne="स्क्यान सिमुलेट गर्दै…">Simulating a scan…</span>
+      </div>
       <div class="demo-scan-reticle"></div>
     </div>
-    <p class="demo-scan-status" id="demo-scan-status">Point your camera at a barcode</p>
+    <p class="demo-scan-status" id="demo-scan-status" data-en="Point your camera at a barcode…" data-ne="क्यामेरालाई बारकोडतिर देखाउनुहोस्…">Point your camera at a barcode…</p>
     <div class="demo-modal-actions">
-      <button type="button" class="demo-cancel-btn" id="demo-scan-cancel">Cancel</button>
+      <button type="button" class="demo-cancel-btn" id="demo-scan-cancel" data-en="Cancel" data-ne="रद्द गर्नुहोस्">Cancel</button>
     </div>
   </div>
 </div>
 
 <div class="demo-toast" id="demo-toast"></div>
 
+<script src="/script.js"></script>
 <script src="/demo.js"></script>
 </body>
 </html>
