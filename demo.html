@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Try the Demo: Khatiwada POS</title>
-<meta name="description" content="Try a live demo of Khatiwada POS right in your browser. Scan products, ring up a sale, and add a product yourself. Nothing you do here is saved.">
+<meta name="description" content="Try a live demo of Khatiwada POS right in your browser. Scan products, ring up a sale, and try the admin side too. Nothing you do here is saved.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Khatiwada POS">
 <meta property="og:title" content="Try the Demo: Khatiwada POS">
@@ -18,64 +18,92 @@
 <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/favicon-180.png">
 <style>
-  /* Demo-only styles. Kept in this page rather than style.css since none of
-     it is reused anywhere else on the site (matches the existing convention
-     of one-off layout staying local to the page that needs it). Everything
-     here still draws its colors from style.css's shared custom properties,
-     so it stays in sync if the palette ever changes. */
+  /* Demo-only styles, following the same structure as the real product
+     (real cashier bar, real admin sidebar nav, real Products/Reports
+     layout) but drawn entirely from the landing page's own palette
+     instead of the real app's navy/green, per the chosen design
+     direction. Kept in this page rather than style.css since none of it
+     is reused anywhere else on the site. */
 
   body { overflow-x: hidden; }
 
-  /* ---- Watermark: fixed, diagonal, non-interactive, sits above everything
-     but never blocks a real click or tap underneath it. Repeated a few times
-     down the page rather than one instance, so it stays visible on tall
-     content and after scrolling, not just at the very top. */
   .demo-watermark {
-    position: fixed; inset: 0; z-index: 200; pointer-events: none;
+    position: fixed; inset: 0; z-index: 500; pointer-events: none;
     overflow: hidden; display: flex; flex-direction: column;
     justify-content: space-evenly; align-items: center; gap: 18vh;
   }
   .demo-watermark span {
     display: block; white-space: nowrap; transform: rotate(-28deg);
     font-family: var(--font-heading); font-weight: 800; letter-spacing: 0.02em;
-    font-size: clamp(15px, 3vw, 26px); color: var(--terracotta);
-    opacity: 0.16;
+    font-size: clamp(15px, 3vw, 26px); color: var(--terracotta); opacity: 0.16;
   }
 
-  /* ---- Demo header: same brand mark/fonts as the rest of the site so
-     arriving here reads as a continuation, not a jump to a different site,
-     but simplified: no Features/Pricing/etc, since none of that applies
-     inside the sandbox. */
-  .demo-header {
-    position: sticky; top: 0; z-index: 100;
-    background: #FBF6EDE8; backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--tan-border);
-    padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  /* ---- Cashier bar: mirrors the real product's own header (store badge +
+     name + date/time on the left, language + Admin on the right), just in
+     the landing palette instead of the real app's navy. ---- */
+  .demo-cashier-bar {
+    background: var(--green); color: var(--cream); padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   }
-  .demo-header-left { display: flex; align-items: center; gap: 12px; }
+  .demo-store-id { display: flex; align-items: center; gap: 12px; }
+  .demo-store-avatar {
+    width: 36px; height: 36px; border-radius: 10px; background: var(--terracotta);
+    color: #FFF; font-family: var(--font-heading); font-weight: 800; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .demo-store-name { font-family: var(--font-heading); font-weight: 700; font-size: 16px; }
+  .demo-store-datetime { font-size: 12px; color: var(--footer-text-soft); }
+  .demo-bar-right { display: flex; align-items: center; gap: 10px; }
+  .demo-bar-btn {
+    border: none; cursor: pointer; background: rgba(255,255,255,0.12); color: var(--cream);
+    font-family: var(--font-body); font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 999px;
+    transition: background-color .15s var(--ease);
+  }
+  .demo-bar-btn:hover { background: rgba(255,255,255,0.22); }
+  .demo-bar-btn.exit { background: var(--terracotta); }
+  .demo-bar-btn.exit:hover { background: var(--terracotta-dark); }
+  .demo-lang-switch { display: flex; background: rgba(255,255,255,0.12); border-radius: 999px; padding: 3px; }
+  .demo-lang-switch .lang-btn { color: var(--footer-text-soft); padding: 6px 12px; font-size: 13px; }
+  .demo-lang-switch .lang-btn.active { background: var(--terracotta); color: #FFF; }
+
   .demo-badge {
-    background: var(--terracotta); color: #FFF; font-family: var(--font-body);
-    font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-    padding: 4px 10px; border-radius: 999px;
+    background: var(--terracotta-light); color: var(--ink); font-family: var(--font-body);
+    font-weight: 800; font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px; margin-left: 8px;
   }
 
-  /* ---- Tab switcher, same pill pattern as the language toggle elsewhere ---- */
-  .demo-tabs { display: flex; background: var(--cream-2); border-radius: 999px; padding: 4px; }
-  .demo-tab {
-    border: none; cursor: pointer; padding: 10px 20px; border-radius: 999px;
-    font-family: var(--font-body); font-size: 14px; font-weight: 800;
-    background: transparent; color: var(--brown); transition: background-color .15s var(--ease), color .15s var(--ease);
+  /* ---- App shell: sidebar (admin) or full-width (cashier) ---- */
+  .demo-shell { display: flex; min-height: calc(100vh - 66px); }
+  .demo-sidebar {
+    width: 220px; flex-shrink: 0; background: var(--ink); color: var(--cream);
+    padding: 20px 0; display: none; flex-direction: column;
   }
-  .demo-tab.active { background: var(--terracotta); color: #FFF; }
+  .demo-sidebar.open { display: flex; }
+  .demo-sidebar-back {
+    color: var(--footer-text-soft); text-decoration: none; font-size: 13px; font-weight: 700;
+    padding: 0 20px 18px; display: block; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px;
+  }
+  .demo-sidebar-group { padding: 0 20px; margin-bottom: 4px; }
+  .demo-sidebar-heading {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--footer-muted); margin: 16px 0 8px;
+  }
+  .demo-sidebar-link {
+    display: block; text-decoration: none; color: var(--footer-text-soft); font-size: 14px; font-weight: 700;
+    padding: 9px 12px; border-radius: 10px; margin: 0 -12px; cursor: pointer; background: none; border: none; width: calc(100% + 24px); text-align: left; font-family: var(--font-body);
+  }
+  .demo-sidebar-link:hover { background: rgba(255,255,255,0.06); color: var(--cream); }
+  .demo-sidebar-link.active { background: var(--green); color: #FFF; }
 
-  .demo-main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; position: relative; z-index: 1; }
+  .demo-main { flex: 1; min-width: 0; padding: 24px 24px 80px; position: relative; }
+  .demo-main-narrow { max-width: 1100px; }
   .demo-view { display: none; }
   .demo-view.active { display: block; }
 
   /* ---- Cashier tab ---- */
   .demo-cashier-layout { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
   .demo-products-col { flex: 2 1 480px; min-width: 280px; }
-  .demo-cart-col { flex: 1 1 300px; min-width: 260px; position: sticky; top: 90px; }
+  .demo-cart-col { flex: 1 1 300px; min-width: 260px; position: sticky; top: 24px; }
 
   .demo-toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
   .demo-search {
@@ -92,20 +120,30 @@
 
   .demo-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   .demo-product-tile {
-    border: none; cursor: pointer; border-radius: 16px; padding: 16px 12px; text-align: left;
-    color: #FFF; font-family: var(--font-body); display: flex; flex-direction: column; gap: 4px;
-    min-height: 88px; justify-content: flex-end;
+    border: none; cursor: pointer; border-radius: 16px; padding: 14px 12px; text-align: center;
+    font-family: var(--font-body); display: flex; flex-direction: column; align-items: center; gap: 8px;
+    min-height: 110px; justify-content: flex-start;
     transition: transform .15s var(--ease), box-shadow .15s var(--ease);
   }
   .demo-product-tile:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(43,32,25,0.18); }
-  .demo-product-tile .name { font-weight: 800; font-size: 14.5px; line-height: 1.25; }
-  .demo-product-tile .price { font-size: 13px; opacity: 0.9; font-weight: 700; }
+  .demo-tile-icon {
+    width: 40px; height: 40px; border-radius: 10px; background: var(--white);
+    display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+  }
+  .demo-product-tile .name { font-weight: 800; font-size: 14px; line-height: 1.25; color: #FFF; }
+  .demo-product-tile .sub { font-size: 12px; opacity: 0.9; font-weight: 700; color: #FFF; }
+  .demo-quick-add {
+    grid-column: 1 / -1; border: 2px dashed var(--tan-border); background: none; cursor: pointer;
+    border-radius: 14px; padding: 14px; color: var(--brown-2); font-family: var(--font-body); font-weight: 700;
+  }
+  .demo-quick-add:hover { border-color: var(--terracotta); color: var(--terracotta-text); }
 
   .demo-cart {
     background: var(--white); border: 1px solid var(--tan-border); border-radius: 20px;
     padding: 20px; box-shadow: 0 12px 32px rgba(43,32,25,0.06);
   }
-  .demo-cart h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 14px; color: var(--ink); }
+  .demo-cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .demo-cart-header h2 { font-family: var(--font-heading); font-size: 18px; margin: 0; color: var(--ink); }
   .demo-cart-empty { color: var(--brown-2); font-size: 14px; text-align: center; padding: 20px 0; }
   .demo-cart-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--tan-border); }
   .demo-cart-item:last-child { border-bottom: none; }
@@ -120,16 +158,48 @@
   .demo-cart-total span:last-child { font-weight: 800; font-size: 20px; color: var(--terracotta); }
   .demo-checkout-btn { width: 100%; margin-top: 16px; }
 
-  /* ---- Products/admin tab ---- */
-  .demo-products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+  /* ---- Admin pages, shared table look ---- */
+  .demo-page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+  .demo-page-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .demo-select, .demo-table-search {
+    font-family: var(--font-body); font-size: 14px; padding: 10px 14px; border-radius: 10px;
+    border: 1px solid var(--tan-border); background: var(--white); color: var(--ink);
+  }
+  .demo-table-search { flex: 1; min-width: 200px; }
+  .demo-table-wrap { overflow-x: auto; }
   .demo-products-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--tan-border); border-radius: 16px; overflow: hidden; }
   .demo-products-table th {
-    text-align: left; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
-    color: var(--brown-2); padding: 12px 16px; background: var(--cream-2);
+    text-align: left; font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--brown-2); padding: 12px 14px; background: var(--cream-2); white-space: nowrap;
   }
-  .demo-products-table td { padding: 12px 16px; font-size: 14.5px; color: var(--ink); border-top: 1px solid var(--tan-border); }
+  .demo-products-table td { padding: 11px 14px; font-size: 14px; color: var(--ink); border-top: 1px solid var(--tan-border); white-space: nowrap; }
+  .demo-row-action { border: none; background: none; cursor: pointer; font-family: var(--font-body); font-weight: 700; font-size: 13px; padding: 0; margin-right: 10px; }
+  .demo-row-action.edit { color: var(--green-text); }
+  .demo-row-action.deactivate { color: var(--terracotta-text); }
+  .demo-row-action.delete { color: var(--terracotta-dark); }
+  .demo-status-pill { font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
+  .demo-status-pill.active { background: var(--green-mist); color: var(--green); }
+  .demo-status-pill.inactive { background: var(--cream-2); color: var(--brown-2); }
 
-  /* ---- Modal (used for add-product and the scan viewfinder) ---- */
+  .demo-report-card { background: var(--white); border: 1px solid var(--tan-border); border-radius: 16px; overflow: hidden; margin-bottom: 28px; }
+  .demo-report-card h3 { font-family: var(--font-heading); font-size: 16px; margin: 0 0 12px; color: var(--ink); }
+  .demo-info-note { font-size: 14px; color: var(--brown-2); margin: 0 0 20px; }
+
+  .demo-simple-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .demo-simple-list li {
+    background: var(--white); border: 1px solid var(--tan-border); border-radius: 12px; padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center; font-size: 14.5px;
+  }
+
+  .demo-form-narrow { max-width: 360px; }
+  .demo-form-narrow .field { margin-bottom: 16px; }
+  .demo-form-narrow label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .demo-form-narrow input {
+    width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 14px;
+    border-radius: 10px; border: 1px solid var(--tan-border); background: var(--cream);
+  }
+
+  /* ---- Modal (add/edit product, category drill-down, scan viewfinder) ---- */
   .demo-modal-backdrop {
     position: fixed; inset: 0; z-index: 300; background: rgba(43,32,25,0.5);
     display: flex; align-items: center; justify-content: center; padding: 20px;
@@ -137,7 +207,7 @@
   .demo-modal-backdrop[hidden] { display: none; }
   .demo-modal {
     background: var(--white); border-radius: 20px; padding: 28px; width: 100%; max-width: 380px;
-    box-shadow: 0 24px 60px rgba(43,32,25,0.28);
+    box-shadow: 0 24px 60px rgba(43,32,25,0.28); max-height: calc(100vh - 40px); overflow-y: auto;
   }
   .demo-modal h2 { font-family: var(--font-heading); font-size: 19px; margin: 0 0 16px; color: var(--ink); }
   .demo-modal .field { margin-bottom: 16px; }
@@ -152,17 +222,16 @@
     border: 1px solid var(--tan-border); background: var(--white); color: var(--brown);
     font-family: var(--font-body); font-weight: 800; font-size: 15px; padding: 12px; border-radius: 999px; cursor: pointer;
   }
+  .demo-category-item-list { display: flex; flex-direction: column; gap: 8px; }
+  .demo-category-item-btn {
+    display: flex; justify-content: space-between; align-items: center; width: 100%;
+    border: 1px solid var(--tan-border); background: var(--cream); border-radius: 12px; padding: 12px 14px;
+    cursor: pointer; font-family: var(--font-body); font-size: 14.5px; font-weight: 700; color: var(--ink);
+  }
+  .demo-category-item-btn:hover { border-color: var(--terracotta); background: var(--white); }
 
   /* ---- Scan viewfinder ---- */
-  /* aspect-ratio lives on the frame itself, not just the <video>, so the
-     reticle (an absolutely-positioned child) always has real space to
-     size itself against, camera granted or not -- without this, a denied
-     or unavailable camera left the video collapsed to zero height and the
-     reticle shrank down to a thin sliver instead of a proper viewfinder. */
-  .demo-scan-frame {
-    position: relative; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden;
-    background: var(--ink);
-  }
+  .demo-scan-frame { position: relative; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; background: var(--ink); }
   .demo-scan-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .demo-scan-reticle {
     position: absolute; inset: 16%; border: 3px solid var(--terracotta); border-radius: 16px;
@@ -175,16 +244,18 @@
   .demo-scan-no-camera .icon { font-size: 32px; }
   .demo-scan-status { text-align: center; margin-top: 14px; font-weight: 700; color: var(--ink); }
 
-  /* ---- Toast ---- */
   .demo-toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: var(--green); color: var(--cream); font-family: var(--font-body); font-weight: 700;
     padding: 14px 24px; border-radius: 999px; box-shadow: 0 12px 32px rgba(43,32,25,0.28);
     z-index: 400; opacity: 0; transition: opacity .25s var(--ease), transform .25s var(--ease); pointer-events: none;
+    max-width: calc(100vw - 48px); text-align: center;
   }
   .demo-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  @media (max-width: 700px) {
+  @media (max-width: 860px) {
+    .demo-shell { flex-direction: column; }
+    .demo-sidebar { width: 100%; padding: 12px 0; }
     .demo-cart-col { position: static; }
   }
 </style>
@@ -198,75 +269,156 @@
   <span data-en="This is a demo of what your POS system will look like" data-ne="तपाईंको POS सिस्टम कस्तो देखिन्छ भन्ने यो डेमोले देखाउँछ">This is a demo of what your POS system will look like</span>
 </div>
 
-<header class="demo-header">
-  <div class="demo-header-left">
-    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <img src="/logo.png" alt="Khatiwada POS" width="34" height="34">
-      <span style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--ink)">Khatiwada <span style="color:var(--terracotta)">POS</span></span>
-    </a>
-    <span class="demo-badge" data-en="Demo" data-ne="डेमो">Demo</span>
+<header class="demo-cashier-bar">
+  <div class="demo-store-id">
+    <div class="demo-store-avatar">K</div>
+    <div>
+      <div class="demo-store-name">Demo Store <span class="demo-badge" data-en="Demo" data-ne="डेमो">Demo</span></div>
+      <div class="demo-store-datetime" id="demo-datetime"></div>
+    </div>
   </div>
-  <div class="demo-tabs" role="tablist">
-    <button class="demo-tab active" data-view="cashier" role="tab" data-en="Cashier" data-ne="क्यासियर">Cashier</button>
-    <button class="demo-tab" data-view="products" role="tab" data-en="Products" data-ne="प्रोडक्ट">Products</button>
-  </div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div class="lang-switch">
+  <div class="demo-bar-right">
+    <div class="demo-lang-switch lang-switch">
       <button class="lang-btn" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="ne"><span class="lang-full">नेपाली</span><span class="lang-abbr">ने</span></button>
     </div>
-    <a href="/" class="btn-text" data-en="Exit demo" data-ne="डेमोबाट बाहिर निस्कनुहोस्">Exit demo</a>
+    <button type="button" class="demo-bar-btn" id="demo-admin-open" data-en="⚙ Admin" data-ne="⚙ एडमिन">⚙ Admin</button>
+    <a href="/" class="demo-bar-btn exit" data-en="Exit demo" data-ne="डेमोबाट बाहिर निस्कनुहोस्">Exit demo</a>
   </div>
 </header>
 
-<main class="demo-main">
+<div class="demo-shell">
+  <nav class="demo-sidebar" id="demo-sidebar">
+    <button type="button" class="demo-sidebar-back" id="demo-sidebar-back" data-en="← Cashier screen" data-ne="← क्यासियर स्क्रिन">← Cashier screen</button>
+    <div class="demo-sidebar-group">
+      <div class="demo-sidebar-heading" data-en="Catalog" data-ne="क्याटलग">Catalog</div>
+      <button type="button" class="demo-sidebar-link" data-page="products" data-en="Products" data-ne="प्रोडक्टहरू">Products</button>
+      <button type="button" class="demo-sidebar-link" data-page="groups" data-en="Groups" data-ne="समूह">Groups</button>
+      <button type="button" class="demo-sidebar-link" data-page="duplicates" data-en="Duplicates" data-ne="डुप्लिकेट">Duplicates</button>
+    </div>
+    <div class="demo-sidebar-group">
+      <div class="demo-sidebar-heading" data-en="Reports &amp; Data" data-ne="रिपोर्ट र डाटा">Reports &amp; Data</div>
+      <button type="button" class="demo-sidebar-link" data-page="reports" data-en="Reports" data-ne="रिपोर्ट">Reports</button>
+      <button type="button" class="demo-sidebar-link" data-page="export" data-en="Export sales CSV" data-ne="बिक्री CSV निर्यात">Export sales CSV</button>
+      <button type="button" class="demo-sidebar-link" data-page="import" data-en="Import products" data-ne="प्रोडक्ट आयात">Import products</button>
+    </div>
+    <div class="demo-sidebar-group">
+      <div class="demo-sidebar-heading" data-en="Account" data-ne="खाता">Account</div>
+      <button type="button" class="demo-sidebar-link" data-page="password" data-en="Change password" data-ne="पासवर्ड परिवर्तन">Change password</button>
+      <button type="button" class="demo-sidebar-link" id="demo-logout" data-en="Log out" data-ne="लग आउट">Log out</button>
+    </div>
+  </nav>
 
-  <section id="demo-view-cashier" class="demo-view active">
-    <div class="demo-cashier-layout">
-      <div class="demo-products-col">
-        <div class="demo-toolbar">
-          <input type="text" class="demo-search" id="demo-search" autocomplete="off"
-                 data-en-placeholder="Search item…" data-ne-placeholder="सामान खोज्नुहोस्…" placeholder="Search item…">
-          <button type="button" class="demo-scan-btn" id="demo-scan-open">📷 <span data-en="Scan" data-ne="स्क्यान">Scan</span></button>
-        </div>
-        <div class="demo-product-grid" id="demo-product-grid"></div>
-      </div>
-      <div class="demo-cart-col">
-        <div class="demo-cart">
-          <h2 data-en="Current sale" data-ne="हालको बिक्री">Current sale</h2>
-          <div id="demo-cart-items"></div>
-          <div class="demo-cart-total">
-            <span data-en="Total" data-ne="जम्मा">Total</span>
-            <span id="demo-cart-total">Rs 0</span>
+  <main class="demo-main">
+
+    <section id="demo-view-cashier" class="demo-view demo-main-narrow active">
+      <div class="demo-cashier-layout">
+        <div class="demo-products-col">
+          <div class="demo-toolbar">
+            <input type="text" class="demo-search" id="demo-search" autocomplete="off"
+                   data-en-placeholder="Search item…" data-ne-placeholder="सामान खोज्नुहोस्…" placeholder="Search item…">
+            <button type="button" class="demo-scan-btn" id="demo-scan-open">📷 <span data-en="Scan" data-ne="स्क्यान">Scan</span></button>
           </div>
-          <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout" data-en="Complete sale" data-ne="बिक्री पूरा गर्नुहोस्">Complete sale</button>
+          <div class="demo-product-grid" id="demo-product-grid"></div>
+        </div>
+        <div class="demo-cart-col">
+          <div class="demo-cart">
+            <div class="demo-cart-header">
+              <h2 data-en="Current sale" data-ne="हालको बिक्री">Current sale</h2>
+              <button type="button" class="btn-text" id="demo-cart-clear" data-en="Clear" data-ne="खाली गर्नुहोस्">Clear</button>
+            </div>
+            <div id="demo-cart-items"></div>
+            <div class="demo-cart-total">
+              <span data-en="Total" data-ne="जम्मा">Total</span>
+              <span id="demo-cart-total">Rs 0</span>
+            </div>
+            <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout" data-en="New sale" data-ne="नयाँ बिक्री">New sale</button>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="demo-view-products" class="demo-view">
-    <div class="demo-products-header">
-      <h1 class="section-title" style="font-size:22px;margin:0" data-en="Products" data-ne="प्रोडक्टहरू">Products</h1>
-      <button type="button" class="btn-primary small" id="demo-add-product-open" data-en="+ Add product" data-ne="+ प्रोडक्ट थप्नुहोस्">+ Add product</button>
-    </div>
-    <table class="demo-products-table">
-      <thead>
-        <tr>
-          <th data-en="Name" data-ne="नाम">Name</th>
-          <th data-en="Category" data-ne="श्रेणी">Category</th>
-          <th data-en="Price" data-ne="मूल्य">Price</th>
-        </tr>
-      </thead>
-      <tbody id="demo-products-tbody"></tbody>
-    </table>
-  </section>
+    <section id="demo-view-products" class="demo-view">
+      <div class="demo-page-header">
+        <h1 class="section-title" style="font-size:22px;margin:0" data-en="Products" data-ne="प्रोडक्टहरू">Products</h1>
+        <button type="button" class="btn-primary small" id="demo-add-product-open" data-en="+ Add product" data-ne="+ प्रोडक्ट थप्नुहोस्">+ Add product</button>
+      </div>
+      <div class="demo-page-toolbar">
+        <input type="text" class="demo-table-search" id="demo-products-search" autocomplete="off"
+               data-en-placeholder="Search name or barcode…" data-ne-placeholder="नाम वा बारकोड खोज्नुहोस्…" placeholder="Search name or barcode…">
+        <select class="demo-select" id="demo-category-filter"></select>
+        <button type="button" class="btn-text" id="demo-products-clear" data-en="Clear" data-ne="खाली गर्नुहोस्">Clear</button>
+      </div>
+      <div class="demo-table-wrap">
+        <table class="demo-products-table">
+          <thead>
+            <tr>
+              <th data-en="Name" data-ne="नाम">Name</th>
+              <th data-en="Barcode" data-ne="बारकोड">Barcode</th>
+              <th data-en="Category" data-ne="श्रेणी">Category</th>
+              <th data-en="Price" data-ne="मूल्य">Price</th>
+              <th data-en="Unit" data-ne="एकाइ">Unit</th>
+              <th data-en="Weighed" data-ne="तौलिने">Weighed</th>
+              <th data-en="Status" data-ne="स्थिति">Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="demo-products-tbody"></tbody>
+        </table>
+      </div>
+    </section>
 
-</main>
+    <section id="demo-view-groups" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Groups" data-ne="समूह">Groups</h1>
+      <p class="demo-info-note" data-en="Categories currently in your catalog, and how many products are in each." data-ne="तपाईंको क्याटलगमा भएका श्रेणीहरू, र हरेकमा कति प्रोडक्ट छन्।">Categories currently in your catalog, and how many products are in each.</p>
+      <ul class="demo-simple-list" id="demo-groups-list"></ul>
+    </section>
+
+    <section id="demo-view-duplicates" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Duplicates" data-ne="डुप्लिकेट">Duplicates</h1>
+      <p class="demo-info-note" data-en="Products that share the exact same name, so you can catch accidental double entries." data-ne="उस्तै नामका प्रोडक्टहरू, ताकि भुलवश दोहोरिएका प्रविष्टिहरू पत्ता लगाउन सकियोस्।">Products that share the exact same name, so you can catch accidental double entries.</p>
+      <div id="demo-duplicates-content"></div>
+    </section>
+
+    <section id="demo-view-reports" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Sales reports" data-ne="बिक्री रिपोर्ट">Sales reports</h1>
+      <p class="demo-info-note" data-en="This demo only tracks sales made during your current session, not real historical data." data-ne="यो डेमोले तपाईंको हालको सेसनमा भएको बिक्री मात्र राख्छ, वास्तविक ऐतिहासिक डाटा होइन।">This demo only tracks sales made during your current session, not real historical data.</p>
+      <div id="demo-reports-content"></div>
+    </section>
+
+    <section id="demo-view-export" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Export sales CSV" data-ne="बिक्री CSV निर्यात">Export sales CSV</h1>
+      <p class="demo-info-note" data-en="Download every sale made in this demo session as a real CSV file." data-ne="यो डेमो सेसनमा भएका सबै बिक्री वास्तविक CSV फाइलको रूपमा डाउनलोड गर्नुहोस्।">Download every sale made in this demo session as a real CSV file.</p>
+      <button type="button" class="btn-primary" id="demo-export-btn" data-en="Download CSV" data-ne="CSV डाउनलोड गर्नुहोस्">Download CSV</button>
+    </section>
+
+    <section id="demo-view-import" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Import products" data-ne="प्रोडक्ट आयात">Import products</h1>
+      <p class="demo-info-note" data-en="Upload a CSV with name,price,category columns to add products to this demo session." data-ne="name,price,category स्तम्भ भएको CSV अपलोड गर्नुहोस्, यो डेमो सेसनमा प्रोडक्ट थप्न।">Upload a CSV with name,price,category columns to add products to this demo session.</p>
+      <input type="file" accept=".csv" id="demo-import-file">
+    </section>
+
+    <section id="demo-view-password" class="demo-view">
+      <h1 class="section-title" style="font-size:22px" data-en="Change password" data-ne="पासवर्ड परिवर्तन">Change password</h1>
+      <form class="demo-form-narrow" id="demo-password-form">
+        <div class="field">
+          <label for="demo-current-password" data-en="Current password" data-ne="हालको पासवर्ड">Current password</label>
+          <input type="password" id="demo-current-password">
+        </div>
+        <div class="field">
+          <label for="demo-new-password" data-en="New password" data-ne="नयाँ पासवर्ड">New password</label>
+          <input type="password" id="demo-new-password">
+        </div>
+        <button type="submit" class="btn-primary" data-en="Update password" data-ne="पासवर्ड अपडेट गर्नुहोस्">Update password</button>
+      </form>
+    </section>
+
+  </main>
+</div>
 
 <div class="demo-modal-backdrop" id="demo-add-modal" hidden>
   <div class="demo-modal">
-    <h2 data-en="Add a product" data-ne="प्रोडक्ट थप्नुहोस्">Add a product</h2>
+    <h2 id="demo-add-modal-title" data-en="Add a product" data-ne="प्रोडक्ट थप्नुहोस्">Add a product</h2>
     <form id="demo-add-form">
       <div class="field">
         <label for="demo-add-name" data-en="Product name" data-ne="प्रोडक्टको नाम">Product name</label>
@@ -280,9 +432,19 @@
       </div>
       <div class="demo-modal-actions">
         <button type="button" class="demo-cancel-btn" id="demo-add-cancel" data-en="Cancel" data-ne="रद्द गर्नुहोस्">Cancel</button>
-        <button type="submit" class="btn-primary" data-en="Add product" data-ne="प्रोडक्ट थप्नुहोस्">Add product</button>
+        <button type="submit" class="btn-primary" id="demo-add-submit" data-en="Add product" data-ne="प्रोडक्ट थप्नुहोस्">Add product</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="demo-modal-backdrop" id="demo-category-modal" hidden>
+  <div class="demo-modal">
+    <h2 id="demo-category-modal-title"></h2>
+    <div class="demo-category-item-list" id="demo-category-item-list"></div>
+    <div class="demo-modal-actions">
+      <button type="button" class="demo-cancel-btn" id="demo-category-cancel" data-en="Close" data-ne="बन्द गर्नुहोस्">Close</button>
+    </div>
   </div>
 </div>
 
