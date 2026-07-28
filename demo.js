@@ -57,15 +57,15 @@
   // "N varieties" folders and individual SKU tiles.
   var DEFAULT_PRODUCTS = [
     { id: "rice-basmati", name: { en: "Basmati Rice 1kg", ne: "बासमती चामल 1kg" }, price: 180, barcode: "8901030875315", catId: "rice", unit: { en: "kg", ne: "kg" }, weighed: false, status: "active", standalone: false },
-    { id: "rice-mota", name: { en: "Mota Chamal 1kg", ne: "मोटा चामल 1kg" }, price: 120, barcode: null, catId: "rice", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
-    { id: "rice-sona", name: { en: "Sona Masuri 1kg", ne: "सोना मसुरी 1kg" }, price: 140, barcode: null, catId: "rice", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
+    { id: "rice-mota", name: { en: "Mota Chamal", ne: "मोटा चामल" }, price: 120, barcode: null, catId: "rice", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
+    { id: "rice-sona", name: { en: "Sona Masuri", ne: "सोना मसुरी" }, price: 140, barcode: null, catId: "rice", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
     { id: "dal-musuro", name: { en: "Musuro Dal 1kg", ne: "मुसुरो दाल 1kg" }, price: 180, barcode: "8901030111111", catId: "dal", unit: { en: "kg", ne: "kg" }, weighed: false, status: "active", standalone: false },
-    { id: "dal-chana", name: { en: "Chana Dal 1kg", ne: "चना दाल 1kg" }, price: 145, barcode: null, catId: "dal", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
-    { id: "dal-kalo", name: { en: "Kalo Dal 1kg", ne: "कालो दाल 1kg" }, price: 200, barcode: null, catId: "dal", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
+    { id: "dal-chana", name: { en: "Chana Dal", ne: "चना दाल" }, price: 145, barcode: null, catId: "dal", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
+    { id: "dal-kalo", name: { en: "Kalo Dal", ne: "कालो दाल" }, price: 200, barcode: null, catId: "dal", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
     { id: "sugar-1kg", name: { en: "Sugar 1kg", ne: "चिनी 1kg" }, price: 120, barcode: "8901030222222", catId: "sugar", unit: { en: "kg", ne: "kg" }, weighed: false, status: "active", standalone: false },
     { id: "flour-wheat", name: { en: "Wheat Flour 1kg", ne: "गहुँको पीठो 1kg" }, price: 90, barcode: "8901030333333", catId: "flour", unit: { en: "kg", ne: "kg" }, weighed: false, status: "active", standalone: false },
-    { id: "flour-maize", name: { en: "Maize Flour 1kg", ne: "मकैको पीठो 1kg" }, price: 85, barcode: null, catId: "flour", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
-    { id: "flour-rice", name: { en: "Rice Flour 500g", ne: "चामलको पीठो 500g" }, price: 70, barcode: null, catId: "flour", unit: { en: "g", ne: "g" }, weighed: true, status: "active", standalone: false },
+    { id: "flour-maize", name: { en: "Maize Flour", ne: "मकैको पीठो" }, price: 85, barcode: null, catId: "flour", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
+    { id: "flour-rice", name: { en: "Rice Flour", ne: "चामलको पीठो" }, price: 100, barcode: null, catId: "flour", unit: { en: "kg", ne: "kg" }, weighed: true, status: "active", standalone: false },
     { id: "flour-besan", name: { en: "Besan 500g", ne: "बेसन 500g" }, price: 95, barcode: "8901030444444", catId: "flour", unit: { en: "g", ne: "g" }, weighed: false, status: "active", standalone: false },
     { id: "other-salt", name: { en: "Salt 1kg", ne: "नुन 1kg" }, price: 25, barcode: "8901030555555", catId: "other", unit: { en: "kg", ne: "kg" }, weighed: false, status: "active", standalone: false },
     { id: "other-matches", name: { en: "Matches", ne: "सलाई" }, price: 10, barcode: null, catId: "other", unit: { en: "piece", ne: "थान" }, weighed: false, status: "active", standalone: false },
@@ -102,6 +102,15 @@
   var sales = loadSales();
 
   function money(n) { return "Rs " + n.toLocaleString("en-IN"); }
+
+  // A weighed product's price is a rate (per kg), not a fixed price, so it
+  // needs a "/kg" suffix wherever it's shown as a rate rather than an
+  // already-computed line total (which stays a plain amount either way).
+  function setPriceLabel(el, p) {
+    if (!p.weighed) { el.textContent = money(p.price); return; }
+    var unit = localized(p.unit);
+    setBilingualText(el, { en: money(p.price) + "/" + unit.en, ne: money(p.price) + "/" + unit.ne });
+  }
   function findProduct(id) { for (var i = 0; i < products.length; i++) if (products[i].id === id) return products[i]; return null; }
 
   // ---- Toast --------------------------------------------------------------
@@ -283,7 +292,7 @@
       var nameSpan = document.createElement("span");
       setBilingualText(nameSpan, name);
       var priceSpan = document.createElement("span");
-      priceSpan.textContent = money(p.price);
+      setPriceLabel(priceSpan, p);
       btn.appendChild(nameSpan);
       btn.appendChild(priceSpan);
       btn.addEventListener("click", function () {
@@ -669,7 +678,7 @@
       var barcodeTd = document.createElement("td");
       if (p.barcode) barcodeTd.textContent = p.barcode; else setBilingualText(barcodeTd, NO_BARCODE_TEXT);
       var catTd = document.createElement("td"); setBilingualText(catTd, meta.name);
-      var priceTd = document.createElement("td"); priceTd.textContent = money(p.price);
+      var priceTd = document.createElement("td"); setPriceLabel(priceTd, p);
       var unitTd = document.createElement("td"); setBilingualText(unitTd, unit);
       var weighedTd = document.createElement("td");
       setBilingualText(weighedTd, p.weighed ? { en: "Yes", ne: "हो" } : { en: "No", ne: "होइन" });
