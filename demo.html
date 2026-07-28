@@ -27,6 +27,15 @@
 
   body { overflow-x: hidden; }
 
+  /* Several elements below set their own `display` (flex/block) for their
+     visible state and are toggled via the hidden attribute/property. The
+     browser's built-in [hidden] { display: none } rule has the same
+     specificity as a plain class selector, so whichever rule is declared
+     later in the stylesheet wins, not necessarily "hidden" -- this
+     universal override guarantees hidden always actually means hidden,
+     regardless of what any individual class declares. */
+  [hidden] { display: none !important; }
+
   .demo-watermark {
     position: fixed; inset: 0; z-index: 500; pointer-events: none;
     overflow: hidden; display: flex; flex-direction: column;
@@ -82,7 +91,10 @@
   .demo-sidebar-back {
     color: var(--footer-text-soft); text-decoration: none; font-size: 13px; font-weight: 700;
     padding: 0 20px 18px; display: block; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px;
+    background: none; border-left: none; border-right: none; border-top: none; cursor: pointer;
+    width: 100%; text-align: left; font-family: var(--font-body);
   }
+  .demo-sidebar-back:hover { color: var(--cream); }
   .demo-sidebar-group { padding: 0 20px; margin-bottom: 4px; }
   .demo-sidebar-heading {
     font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
@@ -158,6 +170,59 @@
   .demo-cart-total span:last-child { font-weight: 800; font-size: 20px; color: var(--terracotta); }
   .demo-checkout-btn { width: 100%; margin-top: 16px; }
 
+  /* ---- Payment method, QR box, customer-paid, change (matching the real
+     product's own checkout section) ---- */
+  .demo-field-label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .demo-field-optional { font-weight: 400; color: var(--brown-2); }
+  .demo-pay-method, .demo-paid-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--tan-border); }
+  .demo-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .demo-pay-chip {
+    border: 1.5px solid var(--tan-border); background: var(--cream); color: var(--brown);
+    font-family: var(--font-body); font-weight: 800; font-size: 13.5px; padding: 9px 16px;
+    border-radius: 999px; cursor: pointer; transition: all .15s var(--ease);
+  }
+  .demo-pay-chip.selected { border-color: var(--terracotta); background: var(--terracotta); color: #FFF; }
+
+  .demo-qr-box {
+    margin-top: 14px; padding: 16px; background: var(--cream-2); border: 1px solid var(--tan-border);
+    border-radius: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+  }
+  .demo-qr-pattern {
+    width: 120px; height: 120px; display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px;
+    background: #FFF; padding: 8px; border-radius: 8px;
+  }
+  .demo-qr-pattern div { background: var(--ink); }
+  .demo-qr-pattern div:nth-child(3n) { background: transparent; }
+  .demo-qr-pattern div:nth-child(5n+1) { background: transparent; }
+  .demo-qr-note { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .demo-qr-note strong { color: var(--terracotta); }
+  .demo-qr-brand { font-size: 12px; color: var(--brown-2); }
+
+  .demo-custom-pad { margin-top: 12px; }
+  .demo-custom-value { text-align: center; font-size: 22px; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+  .demo-numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .demo-numpad button {
+    border: 1px solid var(--tan-border); background: var(--white); color: var(--ink);
+    font-family: var(--font-body); font-weight: 800; font-size: 16px; padding: 12px; border-radius: 10px; cursor: pointer;
+  }
+  .demo-numpad button:hover { background: var(--cream-2); }
+  .demo-change-box {
+    margin-top: 12px; padding: 12px 14px; background: var(--green-mist); border-radius: 10px;
+    display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px;
+  }
+  .demo-change-box span:first-child { font-size: 13px; font-weight: 700; color: var(--green); }
+  .demo-change-box strong { font-size: 17px; color: var(--green); }
+  .demo-change-note { width: 100%; font-size: 12px; color: var(--terracotta-text); }
+  .demo-change-box.owed { background: var(--cream-2); }
+  .demo-change-box.owed strong { color: var(--terracotta-text); }
+
+  /* ---- Weight entry modal ---- */
+  .demo-weight-display { text-align: center; margin-bottom: 16px; }
+  .demo-weight-display #demo-weight-value { font-size: 32px; font-weight: 800; color: var(--ink); font-family: var(--font-heading); }
+  .demo-weight-display #demo-weight-unit { font-size: 16px; color: var(--brown); }
+  .demo-weight-line-total { display: block; font-size: 18px; font-weight: 800; color: var(--terracotta); margin-top: 6px; }
+  #demo-weight-presets { margin-bottom: 14px; justify-content: center; }
+
   /* ---- Admin pages, shared table look ---- */
   .demo-page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
   .demo-page-toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -197,6 +262,13 @@
   .demo-form-narrow input {
     width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 14px;
     border-radius: 10px; border: 1px solid var(--tan-border); background: var(--cream);
+  }
+
+  /* Visually hidden but still fully keyboard/screen-reader operable via its
+     <label>, rather than display:none which would break that association. */
+  .demo-visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
 
   /* ---- Modal (add/edit product, category drill-down, scan viewfinder) ---- */
@@ -332,6 +404,48 @@
               <span data-en="Total" data-ne="जम्मा">Total</span>
               <span id="demo-cart-total">Rs 0</span>
             </div>
+
+            <div class="demo-pay-method">
+              <span class="demo-field-label" data-en="Payment" data-ne="भुक्तानी">Payment</span>
+              <div class="demo-chip-row">
+                <button type="button" class="demo-pay-chip selected" id="demo-pay-cash" data-en="Cash" data-ne="नगद">Cash</button>
+                <button type="button" class="demo-pay-chip" id="demo-pay-qr" data-en="QR" data-ne="QR">QR</button>
+              </div>
+            </div>
+            <div class="demo-qr-box" id="demo-qr-box" hidden>
+              <div class="demo-qr-pattern" aria-hidden="true">
+                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+              </div>
+              <span class="demo-qr-note"><span data-en="Scan to pay" data-ne="स्क्यान गरेर तिर्नुहोस्">Scan to pay</span> <strong id="demo-qr-amount">Rs 0</strong></span>
+              <span class="demo-qr-brand" data-en="Demo QR, not a real payment code" data-ne="डेमो QR, वास्तविक भुक्तानी कोड होइन">Demo QR, not a real payment code</span>
+            </div>
+
+            <div class="demo-paid-section">
+              <span class="demo-field-label"><span data-en="Customer paid" data-ne="ग्राहकले तिरेको">Customer paid</span> <span class="demo-field-optional" data-en="(optional)" data-ne="(वैकल्पिक)">(optional)</span></span>
+              <div class="demo-chip-row">
+                <button type="button" class="demo-pay-chip" data-paid="500">Rs 500</button>
+                <button type="button" class="demo-pay-chip" data-paid="1000">Rs 1000</button>
+                <button type="button" class="demo-pay-chip" id="demo-paid-custom-chip" data-en="Custom" data-ne="अन्य">Custom</button>
+              </div>
+              <div class="demo-custom-pad" id="demo-custom-pad" hidden>
+                <div class="demo-custom-value">Rs <span id="demo-custom-value">0</span></div>
+                <div class="demo-numpad" id="demo-numpad">
+                  <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+                  <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+                  <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+                  <button type="button" data-key=".">.</button><button type="button" data-key="0">0</button><button type="button" data-key="del">⌫</button>
+                </div>
+                <button type="button" class="btn-primary small" id="demo-custom-set" style="width:100%" data-en="Set amount" data-ne="रकम सेट गर्नुहोस्">Set amount</button>
+              </div>
+              <div class="demo-change-box" id="demo-change-box" hidden>
+                <span data-en="Change" data-ne="फिर्ता">Change</span>
+                <strong id="demo-change-value">Rs 0</strong>
+                <span class="demo-change-note" id="demo-change-note" hidden data-en="Amount paid is less than the total" data-ne="तिरेको रकम जम्माभन्दा कम छ">Amount paid is less than the total</span>
+              </div>
+            </div>
+
             <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout" data-en="New sale" data-ne="नयाँ बिक्री">New sale</button>
           </div>
         </div>
@@ -395,7 +509,11 @@
     <section id="demo-view-import" class="demo-view">
       <h1 class="section-title" style="font-size:22px" data-en="Import products" data-ne="प्रोडक्ट आयात">Import products</h1>
       <p class="demo-info-note" data-en="Upload a CSV with name,price,category columns to add products to this demo session." data-ne="name,price,category स्तम्भ भएको CSV अपलोड गर्नुहोस्, यो डेमो सेसनमा प्रोडक्ट थप्न।">Upload a CSV with name,price,category columns to add products to this demo session.</p>
-      <input type="file" accept=".csv" id="demo-import-file">
+      <input type="file" accept=".csv" id="demo-import-file" class="demo-visually-hidden">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <label for="demo-import-file" class="btn-primary small" style="cursor:pointer" data-en="Choose CSV file" data-ne="CSV फाइल छान्नुहोस्">Choose CSV file</label>
+        <span id="demo-import-filename" class="demo-info-note" style="margin:0" data-en="No file chosen" data-ne="कुनै फाइल छानिएको छैन">No file chosen</span>
+      </div>
     </section>
 
     <section id="demo-view-password" class="demo-view">
@@ -444,6 +562,27 @@
     <div class="demo-category-item-list" id="demo-category-item-list"></div>
     <div class="demo-modal-actions">
       <button type="button" class="demo-cancel-btn" id="demo-category-cancel" data-en="Close" data-ne="बन्द गर्नुहोस्">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="demo-modal-backdrop" id="demo-weight-modal" hidden>
+  <div class="demo-modal">
+    <h2 id="demo-weight-title"></h2>
+    <div class="demo-weight-display">
+      <span id="demo-weight-value">0</span> <span id="demo-weight-unit">kg</span>
+      <span class="demo-weight-line-total" id="demo-weight-line-total">Rs 0</span>
+    </div>
+    <div class="demo-chip-row" id="demo-weight-presets"></div>
+    <div class="demo-numpad" id="demo-weight-numpad">
+      <button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button>
+      <button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button>
+      <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button>
+      <button type="button" data-key=".">.</button><button type="button" data-key="0">0</button><button type="button" data-key="del">⌫</button>
+    </div>
+    <div class="demo-modal-actions">
+      <button type="button" class="demo-cancel-btn" id="demo-weight-cancel" data-en="Cancel" data-ne="रद्द गर्नुहोस्">Cancel</button>
+      <button type="button" class="btn-primary" id="demo-weight-ok" disabled data-en="Add" data-ne="थप्नुहोस्">Add</button>
     </div>
   </div>
 </div>

@@ -256,8 +256,14 @@
     tile.appendChild(iconEl);
     tile.appendChild(nameEl);
     tile.appendChild(priceEl);
-    tile.addEventListener("click", function () { addToCart(p.id); });
+    tile.addEventListener("click", function () { selectProduct(p); });
     return tile;
+  }
+
+  // Weighed products need an entered weight before they can go in the cart
+  // (matching the real product exactly); everything else adds directly.
+  function selectProduct(p) {
+    if (p.weighed) openWeightModal(p); else addToCart(p.id);
   }
 
   searchEl.addEventListener("input", renderGrid);
@@ -281,8 +287,8 @@
       btn.appendChild(nameSpan);
       btn.appendChild(priceSpan);
       btn.addEventListener("click", function () {
-        addToCart(p.id);
         categoryModal.hidden = true;
+        selectProduct(p);
       });
       categoryItemList.appendChild(btn);
     });
@@ -290,27 +296,48 @@
   }
   document.getElementById("demo-category-cancel").addEventListener("click", function () { categoryModal.hidden = true; });
 
-  // ---- Cart -----------------------------------------------------------------
+  // ---- Cart -------------------------------------------------------------------
+  // Each line carries a unique cartLineId rather than being keyed purely by
+  // product id, since a weighed product can legitimately appear as several
+  // separate lines (a different weigh-out each time), while a regular
+  // product still merges into a single line like before. `qty` means
+  // "how much of this line": an integer count for regular products, or a
+  // decimal weight (in the product's own unit) for weighed ones -- either
+  // way, line total is always price * qty.
+  var cartLineSeq = 0;
   var cartItemsEl = document.getElementById("demo-cart-items");
   var cartTotalEl = document.getElementById("demo-cart-total");
   var CART_EMPTY_TEXT = { en: "Tap a product, or scan one, to start a sale.", ne: "बिक्री सुरु गर्न कुनै प्रोडक्ट थिच्नुहोस्, वा स्क्यान गर्नुहोस्।" };
 
-  function addToCart(id) {
-    var line = null;
-    for (var i = 0; i < cart.length; i++) if (cart[i].id === id) line = cart[i];
-    if (line) line.qty += 1; else cart.push({ id: id, qty: 1 });
+  function addToCart(id, qty) {
+    qty = qty || 1;
+    var p = findProduct(id);
+    if (p && p.weighed) {
+      cart.push({ cartLineId: "l" + (cartLineSeq++), id: id, qty: qty });
+    } else {
+      var line = null;
+      for (var i = 0; i < cart.length; i++) if (cart[i].id === id) line = cart[i];
+      if (line) line.qty += qty;
+      else cart.push({ cartLineId: "l" + (cartLineSeq++), id: id, qty: qty });
+    }
     saveCart(cart);
     renderCart();
   }
 
-  function changeQty(id, delta) {
+  function changeQty(cartLineId, delta) {
     var line = null, idx = -1;
-    for (var i = 0; i < cart.length; i++) if (cart[i].id === id) { line = cart[i]; idx = i; }
+    for (var i = 0; i < cart.length; i++) if (cart[i].cartLineId === cartLineId) { line = cart[i]; idx = i; }
     if (!line) return;
     line.qty += delta;
     if (line.qty <= 0) cart.splice(idx, 1);
     saveCart(cart);
     renderCart();
+  }
+
+  function cartTotal() {
+    var total = 0;
+    cart.forEach(function (line) { var p = findProduct(line.id); if (p) total += p.price * line.qty; });
+    return total;
   }
 
   function renderCart() {
@@ -321,31 +348,49 @@
       setBilingualText(empty, CART_EMPTY_TEXT);
       cartItemsEl.appendChild(empty);
     }
-    var total = 0;
     cart.forEach(function (line) {
       var p = findProduct(line.id);
       if (!p) return;
       var name = localized(p.name);
-      total += p.price * line.qty;
       var row = document.createElement("div");
       row.className = "demo-cart-item";
       var nameEl = document.createElement("span");
       nameEl.className = "demo-cart-item-name";
-      setBilingualText(nameEl, name);
-      var minusBtn = document.createElement("button");
-      minusBtn.type = "button"; minusBtn.className = "demo-qty-btn"; minusBtn.textContent = "−";
-      minusBtn.addEventListener("click", function () { changeQty(line.id, -1); });
-      var qtyEl = document.createElement("span"); qtyEl.textContent = line.qty;
-      var plusBtn = document.createElement("button");
-      plusBtn.type = "button"; plusBtn.className = "demo-qty-btn"; plusBtn.textContent = "+";
-      plusBtn.addEventListener("click", function () { changeQty(line.id, 1); });
+      if (p.weighed) {
+        var unit = localized(p.unit);
+        setBilingualText(nameEl, { en: name.en + " (" + line.qty + " " + unit.en + ")", ne: name.ne + " (" + line.qty + " " + unit.ne + ")" });
+      } else {
+        setBilingualText(nameEl, name);
+      }
       var priceEl = document.createElement("span");
       priceEl.className = "demo-cart-item-price";
       priceEl.textContent = money(p.price * line.qty);
-      row.appendChild(nameEl); row.appendChild(minusBtn); row.appendChild(qtyEl); row.appendChild(plusBtn); row.appendChild(priceEl);
+
+      row.appendChild(nameEl);
+      if (p.weighed) {
+        // A weighed line's quantity was deliberately weighed out, not a
+        // simple unit count, so it's removed as a whole line rather than
+        // nudged with +/- like regular items.
+        var removeBtn = document.createElement("button");
+        removeBtn.type = "button"; removeBtn.className = "demo-qty-btn";
+        removeBtn.textContent = "×";
+        removeBtn.addEventListener("click", function () { changeQty(line.cartLineId, -Infinity); });
+        row.appendChild(removeBtn);
+      } else {
+        var minusBtn = document.createElement("button");
+        minusBtn.type = "button"; minusBtn.className = "demo-qty-btn"; minusBtn.textContent = "−";
+        minusBtn.addEventListener("click", function () { changeQty(line.cartLineId, -1); });
+        var qtyEl = document.createElement("span"); qtyEl.textContent = line.qty;
+        var plusBtn = document.createElement("button");
+        plusBtn.type = "button"; plusBtn.className = "demo-qty-btn"; plusBtn.textContent = "+";
+        plusBtn.addEventListener("click", function () { changeQty(line.cartLineId, 1); });
+        row.appendChild(minusBtn); row.appendChild(qtyEl); row.appendChild(plusBtn);
+      }
+      row.appendChild(priceEl);
       cartItemsEl.appendChild(row);
     });
-    cartTotalEl.textContent = money(total);
+    cartTotalEl.textContent = money(cartTotal());
+    updatePaymentUI();
   }
 
   document.getElementById("demo-cart-clear").addEventListener("click", function () {
@@ -357,18 +402,173 @@
 
   document.getElementById("demo-checkout").addEventListener("click", function () {
     if (cart.length === 0) return;
-    var total = 0;
-    cart.forEach(function (line) { var p = findProduct(line.id); if (p) total += p.price * line.qty; });
+    var total = cartTotal();
     sales.push({ time: Date.now(), total: total, itemCount: cart.reduce(function (n, l) { return n + l.qty; }, 0) });
     saveSales(sales);
     cart = [];
     saveCart(cart);
     renderCart();
+    resetPaymentUI();
     showToast({
       en: "Sale complete, " + money(total) + " (demo only, nothing was actually charged)",
       ne: "बिक्री पूरा भयो, " + money(total) + " (यो डेमो मात्र हो, वास्तवमा केही शुल्क लागेको छैन)"
     });
   });
+
+  // ---- Weight entry modal (matches the real product's weigh-out flow) -----
+  var weightModal = document.getElementById("demo-weight-modal");
+  var weightTitle = document.getElementById("demo-weight-title");
+  var weightValueEl = document.getElementById("demo-weight-value");
+  var weightUnitEl = document.getElementById("demo-weight-unit");
+  var weightLineTotalEl = document.getElementById("demo-weight-line-total");
+  var weightPresetsEl = document.getElementById("demo-weight-presets");
+  var weightOkBtn = document.getElementById("demo-weight-ok");
+  var WEIGHT_PRESETS = [0.5, 1, 2, 5];
+  var weightProduct = null;
+  var weightStr = "0";
+
+  function updateWeightDisplay() {
+    var w = parseFloat(weightStr) || 0;
+    weightValueEl.textContent = weightStr;
+    weightLineTotalEl.textContent = money(Math.round(weightProduct.price * w));
+    weightOkBtn.disabled = w <= 0;
+    weightPresetsEl.querySelectorAll(".demo-pay-chip").forEach(function (chip) {
+      chip.classList.toggle("selected", parseFloat(chip.dataset.value) === w);
+    });
+  }
+
+  function openWeightModal(p) {
+    weightProduct = p;
+    weightStr = "0";
+    setBilingualText(weightTitle, localized(p.name));
+    setBilingualText(weightUnitEl, localized(p.unit));
+    weightPresetsEl.innerHTML = "";
+    WEIGHT_PRESETS.forEach(function (val) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "demo-pay-chip";
+      chip.dataset.value = val;
+      var unit = localized(p.unit);
+      setBilingualText(chip, { en: val + " " + unit.en, ne: val + " " + unit.ne });
+      chip.addEventListener("click", function () { weightStr = String(val); updateWeightDisplay(); });
+      weightPresetsEl.appendChild(chip);
+    });
+    updateWeightDisplay();
+    weightModal.hidden = false;
+  }
+
+  document.getElementById("demo-weight-numpad").addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-key]");
+    if (!btn) return;
+    var key = btn.dataset.key;
+    if (key === "del") weightStr = weightStr.length > 1 ? weightStr.slice(0, -1) : "0";
+    else if (key === "." && weightStr.indexOf(".") !== -1) { /* only one decimal point */ }
+    else weightStr = weightStr === "0" && key !== "." ? key : weightStr + key;
+    updateWeightDisplay();
+  });
+
+  document.getElementById("demo-weight-cancel").addEventListener("click", function () { weightModal.hidden = true; });
+  weightOkBtn.addEventListener("click", function () {
+    var w = parseFloat(weightStr) || 0;
+    if (w <= 0) return;
+    weightModal.hidden = true;
+    addToCart(weightProduct.id, w);
+  });
+
+  // ---- Payment method (Cash / QR) -----------------------------------------
+  var payCashBtn = document.getElementById("demo-pay-cash");
+  var payQrBtn = document.getElementById("demo-pay-qr");
+  var qrBox = document.getElementById("demo-qr-box");
+  var qrAmountEl = document.getElementById("demo-qr-amount");
+  var payMethod = "cash";
+
+  function setPayMethod(method) {
+    payMethod = method;
+    payCashBtn.classList.toggle("selected", method === "cash");
+    payQrBtn.classList.toggle("selected", method === "qr");
+    qrBox.hidden = method !== "qr";
+  }
+  payCashBtn.addEventListener("click", function () { setPayMethod("cash"); });
+  payQrBtn.addEventListener("click", function () { setPayMethod("qr"); });
+
+  // ---- Customer paid + change --------------------------------------------
+  var paidChips = document.querySelectorAll(".demo-paid-section [data-paid]");
+  var customChip = document.getElementById("demo-paid-custom-chip");
+  var customPad = document.getElementById("demo-custom-pad");
+  var customValueEl = document.getElementById("demo-custom-value");
+  var customSetBtn = document.getElementById("demo-custom-set");
+  var changeBox = document.getElementById("demo-change-box");
+  var changeValueEl = document.getElementById("demo-change-value");
+  var changeNoteEl = document.getElementById("demo-change-note");
+  var paidAmount = null;
+  var customStr = "0";
+
+  function selectPaidChip(activeBtn) {
+    paidChips.forEach(function (c) { c.classList.remove("selected"); });
+    if (activeBtn) activeBtn.classList.add("selected");
+  }
+
+  paidChips.forEach(function (chip) {
+    if (chip === customChip) return;
+    chip.addEventListener("click", function () {
+      customPad.hidden = true;
+      paidAmount = parseFloat(chip.dataset.paid);
+      selectPaidChip(chip);
+      updatePaymentUI();
+    });
+  });
+
+  customChip.addEventListener("click", function () {
+    customPad.hidden = !customPad.hidden;
+    if (!customPad.hidden) { customStr = "0"; customValueEl.textContent = customStr; }
+  });
+
+  document.getElementById("demo-numpad").addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-key]");
+    if (!btn) return;
+    var key = btn.dataset.key;
+    if (key === "del") customStr = customStr.length > 1 ? customStr.slice(0, -1) : "0";
+    else if (key === "." && customStr.indexOf(".") !== -1) { /* only one decimal point */ }
+    else customStr = customStr === "0" && key !== "." ? key : customStr + key;
+    customValueEl.textContent = customStr;
+  });
+
+  customSetBtn.addEventListener("click", function () {
+    var v = parseFloat(customStr) || 0;
+    paidAmount = v;
+    customPad.hidden = true;
+    selectPaidChip(customChip);
+    updatePaymentUI();
+  });
+
+  function updatePaymentUI() {
+    var total = cartTotal();
+    qrAmountEl.textContent = money(total);
+    if (paidAmount === null || cart.length === 0) {
+      changeBox.hidden = true;
+      return;
+    }
+    changeBox.hidden = false;
+    var diff = paidAmount - total;
+    if (diff >= 0) {
+      changeBox.classList.remove("owed");
+      changeValueEl.textContent = money(diff);
+      changeNoteEl.hidden = true;
+    } else {
+      changeBox.classList.add("owed");
+      changeValueEl.textContent = money(Math.abs(diff));
+      changeNoteEl.hidden = false;
+    }
+  }
+
+  function resetPaymentUI() {
+    setPayMethod("cash");
+    paidAmount = null;
+    customStr = "0";
+    customPad.hidden = true;
+    selectPaidChip(null);
+    updatePaymentUI();
+  }
 
   // ---- Add / Edit product modal --------------------------------------------
   var addModal = document.getElementById("demo-add-modal");
@@ -651,9 +851,13 @@
   });
 
   // ---- Import products (real CSV parse into this session's product list) --
+  var importFilenameEl = document.getElementById("demo-import-filename");
   document.getElementById("demo-import-file").addEventListener("change", function (e) {
     var file = e.target.files[0];
     if (!file) return;
+    importFilenameEl.removeAttribute("data-en");
+    importFilenameEl.removeAttribute("data-ne");
+    importFilenameEl.textContent = file.name;
     var reader = new FileReader();
     reader.onload = function () {
       var lines = String(reader.result).split(/\r?\n/).filter(function (l) { return l.trim(); });
@@ -719,7 +923,10 @@
 
     scanTimer = setTimeout(function () {
       if (scanModal.hidden) return;
-      var pool = activeProducts();
+      // Loose/weighed goods realistically have no barcode to scan (matches
+      // this demo's own seed data, where every weighed product's barcode is
+      // null), so scanning only ever "finds" a regular packaged product.
+      var pool = activeProducts().filter(function (p) { return !p.weighed; });
       var p = pool[Math.floor(Math.random() * pool.length)];
       var name = localized(p.name);
       stopScan();
