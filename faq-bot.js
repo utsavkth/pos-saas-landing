@@ -501,7 +501,25 @@
       drag = null;
       launcher.classList.remove("dragging");
       launcher.style.transform = "";
-      if (!wasDrag) return;
+
+      if (!wasDrag) {
+        // A plain tap, not a drag: open directly from here rather than
+        // waiting for the browser's own "click" event. Chrome retargets
+        // that click to #faq-bot-launcher instead of #faq-bot-open once
+        // setPointerCapture has been called (confirmed live: the pointerup
+        // and click events both report faq-bot-launcher as e.target, not
+        // the button the visitor actually tapped), so openBtn's click
+        // listener silently never fires and the chat never opens on a real
+        // mouse/trackpad click. That's the actual current bug, distinct
+        // from the two fixed earlier. Calling open() here sidesteps the
+        // browser's click targeting entirely for pointer-driven taps; the
+        // click listener on openBtn stays only as the path keyboard
+        // activation (Tab + Enter/Space, which has no pointer events at
+        // all) still needs, and open() is idempotent so no harm if both
+        // somehow fire for the same interaction.
+        open();
+        return;
+      }
 
       // Snap to whichever half of the screen she was let go in.
       var newSide = dropX < window.innerWidth / 2 ? "left" : "right";
@@ -517,8 +535,8 @@
       // NOT get a follow-up click at all, so arming the flag there left it
       // stuck forever with nothing to consume it -- silently swallowing the
       // visitor's next honest tap and making it look like "the first click
-      // after moving her does nothing, the second one works." That was the
-      // actual bug, not a timing fluke in the click handler itself.
+      // after moving her does nothing, the second one works." That was a
+      // second, separate bug from the click-retargeting one above.
       if (e.type === "pointerup") {
         suppressNextClick = true;
         // Belt and suspenders: if the anticipated click somehow never
