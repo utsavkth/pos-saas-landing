@@ -59,44 +59,44 @@
       <h1 style="font-family:var(--font-heading);font-size:clamp(28px,3.8vw,40px);font-weight:800;margin:0 0 14px" data-en="Get in touch" data-ne="सम्पर्क गर्नुहोस्">Get in touch</h1>
       <p style="font-size:17px;line-height:1.65;color:var(--brown);margin:0 0 32px" data-en="Questions about Khatiwada POS? We'd love to hear from you." data-ne="खटीवाडा POS बारे प्रश्न छ? हामी तपाईंको कुरा सुन्न चाहन्छौं।">Questions about Khatiwada POS? We'd love to hear from you.</p>
 
-      <div id="contact-success" style="display:none;background:#E4EAE5;border:1px solid #2F4B3C;border-radius:20px;padding:32px;flex-direction:column;gap:10px;align-items:flex-start">
-        <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2F4B3C"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#FBF6ED" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+      <div id="contact-success" style="display:none;background:var(--green-mist);border:1px solid var(--green);border-radius:20px;padding:32px;flex-direction:column;gap:10px;align-items:flex-start">
+        <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="var(--green)"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="var(--cream)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
         <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:6px 0 0" data-en="Message sent" data-ne="सन्देश पठाइयो">Message sent</h3>
-        <p style="font-size:15px;color:#3E4C43;margin:0" data-en="Thanks for reaching out, we'll get back to you soon." data-ne="सम्पर्क गर्नुभएकोमा धन्यवाद, हामी चाँडै जवाफ दिनेछौं।">Thanks for reaching out, we'll get back to you soon.</p>
+        <p style="font-size:15px;color:var(--green-light);margin:0" data-en="Thanks for reaching out, we'll get back to you soon." data-ne="सम्पर्क गर्नुभएकोमा धन्यवाद, हामी चाँडै जवाफ दिनेछौं।">Thanks for reaching out, we'll get back to you soon.</p>
       </div>
 
       <form id="contact-form" style="display:flex;flex-direction:column;gap:20px">
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Name" data-ne="नाम">Name</span>
-          <input name="name" required placeholder="Your name" data-en-placeholder="Your name" data-ne-placeholder="तपाईंको नाम" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+          <input name="name" required placeholder="Your name" data-en-placeholder="Your name" data-ne-placeholder="तपाईंको नाम" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:var(--white);color:var(--ink)">
         </label>
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Email address" data-ne="इमेल ठेगाना">Email address</span>
-          <input type="email" name="email" required placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink)">
+          <input type="email" name="email" required placeholder="you@example.com" data-en-placeholder="you@example.com" data-ne-placeholder="you@example.com" style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:var(--white);color:var(--ink)">
         </label>
         <label style="display:flex;flex-direction:column;gap:8px">
           <span style="font-size:14px;font-weight:700;color:var(--ink)" data-en="Message" data-ne="सन्देश">Message</span>
-          <textarea name="message" required rows="5" placeholder="Tell us about your shop or ask a question..." data-en-placeholder="Tell us about your shop or ask a question..." data-ne-placeholder="आफ्नो पसल वा प्रश्नको बारेमा लेख्नुहोस्..." style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:#FFFFFF;color:var(--ink);resize:vertical"></textarea>
+          <textarea name="message" required rows="5" placeholder="Tell us about your shop or ask a question..." data-en-placeholder="Tell us about your shop or ask a question..." data-ne-placeholder="आफ्नो पसल वा प्रश्नको बारेमा लेख्नुहोस्..." style="font-family:var(--font-body);font-size:16px;padding:14px 16px;border-radius:12px;border:1px solid var(--tan-border);background:var(--white);color:var(--ink);resize:vertical"></textarea>
         </label>
-        <span id="contact-error" style="display:none;font-size:14px;color:#B5502C" data-en="Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com." data-ne="केही समस्या भयो। फेरि प्रयास गर्नुहोस्, वा हामीलाई सिधै hello@khatiwadapos.com मा इमेल गर्नुहोस्।">Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com.</span>
-        <button type="submit" style="border:none;cursor:pointer;background:#B5502C;color:#FFF;font-weight:800;font-size:17px;padding:16px 24px;border-radius:999px;font-family:var(--font-body)" data-en="Send message" data-ne="सन्देश पठाउनुहोस्">Send message</button>
+        <span id="contact-error" style="display:none;font-size:14px;color:var(--terracotta)" data-en="Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com." data-ne="केही समस्या भयो। फेरि प्रयास गर्नुहोस्, वा हामीलाई सिधै hello@khatiwadapos.com मा इमेल गर्नुहोस्।">Something went wrong. Please try again, or email us directly at hello@khatiwadapos.com.</span>
+        <button type="submit" style="border:none;cursor:pointer;background:var(--terracotta);color:var(--white);font-weight:800;font-size:17px;padding:16px 24px;border-radius:999px;font-family:var(--font-body)" data-en="Send message" data-ne="सन्देश पठाउनुहोस्">Send message</button>
       </form>
     </div>
 
     <div style="flex:1 1 300px;min-width:260px;max-width:360px">
-      <div style="background:#2F4B3C;border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:24px">
-        <h3 style="font-family:var(--font-heading);font-size:18px;font-weight:700;margin:0;color:#FBF6ED" data-en="Other ways to reach us" data-ne="सम्पर्क गर्ने अन्य तरिकाहरू">Other ways to reach us</h3>
+      <div style="background:var(--green);border-radius:24px;padding:32px;display:flex;flex-direction:column;gap:24px">
+        <h3 style="font-family:var(--font-heading);font-size:18px;font-weight:700;margin:0;color:var(--cream)" data-en="Other ways to reach us" data-ne="सम्पर्क गर्ने अन्य तरिकाहरू">Other ways to reach us</h3>
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Email" data-ne="इमेल">Email</span>
-          <span style="font-size:16px;font-weight:700;color:#FBF6ED">hello@khatiwadapos.com</span>
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--footer-muted)" data-en="Email" data-ne="इमेल">Email</span>
+          <span style="font-size:16px;font-weight:700;color:var(--cream)">hello@khatiwadapos.com</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Phone" data-ne="फोन">Phone</span>
-          <span style="font-size:16px;font-weight:700;color:#FBF6ED" data-en="Coming soon" data-ne="चाँडै आउँदैछ">Coming soon</span>
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--footer-muted)" data-en="Phone" data-ne="फोन">Phone</span>
+          <span style="font-size:16px;font-weight:700;color:var(--cream)" data-en="Coming soon" data-ne="चाँडै आउँदैछ">Coming soon</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#8FA298" data-en="Location" data-ne="ठेगाना">Location</span>
-          <span style="font-size:16px;font-weight:700;color:#FBF6ED" data-en="Kathmandu, Nepal" data-ne="काठमाडौं, नेपाल">Kathmandu, Nepal</span>
+          <span style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--footer-muted)" data-en="Location" data-ne="ठेगाना">Location</span>
+          <span style="font-size:16px;font-weight:700;color:var(--cream)" data-en="Kathmandu, Nepal" data-ne="काठमाडौं, नेपाल">Kathmandu, Nepal</span>
         </div>
       </div>
     </div>
@@ -108,9 +108,9 @@
     <div style="flex:2 1 260px;max-width:340px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <img src="/logo.png" alt="Khatiwada POS" width="36" height="36" style="flex-shrink:0">
-        <span style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:#FBF6ED">Khatiwada <span style="color:#D9895F">POS</span></span>
+        <span style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:var(--cream)">Khatiwada <span style="color:var(--terracotta-light)">POS</span></span>
       </div>
-      <p style="font-size:15px;line-height:1.7;color:#C9D3CB;margin:0" data-en="A simple, honest point-of-sale system built for shops of every size across Nepal." data-ne="नेपालभरका हरेक साइजका पसलका लागि बनेको सिम्पल र भरपर्दो POS सिस्टम।">A simple, honest point-of-sale system built for shops of every size across Nepal.</p>
+      <p style="font-size:15px;line-height:1.7;color:var(--footer-text-soft);margin:0" data-en="A simple, honest point-of-sale system built for shops of every size across Nepal." data-ne="नेपालभरका हरेक साइजका पसलका लागि बनेको सिम्पल र भरपर्दो POS सिस्टम।">A simple, honest point-of-sale system built for shops of every size across Nepal.</p>
     </div>
     <div style="flex:1 1 140px">
       <div class="footer-heading" data-en="Company" data-ne="कम्पनी">Company</div>
@@ -132,13 +132,13 @@
       <div class="footer-heading" data-en="Legal" data-ne="लिगल">Legal</div>
       <div style="display:flex;flex-direction:column;gap:12px">
         <a href="/privacy" data-en="Privacy Policy" data-ne="प्राइभेसी पोलिसी">Privacy Policy</a>
-        <span style="color:#8FA298;font-size:14px">hello@khatiwadapos.com</span>
+        <span style="color:var(--footer-muted);font-size:14px">hello@khatiwadapos.com</span>
       </div>
     </div>
   </div>
-  <div style="max-width:1280px;margin:44px auto 0;padding-top:24px;border-top:1px solid #3E5C4B;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
-    <span style="font-size:13px;color:#8FA298" data-en="© 2026 Khatiwada POS. All rights reserved." data-ne="© २०२६ खटीवाडा POS। सबै अधिकार सुरक्षित।">© 2026 Khatiwada POS. All rights reserved.</span>
-    <span style="font-size:13px;color:#8FA298" data-en="Built in Kathmandu, for shopkeepers everywhere." data-ne="काठमाडौंमा बनेको, जताततैका पसलेहरूका लागि।">Built in Kathmandu, for shopkeepers everywhere.</span>
+  <div style="max-width:1280px;margin:44px auto 0;padding-top:24px;border-top:1px solid var(--green-light);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <span style="font-size:13px;color:var(--footer-muted)" data-en="© 2026 Khatiwada POS. All rights reserved." data-ne="© २०२६ खटीवाडा POS। सबै अधिकार सुरक्षित।">© 2026 Khatiwada POS. All rights reserved.</span>
+    <span style="font-size:13px;color:var(--footer-muted)" data-en="Built in Kathmandu, for shopkeepers everywhere." data-ne="काठमाडौंमा बनेको, जताततैका पसलेहरूका लागि।">Built in Kathmandu, for shopkeepers everywhere.</span>
   </div>
 </footer>
 

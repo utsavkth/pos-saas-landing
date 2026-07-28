@@ -69,7 +69,7 @@
             <input type="password" name="password" placeholder="Enter your password" data-en-placeholder="Enter your password" data-ne-placeholder="आफ्नो पासवर्ड लेख्नुहोस्">
           </div>
           <div style="display:flex;justify-content:flex-end;margin:-12px 0 4px">
-            <button type="button" id="go-forgot" class="btn-text" style="color:#B5502C" data-en="Forgot password?" data-ne="पासवर्ड बिर्सनुभयो?">Forgot password?</button>
+            <button type="button" id="go-forgot" class="btn-text" style="color:var(--terracotta)" data-en="Forgot password?" data-ne="पासवर्ड बिर्सनुभयो?">Forgot password?</button>
           </div>
           <span id="login-error-invalid" class="field-error" style="display:none;margin:-4px 0 16px" data-en="Invalid store name or password." data-ne="पसलको नाम वा पासवर्ड मिलेन।">Invalid store name or password.</span>
           <span id="login-error-suspended" class="field-error" style="display:none;margin:-4px 0 16px" data-en="This account is suspended. Please contact support." data-ne="यो खाता निलम्बित छ। कृपया सहयोगलाई सम्पर्क गर्नुहोस्।">This account is suspended. Please contact support.</span>
@@ -111,7 +111,7 @@
               <input name="store" id="signup-store" placeholder="e.g. Ram Store" data-en-placeholder="e.g. Ram Store" data-ne-placeholder="जस्तै: राम स्टोर">
               <span id="slug-preview" class="field-hint" style="display:none">
                 <span data-en="Your POS will be at:" data-ne="तपाईंको POS यहाँ हुनेछ:">Your POS will be at:</span>
-                <strong id="slug-value" style="color:#2F4B3C"></strong>
+                <strong id="slug-value" style="color:var(--green-text)"></strong>
               </span>
             </div>
             <div class="field">
@@ -177,7 +177,7 @@
           </p>
         </div>
         <div id="signup-sent-wrap" style="display:none;flex-direction:column;gap:14px;align-items:flex-start">
-          <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#E4EAE5"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#2F4B3C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="var(--green-mist)"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="var(--green)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
           <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0" data-en="Request sent" data-ne="रिक्वेस्ट पठाइयो">Request sent</h3>
           <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0" data-en="Thanks for reaching out. One of our representatives will be in contact with you shortly if we need any more details from you." data-ne="सम्पर्क गर्नुभएकोमा धन्यवाद। हाम्रो एक प्रतिनिधिले चाँडै सम्पर्क गर्नेछ, थप जानकारी चाहियो भने पनि।">Thanks for reaching out. One of our representatives will be in contact with you shortly if we need any more details from you.</p>
           <button type="button" id="back-from-signup-sent" class="btn-text" style="margin-top:8px" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
@@ -219,7 +219,7 @@
           </form>
         </div>
         <div id="forgot-done-wrap" style="display:none;flex-direction:column;gap:14px;align-items:flex-start">
-          <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#E4EAE5"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="#2F4B3C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+          <svg width="44" height="44" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="var(--green-mist)"></circle><polyline points="14,25 21,32 34,17" fill="none" stroke="var(--green)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
           <h3 style="font-family:var(--font-heading);font-size:20px;font-weight:700;margin:0" data-en="Password updated" data-ne="पासवर्ड अपडेट भयो">Password updated</h3>
           <p style="font-size:15px;line-height:1.6;color:var(--brown);margin:0" data-en="Your password has been reset. Log in with your new password." data-ne="तपाईंको पासवर्ड रिसेट भयो। नयाँ पासवर्डले लग इन गर्नुहोस्।">Your password has been reset. Log in with your new password.</p>
           <button type="button" id="back-from-forgot-done" class="btn-text" style="margin-top:8px" data-en="← Back to log in" data-ne="← लग इनमा फर्कनुहोस्">← Back to log in</button>
@@ -229,8 +229,8 @@
     </div>
 
     <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:20px">
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#6B5D4F" stroke-width="1.8"><rect x="4" y="9" width="12" height="8" rx="2"></rect><path d="M6.5 9 V6 a3.5 3.5 0 0 1 7 0 V9"></path></svg>
-      <span style="font-size:13px;color:#6B5D4F" data-en="Your shop's data stays private to your account only." data-ne="तपाईंको पसलको डेटा तपाईंको खातामा मात्र निजी रहन्छ।">Your shop's data stays private to your account only.</span>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="var(--brown)" stroke-width="1.8"><rect x="4" y="9" width="12" height="8" rx="2"></rect><path d="M6.5 9 V6 a3.5 3.5 0 0 1 7 0 V9"></path></svg>
+      <span style="font-size:13px;color:var(--brown)" data-en="Your shop's data stays private to your account only." data-ne="तपाईंको पसलको डेटा तपाईंको खातामा मात्र निजी रहन्छ।">Your shop's data stays private to your account only.</span>
     </div>
   </div>
 </main>
@@ -240,9 +240,9 @@
     <div style="flex:2 1 260px;max-width:340px">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
         <img src="/logo.png" alt="Khatiwada POS" width="36" height="36" style="flex-shrink:0">
-        <span style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:#FBF6ED">Khatiwada <span style="color:#D9895F">POS</span></span>
+        <span style="font-family:var(--font-heading);font-size:20px;font-weight:700;color:var(--cream)">Khatiwada <span style="color:var(--terracotta-light)">POS</span></span>
       </div>
-      <p style="font-size:15px;line-height:1.7;color:#C9D3CB;margin:0" data-en="A simple, honest point-of-sale system built for shops of every size across Nepal." data-ne="नेपालभरका हरेक साइजका पसलका लागि बनेको सिम्पल र भरपर्दो POS सिस्टम।">A simple, honest point-of-sale system built for shops of every size across Nepal.</p>
+      <p style="font-size:15px;line-height:1.7;color:var(--footer-text-soft);margin:0" data-en="A simple, honest point-of-sale system built for shops of every size across Nepal." data-ne="नेपालभरका हरेक साइजका पसलका लागि बनेको सिम्पल र भरपर्दो POS सिस्टम।">A simple, honest point-of-sale system built for shops of every size across Nepal.</p>
     </div>
     <div style="flex:1 1 140px">
       <div class="footer-heading" data-en="Company" data-ne="कम्पनी">Company</div>
@@ -264,13 +264,13 @@
       <div class="footer-heading" data-en="Legal" data-ne="लिगल">Legal</div>
       <div style="display:flex;flex-direction:column;gap:12px">
         <a href="/privacy" data-en="Privacy Policy" data-ne="प्राइभेसी पोलिसी">Privacy Policy</a>
-        <span style="color:#8FA298;font-size:14px">hello@khatiwadapos.com</span>
+        <span style="color:var(--footer-muted);font-size:14px">hello@khatiwadapos.com</span>
       </div>
     </div>
   </div>
-  <div style="max-width:1280px;margin:44px auto 0;padding-top:24px;border-top:1px solid #3E5C4B;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
-    <span style="font-size:13px;color:#8FA298" data-en="© 2026 Khatiwada POS. All rights reserved." data-ne="© २०२६ खटीवाडा POS। सबै अधिकार सुरक्षित।">© 2026 Khatiwada POS. All rights reserved.</span>
-    <span style="font-size:13px;color:#8FA298" data-en="Built in Kathmandu, for shopkeepers everywhere." data-ne="काठमाडौंमा बनेको, जताततैका पसलेहरूका लागि।">Built in Kathmandu, for shopkeepers everywhere.</span>
+  <div style="max-width:1280px;margin:44px auto 0;padding-top:24px;border-top:1px solid var(--green-light);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <span style="font-size:13px;color:var(--footer-muted)" data-en="© 2026 Khatiwada POS. All rights reserved." data-ne="© २०२६ खटीवाडा POS। सबै अधिकार सुरक्षित।">© 2026 Khatiwada POS. All rights reserved.</span>
+    <span style="font-size:13px;color:var(--footer-muted)" data-en="Built in Kathmandu, for shopkeepers everywhere." data-ne="काठमाडौंमा बनेको, जताततैका पसलेहरूका लागि।">Built in Kathmandu, for shopkeepers everywhere.</span>
   </div>
 </footer>
 
