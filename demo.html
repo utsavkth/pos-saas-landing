@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Try the Demo: Khatiwada POS</title>
+<meta name="description" content="Try a live demo of Khatiwada POS right in your browser. Scan products, ring up a sale, and add a product yourself. Nothing you do here is saved.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Khatiwada POS">
+<meta property="og:title" content="Try the Demo: Khatiwada POS">
+<meta property="og:description" content="A live, hands-on demo. Scan products, ring up a sale, and try the admin side too. Nothing here is saved.">
+<meta property="og:url" content="https://possaas.chickenkiller.com/demo">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/favicon-180.png">
+<style>
+  /* Demo-only styles. Kept in this page rather than style.css since none of
+     it is reused anywhere else on the site (matches the existing convention
+     of one-off layout staying local to the page that needs it). Everything
+     here still draws its colors from style.css's shared custom properties,
+     so it stays in sync if the palette ever changes. */
+
+  body { overflow-x: hidden; }
+
+  /* ---- Watermark: fixed, diagonal, non-interactive, sits above everything
+     but never blocks a real click or tap underneath it. Repeated a few times
+     down the page rather than one instance, so it stays visible on tall
+     content and after scrolling, not just at the very top. */
+  .demo-watermark {
+    position: fixed; inset: 0; z-index: 200; pointer-events: none;
+    overflow: hidden; display: flex; flex-direction: column;
+    justify-content: space-evenly; align-items: center; gap: 18vh;
+  }
+  .demo-watermark span {
+    display: block; white-space: nowrap; transform: rotate(-28deg);
+    font-family: var(--font-heading); font-weight: 800; letter-spacing: 0.02em;
+    font-size: clamp(15px, 3vw, 26px); color: var(--terracotta);
+    opacity: 0.16;
+  }
+
+  /* ---- Demo header: same brand mark/fonts as the rest of the site so
+     arriving here reads as a continuation, not a jump to a different site,
+     but simplified: no Features/Pricing/etc, since none of that applies
+     inside the sandbox. */
+  .demo-header {
+    position: sticky; top: 0; z-index: 100;
+    background: #FBF6EDE8; backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--tan-border);
+    padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .demo-header-left { display: flex; align-items: center; gap: 12px; }
+  .demo-badge {
+    background: var(--terracotta); color: #FFF; font-family: var(--font-body);
+    font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+  }
+
+  /* ---- Tab switcher, same pill pattern as the language toggle elsewhere ---- */
+  .demo-tabs { display: flex; background: var(--cream-2); border-radius: 999px; padding: 4px; }
+  .demo-tab {
+    border: none; cursor: pointer; padding: 10px 20px; border-radius: 999px;
+    font-family: var(--font-body); font-size: 14px; font-weight: 800;
+    background: transparent; color: var(--brown); transition: background-color .15s var(--ease), color .15s var(--ease);
+  }
+  .demo-tab.active { background: var(--terracotta); color: #FFF; }
+
+  .demo-main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; position: relative; z-index: 1; }
+  .demo-view { display: none; }
+  .demo-view.active { display: block; }
+
+  /* ---- Cashier tab ---- */
+  .demo-cashier-layout { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+  .demo-products-col { flex: 2 1 480px; min-width: 280px; }
+  .demo-cart-col { flex: 1 1 300px; min-width: 260px; position: sticky; top: 90px; }
+
+  .demo-toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .demo-search {
+    flex: 1; font-family: var(--font-body); font-size: 15px; padding: 12px 16px;
+    border-radius: 12px; border: 1px solid var(--tan-border); background: var(--white);
+  }
+  .demo-scan-btn {
+    border: none; cursor: pointer; background: var(--green); color: var(--cream);
+    font-family: var(--font-body); font-weight: 800; font-size: 14px;
+    padding: 0 20px; border-radius: 12px; display: flex; align-items: center; gap: 8px;
+    transition: background-color .15s var(--ease);
+  }
+  .demo-scan-btn:hover { background: var(--green-light); }
+
+  .demo-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .demo-product-tile {
+    border: none; cursor: pointer; border-radius: 16px; padding: 16px 12px; text-align: left;
+    color: #FFF; font-family: var(--font-body); display: flex; flex-direction: column; gap: 4px;
+    min-height: 88px; justify-content: flex-end;
+    transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+  }
+  .demo-product-tile:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(43,32,25,0.18); }
+  .demo-product-tile .name { font-weight: 800; font-size: 14.5px; line-height: 1.25; }
+  .demo-product-tile .price { font-size: 13px; opacity: 0.9; font-weight: 700; }
+
+  .demo-cart {
+    background: var(--white); border: 1px solid var(--tan-border); border-radius: 20px;
+    padding: 20px; box-shadow: 0 12px 32px rgba(43,32,25,0.06);
+  }
+  .demo-cart h2 { font-family: var(--font-heading); font-size: 18px; margin: 0 0 14px; color: var(--ink); }
+  .demo-cart-empty { color: var(--brown-2); font-size: 14px; text-align: center; padding: 20px 0; }
+  .demo-cart-item { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--tan-border); }
+  .demo-cart-item:last-child { border-bottom: none; }
+  .demo-cart-item-name { flex: 1; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .demo-cart-item-price { font-size: 13px; color: var(--brown); }
+  .demo-qty-btn {
+    width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--tan-border); background: var(--cream);
+    cursor: pointer; font-weight: 800; color: var(--ink); flex-shrink: 0; font-family: var(--font-body);
+  }
+  .demo-cart-total { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; margin-top: 12px; border-top: 2px solid var(--ink); }
+  .demo-cart-total span:first-child { font-weight: 800; color: var(--ink); }
+  .demo-cart-total span:last-child { font-weight: 800; font-size: 20px; color: var(--terracotta); }
+  .demo-checkout-btn { width: 100%; margin-top: 16px; }
+
+  /* ---- Products/admin tab ---- */
+  .demo-products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+  .demo-products-table { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--tan-border); border-radius: 16px; overflow: hidden; }
+  .demo-products-table th {
+    text-align: left; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+    color: var(--brown-2); padding: 12px 16px; background: var(--cream-2);
+  }
+  .demo-products-table td { padding: 12px 16px; font-size: 14.5px; color: var(--ink); border-top: 1px solid var(--tan-border); }
+
+  /* ---- Modal (used for add-product and the scan viewfinder) ---- */
+  .demo-modal-backdrop {
+    position: fixed; inset: 0; z-index: 300; background: rgba(43,32,25,0.5);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .demo-modal-backdrop[hidden] { display: none; }
+  .demo-modal {
+    background: var(--white); border-radius: 20px; padding: 28px; width: 100%; max-width: 380px;
+    box-shadow: 0 24px 60px rgba(43,32,25,0.28);
+  }
+  .demo-modal h2 { font-family: var(--font-heading); font-size: 19px; margin: 0 0 16px; color: var(--ink); }
+  .demo-modal .field { margin-bottom: 16px; }
+  .demo-modal label { display: block; font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .demo-modal input {
+    width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 14px;
+    border-radius: 10px; border: 1px solid var(--tan-border); background: var(--cream);
+  }
+  .demo-modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .demo-modal-actions .btn-primary, .demo-modal-actions .demo-cancel-btn { flex: 1; text-align: center; }
+  .demo-cancel-btn {
+    border: 1px solid var(--tan-border); background: var(--white); color: var(--brown);
+    font-family: var(--font-body); font-weight: 800; font-size: 15px; padding: 12px; border-radius: 999px; cursor: pointer;
+  }
+
+  /* ---- Scan viewfinder ---- */
+  /* aspect-ratio lives on the frame itself, not just the <video>, so the
+     reticle (an absolutely-positioned child) always has real space to
+     size itself against, camera granted or not -- without this, a denied
+     or unavailable camera left the video collapsed to zero height and the
+     reticle shrank down to a thin sliver instead of a proper viewfinder. */
+  .demo-scan-frame {
+    position: relative; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden;
+    background: var(--ink);
+  }
+  .demo-scan-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .demo-scan-reticle {
+    position: absolute; inset: 16%; border: 3px solid var(--terracotta); border-radius: 16px;
+    box-shadow: 0 0 0 999px rgba(0,0,0,0.35);
+  }
+  .demo-scan-no-camera {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 10px; color: var(--cream-2); font-family: var(--font-body); font-weight: 700;
+  }
+  .demo-scan-no-camera .icon { font-size: 32px; }
+  .demo-scan-status { text-align: center; margin-top: 14px; font-weight: 700; color: var(--ink); }
+
+  /* ---- Toast ---- */
+  .demo-toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--green); color: var(--cream); font-family: var(--font-body); font-weight: 700;
+    padding: 14px 24px; border-radius: 999px; box-shadow: 0 12px 32px rgba(43,32,25,0.28);
+    z-index: 400; opacity: 0; transition: opacity .25s var(--ease), transform .25s var(--ease); pointer-events: none;
+  }
+  .demo-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 700px) {
+    .demo-cart-col { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-watermark" aria-hidden="true">
+  <span>This is a demo of what your POS system will look like</span>
+  <span>This is a demo of what your POS system will look like</span>
+  <span>This is a demo of what your POS system will look like</span>
+  <span>This is a demo of what your POS system will look like</span>
+</div>
+
+<header class="demo-header">
+  <div class="demo-header-left">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <img src="/logo.png" alt="Khatiwada POS" width="34" height="34">
+      <span style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--ink)">Khatiwada <span style="color:var(--terracotta)">POS</span></span>
+    </a>
+    <span class="demo-badge">Demo</span>
+  </div>
+  <div class="demo-tabs" role="tablist">
+    <button class="demo-tab active" data-view="cashier" role="tab">Cashier</button>
+    <button class="demo-tab" data-view="products" role="tab">Products</button>
+  </div>
+  <a href="/" class="btn-text">Exit demo</a>
+</header>
+
+<main class="demo-main">
+
+  <section id="demo-view-cashier" class="demo-view active">
+    <div class="demo-cashier-layout">
+      <div class="demo-products-col">
+        <div class="demo-toolbar">
+          <input type="text" class="demo-search" id="demo-search" placeholder="Search item…" autocomplete="off">
+          <button type="button" class="demo-scan-btn" id="demo-scan-open">📷 Scan</button>
+        </div>
+        <div class="demo-product-grid" id="demo-product-grid"></div>
+      </div>
+      <div class="demo-cart-col">
+        <div class="demo-cart">
+          <h2>Current sale</h2>
+          <div id="demo-cart-items"></div>
+          <div class="demo-cart-total">
+            <span>Total</span>
+            <span id="demo-cart-total">Rs 0</span>
+          </div>
+          <button type="button" class="btn-primary demo-checkout-btn" id="demo-checkout">Complete sale</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo-view-products" class="demo-view">
+    <div class="demo-products-header">
+      <h1 class="section-title" style="font-size:22px;margin:0">Products</h1>
+      <button type="button" class="btn-primary small" id="demo-add-product-open">+ Add product</button>
+    </div>
+    <table class="demo-products-table">
+      <thead>
+        <tr><th>Name</th><th>Category</th><th>Price</th></tr>
+      </thead>
+      <tbody id="demo-products-tbody"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<div class="demo-modal-backdrop" id="demo-add-modal" hidden>
+  <div class="demo-modal">
+    <h2>Add a product</h2>
+    <form id="demo-add-form">
+      <div class="field">
+        <label for="demo-add-name">Product name</label>
+        <input type="text" id="demo-add-name" required placeholder="e.g. Instant noodles">
+      </div>
+      <div class="field">
+        <label for="demo-add-price">Price (Rs)</label>
+        <input type="number" id="demo-add-price" required min="1" placeholder="e.g. 45">
+      </div>
+      <div class="demo-modal-actions">
+        <button type="button" class="demo-cancel-btn" id="demo-add-cancel">Cancel</button>
+        <button type="submit" class="btn-primary">Add product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="demo-modal-backdrop" id="demo-scan-modal" hidden>
+  <div class="demo-modal">
+    <h2>Scanning…</h2>
+    <div class="demo-scan-frame">
+      <video class="demo-scan-video" id="demo-scan-video" autoplay playsinline muted hidden></video>
+      <div class="demo-scan-no-camera" id="demo-scan-no-camera"><span class="icon">📷</span><span>Simulating a scan…</span></div>
+      <div class="demo-scan-reticle"></div>
+    </div>
+    <p class="demo-scan-status" id="demo-scan-status">Point your camera at a barcode</p>
+    <div class="demo-modal-actions">
+      <button type="button" class="demo-cancel-btn" id="demo-scan-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="demo-toast" id="demo-toast"></div>
+
+<script src="/demo.js"></script>
+</body>
+</html>
