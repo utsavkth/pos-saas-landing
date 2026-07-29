@@ -418,6 +418,12 @@ main figure:hover img { transform: scale(1.04); }
   .hero-mockup-scan { height: 100px !important; }
 }
 
+/* ---- Family shop photo, shrunk on mobile so it doesn't outweigh the
+   text it sits next to once it wraps below on narrow screens ---- */
+@media (max-width: 680px) {
+  .family-shop-img { max-width: 160px !important; min-width: 0 !important; margin: 0 auto !important; }
+}
+
 /* ---- Sticky mobile CTA (homepage only) ---- */
 .sticky-mobile-cta { display: none; }
 @media (max-width: 680px) {
