@@ -334,7 +334,13 @@ img, svg { max-width: 100%; }
 @media (min-width: 1060px) { .faq-bot-restore-mobile.visible { display: none; } }
 #faq-bot-panel {
   position: fixed; right: 18px; bottom: 18px; z-index: 61;
-  width: min(340px, calc(100vw - 36px)); max-height: min(500px, calc(100vh - 36px));
+  /* The cap used to be 500px, which on a 812px phone left the transcript
+     186px -- not enough for one full answer, so the top of every reply was
+     already scrolled out of view as it arrived. dvh (with a vh fallback for
+     older browsers) because the mobile URL bar makes vh overshoot. */
+  width: min(340px, calc(100vw - 36px));
+  max-height: min(600px, calc(100vh - 36px));
+  max-height: min(600px, calc(100dvh - 36px));
   background: var(--white); border: 1px solid var(--tan-border); border-radius: 20px;
   box-shadow: 0 24px 60px rgba(43,32,25,0.28); display: flex; flex-direction: column; overflow: hidden;
 }
@@ -352,17 +358,46 @@ img, svg { max-width: 100%; }
   background: none; border: none; color: var(--cream); font-size: 22px; cursor: pointer; line-height: 1;
   padding: 4px 6px; flex-shrink: 0; font-family: var(--font-body);
 }
-#faq-bot-messages { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--cream); min-height: 120px; }
+#faq-bot-messages { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; background: var(--cream); min-height: 190px; }
 .faq-bot-msg { max-width: 88%; padding: 9px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; }
 .faq-bot-msg.bot { background: var(--white); border: 1px solid var(--tan-border); align-self: flex-start; border-bottom-left-radius: 4px; color: var(--ink); }
 .faq-bot-msg.user { background: var(--terracotta); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 600; }
-#faq-bot-menu { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 7px; background: var(--white); border-top: 1px solid var(--tan-border); max-height: 190px; overflow-y: auto; flex-shrink: 0; }
+/* The disclosure row that owns the full question list. It carries the border
+   the menu used to, so the panel keeps the same seam whether the list is open
+   or shut. Chevron via ::after, not a child element: script.js's applyLang
+   sets textContent on every [data-en] node it finds, and a real child would
+   be wiped on the first language toggle. */
+#faq-bot-menu-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;
+  border: none; border-top: 1px solid var(--tan-border); background: var(--white);
+  color: var(--terracotta-text); font-family: var(--font-body); font-weight: 800;
+  font-size: 12.5px; text-align: left; padding: 11px 14px; cursor: pointer; flex-shrink: 0;
+}
+#faq-bot-menu-toggle:hover { background: var(--cream-2); }
+#faq-bot-menu-toggle::after { content: "\25BE"; font-size: 13px; transition: transform .2s var(--ease); }
+#faq-bot-panel.menu-open #faq-bot-menu-toggle::after { transform: rotate(180deg); }
+/* Only rendered while open, so a closed list costs nothing but the row above.
+   Capped in vh rather than at a flat 190px -- the old fixed height showed 4 of
+   15 questions on every screen size, tall ones included. */
+#faq-bot-menu { display: none; padding: 4px 14px 14px; flex-direction: column; gap: 7px; background: var(--white); max-height: min(300px, 34vh); overflow-y: auto; flex-shrink: 0; }
+#faq-bot-panel.menu-open #faq-bot-menu { display: flex; }
+/* While the list is open the transcript sizes to its content instead of
+   holding a 190px floor -- otherwise the opening state is a greeting followed
+   by a large blank gap. The floor matters only once the list folds away and
+   the transcript becomes the main surface. */
+#faq-bot-panel.menu-open #faq-bot-messages { min-height: 0; }
 .faq-bot-chip {
   text-align: left; background: var(--cream-2); border: 1px solid var(--tan-border); border-radius: 10px;
   padding: 8px 12px; font-size: 13px; font-weight: 700; color: var(--terracotta-text); cursor: pointer;
   font-family: var(--font-body);
 }
 .faq-bot-chip:hover { background: var(--white); border-color: var(--terracotta); }
+/* Suggestion chips rendered inside a bot message (follow-ups after an answer,
+   or the "did you mean" list when the matcher isn't confident) -- same chip
+   look as the standing menu, a step smaller so they read as part of the
+   conversation rather than a second menu. */
+.faq-bot-suggest { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.faq-bot-suggest .faq-bot-chip { font-size: 12.5px; padding: 7px 10px; background: var(--cream); }
 #faq-bot-input-form {
   display: flex; gap: 8px; padding: 10px 14px; background: var(--white);
   border-top: 1px solid var(--tan-border); flex-shrink: 0;
@@ -395,8 +430,11 @@ img, svg { max-width: 100%; }
   /* Panel already spans edge-to-edge here (left AND right both set), so it
      needs no side variant -- and .side-left's `right: auto` would actually
      break that, hence resetting it back. */
+  /* Edge-to-edge on phones, so the extra height is worth taking too -- the
+     panel is the whole interaction at this size, not a corner overlay. */
   #faq-bot-panel { right: 8px; bottom: 8px; left: 8px; width: auto; }
   #faq-bot-panel.side-left { right: 8px; left: 8px; }
+  #faq-bot-panel { max-height: calc(100vh - 16px); max-height: calc(100dvh - 16px); }
 }
 
 /* ---- Utility ---- */

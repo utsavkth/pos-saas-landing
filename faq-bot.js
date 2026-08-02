@@ -89,20 +89,153 @@
     ne: "त्यसको बारेमा म पक्का छैन। तलका प्रश्नहरूमध्ये एउटा प्रयास गर्नुहोस्, वा Contact पेजबाट सम्पर्क गर्नुहोस्।"
   };
 
-  // Still no AI, no backend, no cost -- see the Notion tracker for why that
-  // was chosen over a paid API. But plain substring matching on the whole
-  // typed sentence had real gaps: a multi-word keyword like "bring my data"
-  // only matched if the visitor typed those exact words adjacent and in that
-  // order, and single-word keywords like "cost" wouldn't match "costs" or a
-  // simple typo like "cots". This tokenizes the input into actual words
-  // (Unicode-aware, so Devanagari works the same as Latin script), matches
-  // each keyword word against whole input tokens with light typo/plural
-  // tolerance (prefix match + edit-distance-1), and for multi-word keywords
-  // requires every one of its words to appear SOMEWHERE in the input rather
-  // than as a rigid contiguous phrase -- weighted by word count, so a
-  // specific multi-word match outweighs one generic single-word overlap.
+  /* ---- Matching engine ---------------------------------------------------
+     Still no AI, no backend, no cost -- see the Notion tracker for why that
+     was chosen over a paid API. Everything below runs in the visitor's own
+     browser off the FAQ list above. The aim is to get as close to "it
+     actually understood me" as plain JS honestly can.
+
+     Four things it does that keyword matching alone didn't:
+
+     1. It searches the FULL text of every entry -- keywords, question and
+        answer, weighted in that order -- not just the hand-written keyword
+        list. So "lentils" or "camera" finds the features entry even though
+        nobody thought to list them as keywords. Rare words count for more
+        than common ones (standard IDF weighting): "offline" appears in one
+        entry and is highly diagnostic, "shop" appears in half of them and
+        tells us nothing, and the scoring reflects that on its own without
+        anyone maintaining a list of which words matter.
+
+     2. It normalises how people actually type. Romanised Nepali ("kati
+        parcha", "kasari", "chalcha") folds onto the same canonical term as
+        the English and Devanagari equivalents, along with ordinary synonyms
+        (rate/charge/fee -> cost, esewa/khalti/fonepay -> qr), filler words
+        are dropped from both sides, and the old prefix/one-typo tolerance is
+        kept for everything else.
+
+     3. It knows when it doesn't know. Scores come out as a 0-1 confidence,
+        so there are three outcomes instead of one: confident -> answer;
+        unsure -> answer but say so and offer alternatives; lost -> stop
+        guessing, apologise, and show the closest questions as tappable
+        chips. The old version always answered its single best guess no
+        matter how weak the evidence was, which is how you get a confident
+        answer about pricing to someone asking about receipt printers.
+
+     4. It handles more than one question at a time ("how much is it and does
+        it work offline?") by scoring each clause separately, and follows
+        every answer with the most related questions -- computed from term
+        overlap between entries, not a hand-maintained list, so a new FAQ
+        added above wires itself into the suggestions with no extra work.
+  */
+
+  // Filler that carries no signal for choosing between 15 entries. Stripped
+  // from the query and the index alike. Nepali particles included both in
+  // Devanagari and in the Romanised form people type on a phone keyboard.
+  var STOPWORDS = {};
+  ("a an and any are as at be been but by can could did do does doing for from " +
+   "give go had has have how i if in into is it just like me my need no not of on " +
+   "one or our out own please should so some tell that the their them then there " +
+   "than these they this to too us use used using want was we well what when where " +
+   "which who why will with would you your " +
+   "cha chha ho hola hos huncha hunchha ka ki ko kura lai le ma mero na ni pani " +
+   "ra ta tapai tapain timi yo tyo " +
+   "छ छन् हो हुन् को का की मा मेरो ले लाई र नि पनि यो त्यो के कुरा गर्न गर्ने हुन्छ म तपाईं")
+    .split(/\s+/).forEach(function (w) { if (w) STOPWORDS[w] = true; });
+
+  // Multi-word forms collapsed before tokenizing, so "how much" becomes the
+  // same single term as "price" rather than two throwaway stopwords.
+  var PHRASES = [
+    [/\bhow much\b/g, " cost "],
+    [/\bpoint of sale\b/g, " pos "],
+    [/\bsign ?up\b/g, " signup "],
+    [/\bset ?up\b/g, " setup "],
+    [/\blog ?in\b/g, " login "],
+    [/\bbar ?code\b/g, " barcode "],
+    [/\bwi ?-? ?fi\b/g, " wifi "],
+    [/\bfree trial\b/g, " trial "],
+    [/\bcredit card\b/g, " payment "],
+    [/\bkati (parcha|parxa|padcha|paisa)\b/g, " cost "],
+    [/\b(kasari|kasary)\b/g, " how "],
+    [/\b(chalcha|chalxa|chalchha)\b/g, " work "],
+    [/\b(milcha|milxa|milchha)\b/g, " work "]
+  ];
+
+  // Words that mean the same thing to this bot, collapsed onto one canonical
+  // term. Both the query and the index run through this, so a Devanagari
+  // question can match an English-only answer and vice versa -- which matters
+  // here, because the answers are written in both languages but visitors
+  // routinely mix scripts in a single sentence.
+  var SYNONYM_GROUPS = {
+    cost: ["price", "prices", "pricing", "costs", "much", "rate", "rates", "charge", "charges", "fee",
+           "fees", "expensive", "cheap", "afford", "affordable", "budget", "paisa", "mulya",
+           "mullya", "dam", "kati", "मूल्य", "पैसा", "कति", "दाम", "शुल्क"],
+    hardware: ["device", "devices", "machine", "machines", "equipment", "gadget", "phone",
+               "phones", "mobile", "tablet", "tablets", "laptop", "computer", "ipad", "iphone",
+               "android", "हार्डवेयर", "उपकरण", "फोन", "मोबाइल", "ट्याब्लेट", "ल्यापटप"],
+    scanner: ["scan", "scans", "scanning", "scanner", "scanners", "barcode", "barcodes",
+              "camera", "स्क्यान", "बारकोड", "क्यामेरा"],
+    internet: ["offline", "online", "wifi", "net", "network", "connection", "connectivity",
+               "इन्टरनेट", "अनलाइन", "अफलाइन", "वाइफाइ", "नेटवर्क", "कनेक्सन"],
+    privacy: ["private", "secure", "security", "safe", "safety", "confidential", "hack",
+              "hacked", "leak", "surakshit", "gopya", "सुरक्षित", "गोप्य", "निजी"],
+    data: ["डेटा", "डाटा"],
+    staff: ["employee", "employees", "worker", "workers", "cashier", "cashiers", "counter",
+            "counters", "स्टाफ", "कर्मचारी", "क्यासियर", "काउन्टर"],
+    support: ["help", "helps", "assistance", "assist", "contact", "reach", "सहयोग", "सम्पर्क", "मद्दत"],
+    language: ["nepali", "english", "devanagari", "bilingual", "bhasa", "bhasha", "भाषा",
+               "नेपाली", "अंग्रेजी", "द्विभाषी"],
+    setup: ["install", "installation", "installing", "onboarding", "training", "train",
+            "teach", "configure", "सेटअप", "तालिम", "इन्स्टलेसन", "सिकाउने"],
+    trial: ["demo", "try", "trying", "test", "testing", "sample", "ट्राइल", "डेमो", "परीक्षण", "जाँच्ने"],
+    transfer: ["import", "export", "csv", "excel", "spreadsheet", "migrate", "migration",
+               "upload", "notebook", "इम्पोर्ट", "सार्न", "सारिने", "कापी"],
+    stock: ["inventory", "goods", "item", "items", "product", "products", "samaan", "स्टक",
+            "सामान", "प्रोडक्ट", "मौज्दात"],
+    report: ["reports", "reporting", "analytics", "रिपोर्ट", "हिसाब"],
+    feature: ["features", "capability", "capabilities", "functionality", "function",
+              "functions", "फिचर", "सुविधा"],
+    qr: ["fonepay", "esewa", "khalti", "wallet", "upi", "क्यूआर", "फोनपे", "इसेवा", "खल्ती"],
+    payment: ["payments", "pay", "paying", "paid", "cash", "भुक्तानी", "तिर्न", "पेमेन्ट", "नगद"],
+    plan: ["plans", "package", "packages", "tier", "tiers", "subscription", "प्लान", "योजना"],
+    shop: ["shops", "store", "stores", "business", "dukan", "pasal", "mart", "kirana",
+           "grocery", "पसल", "व्यवसाय", "किराना"],
+    signup: ["register", "registration", "join", "enroll", "start", "started", "begin", "दर्ता", "सुरु"],
+    sale: ["sales", "selling", "sell", "bill", "billing", "invoice", "receipt", "बिक्री", "बिल", "रसिद"],
+    weight: ["weighing", "weighed", "kg", "kilo", "kilogram", "loose", "bulk", "तौल", "किलो", "खुद्रा"],
+    account: ["accounts", "login", "logins", "password", "खाता", "लगइन"]
+  };
+
+  var CANONICAL = {};
+  Object.keys(SYNONYM_GROUPS).forEach(function (canon) {
+    CANONICAL[canon] = canon;
+    SYNONYM_GROUPS[canon].forEach(function (variant) { CANONICAL[variant] = canon; });
+  });
+
+  // \p{M} matters here: Devanagari vowel signs and the virama are combining
+  // MARKS, not letters, so a letters-only class chopped "नमस्ते" into "नमस"
+  // + "त" and "चल्छ" into "चल" + "छ". Matching still mostly worked because
+  // both sides of the comparison were mangled the same way, but the pieces
+  // were meaningless as terms -- and anything matching a whole Nepali word
+  // (the small-talk list below) never fired at all.
   function tokenize(text) {
-    return text.toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
+    return text.toLowerCase().match(/[\p{L}\p{N}\p{M}]+/gu) || [];
+  }
+
+  // Query text and indexed text both go through this, so the two sides always
+  // agree on what a word "is". Returns canonical, de-duplicated terms.
+  function normalize(text) {
+    var lowered = " " + String(text).toLowerCase() + " ";
+    PHRASES.forEach(function (p) { lowered = lowered.replace(p[0], p[1]); });
+    var out = [];
+    var seen = {};
+    tokenize(lowered).forEach(function (raw) {
+      if (STOPWORDS[raw]) return;
+      var term = CANONICAL[raw] || raw;
+      if (STOPWORDS[term] || term.length < 2 || seen[term]) return;
+      seen[term] = true;
+      out.push(term);
+    });
+    return out;
   }
 
   // Cheap Levenshtein, capped at distance 1 (bails out fast once two chars
@@ -124,42 +257,315 @@
     return true;
   }
 
-  function wordMatches(token, keyword) {
-    if (token === keyword) return true;
-    if (keyword.length >= 4 && token.indexOf(keyword) === 0) return true; // "costs" ~ "cost"
-    if (token.length >= 4 && keyword.indexOf(token) === 0) return true;
-    if (keyword.length >= 5 && withinEditDistanceOne(token, keyword)) return true; // typo tolerance
-    return false;
+  // Levenshtein doesn't see a swapped pair of letters as one mistake -- "cots"
+  // for "cost" scores 2 and gets rejected, even though it's a single slip of
+  // the fingers and about the most likely typo anyone will make on this site.
+  // Checking transposition separately is cheaper than a full Damerau table.
+  function withinOneTransposition(a, b) {
+    if (a.length !== b.length) return false;
+    var diff = [];
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) {
+        diff.push(i);
+        if (diff.length > 2) return false;
+      }
+    }
+    return diff.length === 2 && diff[1] === diff[0] + 1 &&
+      a[diff[0]] === b[diff[1]] && a[diff[1]] === b[diff[0]];
   }
 
-  function matchFaq(input) {
-    var tokens = tokenize(input);
-    var best = null;
-    var bestScore = 0;
-    FAQS.forEach(function (faq) {
-      var score = 0;
-      faq.keywords.forEach(function (kw) {
-        var kwWords = tokenize(kw);
-        // Every word of the keyword has to show up SOMEWHERE among the
-        // input's tokens (each still via wordMatches' typo/plural
-        // tolerance), not as a rigid contiguous substring. A phrase keyword
-        // like "bring my data" only matched literal-adjacent typing before;
-        // real typed phrasing ("bring my OLD data over") drops words in
-        // between constantly, and this still counts it. Weight = word count,
-        // so a genuinely specific multi-word phrase outweighs one generic
-        // single-word overlap, but only when every one of its words is
-        // actually present, not a coincidental substring of the sentence.
-        var allWordsPresent = kwWords.every(function (kwWord) {
-          return tokens.some(function (t) { return wordMatches(t, kwWord); });
-        });
-        if (allWordsPresent) score += kwWords.length;
+  function isNearMiss(a, b) {
+    return withinEditDistanceOne(a, b) || withinOneTransposition(a, b);
+  }
+
+  // ---- Index -------------------------------------------------------------
+  // Built once at load from the FAQ list itself. Every entry becomes a bag of
+  // canonical terms with the weight of the strongest field each appeared in,
+  // so a word the author deliberately listed as a keyword outranks the same
+  // word happening to occur in prose.
+  var FIELD_WEIGHT = { keyword: 3, question: 2, answer: 1 };
+  var MAX_FIELD_WEIGHT = 3;
+  var DOC_COUNT = FAQS.length;
+  var DF = {};   // term -> number of entries containing it
+
+  FAQS.forEach(function (faq) {
+    var terms = {};
+    function add(text, weight) {
+      normalize(text).forEach(function (t) {
+        if (!terms[t] || terms[t] < weight) terms[t] = weight;
       });
-      if (score > bestScore) {
-        bestScore = score;
-        best = faq;
+    }
+    faq.keywords.forEach(function (kw) { add(kw, FIELD_WEIGHT.keyword); });
+    add(faq.q.en, FIELD_WEIGHT.question);
+    add(faq.q.ne, FIELD_WEIGHT.question);
+    add(faq.a.en, FIELD_WEIGHT.answer);
+    add(faq.a.ne, FIELD_WEIGHT.answer);
+    faq.terms = terms;
+    // Multi-word keywords kept as term lists for the phrase bonus below.
+    // Ones that reduce to nothing (e.g. "के हो", all particles) are dropped --
+    // an empty list would otherwise vacuously "match" every single query.
+    faq.phrases = faq.keywords.map(normalize).filter(function (w) { return w.length > 1; });
+    Object.keys(terms).forEach(function (t) { DF[t] = (DF[t] || 0) + 1; });
+  });
+
+  // Everything a typed word is allowed to be a near-miss of: the indexed
+  // terms themselves, plus every synonym spelling that leads to one. Without
+  // the second half, a typo in a word that only exists as a synonym ("pricce",
+  // "offlien") resolves to nothing -- the canonical form it would have mapped
+  // to is the only thing in the index, and it looks nothing like what was
+  // typed. Each entry carries the term it ultimately resolves to.
+  var VOCAB = Object.keys(DF);
+  var FUZZY_VOCAB = (function () {
+    var resolvesTo = {};
+    VOCAB.forEach(function (term) { resolvesTo[term] = term; });
+    Object.keys(CANONICAL).forEach(function (variant) {
+      var canon = CANONICAL[variant];
+      if (DF[canon] && !resolvesTo[variant]) resolvesTo[variant] = canon;
+    });
+    return Object.keys(resolvesTo).map(function (word) {
+      return { word: word, term: resolvesTo[word] };
+    });
+  })();
+
+  function idf(term) {
+    var df = DF[term] || 0;
+    return df ? Math.log(1 + DOC_COUNT / df) : 0;
+  }
+
+  // A typed word that isn't in the vocabulary verbatim gets one chance to be
+  // recognised as a plural/prefix form or a single-letter typo of something
+  // that is. Confidence is discounted accordingly rather than treated as an
+  // exact hit, so a fuzzy match can't outrank a real one.
+  function resolveTerm(token) {
+    if (DF[token]) return { term: token, quality: 1 };
+    var best = null;
+    FUZZY_VOCAB.forEach(function (entry) {
+      var word = entry.word;
+      var quality = 0;
+      if (word.length >= 4 && token.indexOf(word) === 0) quality = 0.75;
+      else if (token.length >= 4 && word.indexOf(token) === 0) quality = 0.75;
+      // 4 rather than 5, so a one-letter slip in a short but load-bearing
+      // word still lands: "cots" -> "cost" is the single most likely typo on
+      // this whole site and the old 5-character floor missed it.
+      else if (word.length >= 4 && isNearMiss(token, word)) quality = 0.6;
+      if (!quality) return;
+      if (!best || quality > best.quality ||
+          (quality === best.quality && idf(entry.term) > idf(best.term))) {
+        best = { term: entry.term, quality: quality };
       }
     });
     return best;
+  }
+
+  // Scores every entry against one piece of typed text, best first. The score
+  // is normalised against the best any entry could possibly have done on this
+  // particular query, which is what makes it comparable across questions --
+  // a raw sum isn't, because a long query naturally accumulates more of it.
+  function scoreAll(text) {
+    var resolved = [];
+    normalize(text).forEach(function (token) {
+      var r = resolveTerm(token);
+      if (r) resolved.push(r);
+    });
+    if (!resolved.length) return [];
+
+    var ceiling = 0;
+    resolved.forEach(function (r) { ceiling += idf(r.term) * MAX_FIELD_WEIGHT; });
+    if (ceiling <= 0) return [];
+
+    var scored = [];
+    FAQS.forEach(function (faq) {
+      var raw = 0, hits = 0;
+      resolved.forEach(function (r) {
+        var weight = faq.terms[r.term];
+        if (!weight) return;
+        hits++;
+        raw += idf(r.term) * weight * r.quality;
+      });
+      if (!hits) return;
+      // Same idea as the old phrase rule: every word of a multi-word keyword
+      // present somewhere in the query (not necessarily adjacent) is strong
+      // evidence, so it tops the score up. Capped, so an entry with lots of
+      // long keywords can't win on bonus alone.
+      var bonus = 0;
+      faq.phrases.forEach(function (words) {
+        var allPresent = words.every(function (w) {
+          return resolved.some(function (r) { return r.term === w; });
+        });
+        if (allPresent) bonus += 0.1 * words.length;
+      });
+      scored.push({
+        faq: faq,
+        hits: hits,
+        confidence: Math.min(1, raw / ceiling + Math.min(bonus, 0.3))
+      });
+    });
+    return scored.sort(function (a, b) { return b.confidence - a.confidence; });
+  }
+
+  // Above CONFIDENT we answer flat out; between the two we answer but name
+  // the question we think was asked and offer alternatives; below MAYBE we
+  // stop guessing and just suggest. The gap between them is deliberately
+  // wide -- a wrong answer delivered confidently costs more trust than an
+  // honest "did you mean one of these?".
+  var CONFIDENT = 0.5;
+  var MAYBE = 0.22;
+
+  function faqById(id) {
+    var found = null;
+    FAQS.forEach(function (faq) { if (faq.id === id) found = faq; });
+    return found;
+  }
+
+  // Shown when there's nothing better to show. The three that come up first
+  // in real conversations, in the order someone new to the product asks them.
+  var POPULAR = ["what-is", "cost", "get-started"].map(faqById).filter(Boolean);
+
+  // Not everything typed into a chat box is a question. Greeting someone back
+  // costs nothing and is the difference between "this is a search box wearing
+  // a costume" and something worth talking to. The identity answer is
+  // deliberately honest -- it is not a person and shouldn't imply it is.
+  var SMALLTALK = {
+    greeting: {
+      words: ["hi", "hello", "hey", "yo", "namaste", "namaskar", "नमस्ते", "नमस्कार", "greetings"],
+      reply: { en: "Namaste! Ask me anything about Khatiwada POS, or tap one of these:",
+               ne: "नमस्ते! खटीवाडा POS को बारेमा जे पनि सोध्नुहोस्, वा यीमध्ये एउटा छान्नुहोस्:" }
+    },
+    thanks: {
+      words: ["thanks", "thank", "thankyou", "thx", "dhanyabad", "dhanyabaad", "धन्यवाद"],
+      reply: { en: "Any time! Anything else you'd like to know?",
+               ne: "स्वागत छ! अरू केही जान्न चाहनुहुन्छ?" }
+    },
+    identity: {
+      words: ["robot", "bot", "ai", "human", "person", "machine"],
+      reply: { en: "I'm a little helper on this page, not a person. I answer from a fixed list of questions. Anything I can't cover, the Contact page goes to a real human who reads every message.",
+               ne: "म यो पेजको सानो सहयोगी हुँ, मान्छे होइन। तयार पारिएका प्रश्नहरूबाट जवाफ दिन्छु। मैले नभ्याएको कुरा Contact पेजबाट सोध्नुहोस्, त्यहाँ साँच्चैको मान्छेले हरेक सन्देश पढ्छ।" }
+    }
+  };
+
+  // Only fires when the message is nothing BUT small talk -- "thanks, and how
+  // much does it cost?" is a real question that happens to be polite, and
+  // should be answered as one.
+  function matchSmallTalk(input) {
+    var terms = normalize(input);
+    if (!terms.length) return null;
+    var hit = null;
+    var allSmallTalk = terms.every(function (term) {
+      var found = null;
+      Object.keys(SMALLTALK).forEach(function (kind) {
+        if (SMALLTALK[kind].words.indexOf(term) !== -1) found = kind;
+      });
+      if (found) hit = hit || found;
+      return !!found;
+    });
+    return allSmallTalk ? SMALLTALK[hit] : null;
+  }
+
+  // "how much is it and does it work offline?" is two questions. Splitting on
+  // sentence and clause boundaries lets each half be scored on its own; the
+  // whole string is still scored too, and the split only wins if it turns up
+  // a second, different, genuinely confident answer.
+  function splitClauses(text) {
+    return text.split(/[?।;]+|\band\b|\balso\b|\bor\b|\bra\b|\bani\b| र | अनि |,/i)
+      .map(function (part) { return part.trim(); })
+      .filter(function (part) { return part.length > 2; });
+  }
+
+  // The one entry point the UI uses. Returns what to do, not just what
+  // matched: { kind: "confident" | "maybe" | "none", faqs, alternatives }.
+  function matchFaq(input) {
+    var overall = scoreAll(input);
+    var top = overall[0];
+
+    var clauses = splitClauses(input);
+    if (clauses.length > 1) {
+      var picked = [];
+      var pickedIds = {};
+      clauses.forEach(function (clause) {
+        var best = scoreAll(clause)[0];
+        if (best && best.confidence >= CONFIDENT && !pickedIds[best.faq.id]) {
+          pickedIds[best.faq.id] = true;
+          picked.push(best.faq);
+        }
+      });
+      if (picked.length > 1) {
+        return { kind: "confident", faqs: picked.slice(0, 3), alternatives: [] };
+      }
+    }
+
+    if (!top || top.confidence < MAYBE) {
+      var closest = overall.slice(0, 3).map(function (s) { return s.faq; });
+      return {
+        kind: "none",
+        faqs: [],
+        // A question that overlapped with nothing at all ("do you deliver to
+        // Pokhara?") leaves no closest matches to offer, and a bare "I don't
+        // know" is a dead end. Fall back to the three questions most people
+        // are actually here for.
+        alternatives: closest.length ? closest : POPULAR
+      };
+    }
+
+    return {
+      kind: top.confidence >= CONFIDENT ? "confident" : "maybe",
+      faqs: [top.faq],
+      alternatives: overall.slice(1, 3)
+        .filter(function (s) { return s.confidence >= MAYBE / 2; })
+        .map(function (s) { return s.faq; })
+    };
+  }
+
+  // ---- Related questions --------------------------------------------------
+  // Cosine similarity over the same weighted term vectors, computed once at
+  // load. This is what powers the follow-up chips after each answer, and it
+  // maintains itself: add a FAQ to the list at the top of this file and it
+  // starts appearing under the entries it actually relates to, with no
+  // hand-written "see also" table to keep in sync.
+  function vectorLength(terms) {
+    var sum = 0;
+    Object.keys(terms).forEach(function (t) {
+      var v = idf(t) * terms[t];
+      sum += v * v;
+    });
+    return Math.sqrt(sum) || 1;
+  }
+
+  FAQS.forEach(function (faq) { faq.norm = vectorLength(faq.terms); });
+
+  FAQS.forEach(function (faq) {
+    faq.related = FAQS
+      .filter(function (other) { return other !== faq; })
+      .map(function (other) {
+        var dot = 0;
+        Object.keys(faq.terms).forEach(function (t) {
+          if (other.terms[t]) dot += idf(t) * faq.terms[t] * idf(t) * other.terms[t];
+        });
+        return { faq: other, score: dot / (faq.norm * other.norm) };
+      })
+      .filter(function (s) { return s.score > 0.04; })
+      .sort(function (a, b) { return b.score - a.score; })
+      .slice(0, 3)
+      .map(function (s) { return s.faq; });
+  });
+
+  // ---- Missed questions ---------------------------------------------------
+  // Anything the matcher gave up on is kept locally (last 40, this browser
+  // only, never sent anywhere) so the FAQ list can be grown from what people
+  // genuinely asked instead of what we guessed they'd ask. Read it from the
+  // console with KhatiwadaFaqBot.misses().
+  var MISS_KEY = "khatiwada_faq_misses";
+
+  function readMisses() {
+    try { return JSON.parse(localStorage.getItem(MISS_KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function logMiss(question) {
+    try {
+      var misses = readMisses();
+      misses.push({ q: question, at: new Date().toISOString() });
+      localStorage.setItem(MISS_KEY, JSON.stringify(misses.slice(-40)));
+    } catch (e) {}
   }
 
   // Same Newari-dress character across all three appearances on the site
@@ -291,11 +697,17 @@
       '<div class="faq-bot-header">' +
         '<span class="faq-bot-avatar">' + AVATAR_IMG + "</span>" +
         '<span class="faq-bot-title" data-en="Khatiwada POS Help" data-ne="खटीवाडा POS सहयोग">Khatiwada POS Help' +
-          '<span class="faq-bot-sub" data-en="Tap a question below" data-ne="तलबाट प्रश्न छान्नुहोस्">Tap a question below</span>' +
+          '<span class="faq-bot-sub" data-en="Tap a question, or type your own" data-ne="प्रश्न छान्नुहोस्, वा आफैं लेख्नुहोस्">Tap a question, or type your own</span>' +
         "</span>" +
         '<button id="faq-bot-close" type="button" aria-label="Close">&times;</button>' +
       "</div>" +
       '<div id="faq-bot-messages"></div>' +
+      // The full question list is a disclosure now, not a permanent fixture.
+      // It opens expanded (that's how a first-time visitor discovers what can
+      // be asked) and folds away once the conversation starts, handing its
+      // room back to the transcript -- see setMenuOpen below.
+      '<button id="faq-bot-menu-toggle" type="button" aria-expanded="true" ' +
+        'aria-controls="faq-bot-menu" data-en="All questions" data-ne="सबै प्रश्नहरू">All questions</button>' +
       '<div id="faq-bot-menu"></div>' +
       '<form id="faq-bot-input-form">' +
         '<input id="faq-bot-input" type="text" autocomplete="off" ' +
@@ -329,6 +741,7 @@
 
     var messagesEl = panel.querySelector("#faq-bot-messages");
     var menuEl = panel.querySelector("#faq-bot-menu");
+    var menuToggle = panel.querySelector("#faq-bot-menu-toggle");
     var inputForm = panel.querySelector("#faq-bot-input-form");
     var inputEl = panel.querySelector("#faq-bot-input");
     var greeted = false;
@@ -338,34 +751,137 @@
     // mechanism (script.js's applyLang, which re-queries every [data-en]
     // element on each toggle) keeps it updated automatically -- including
     // messages already sent before the visitor switched languages.
-    function addMessage(textOrPair, who) {
+    // forceLang answers in the language the visitor actually typed in, even
+    // if the site is currently set to the other one -- someone typing
+    // Devanagari into an English page wants a Nepali answer back. Both
+    // data-en/data-ne are still set, so the next language toggle re-syncs
+    // this message with the rest of the site as usual.
+    function addMessage(textOrPair, who, forceLang) {
       var el = document.createElement("div");
       el.className = "faq-bot-msg " + who;
       if (typeof textOrPair === "object") {
         el.setAttribute("data-en", textOrPair.en);
         el.setAttribute("data-ne", textOrPair.ne);
-        el.textContent = textOrPair[lang()];
+        el.textContent = textOrPair[forceLang || lang()];
       } else {
         el.textContent = textOrPair;
       }
       messagesEl.appendChild(el);
       messagesEl.scrollTop = messagesEl.scrollHeight;
+      return el;
     }
+
+    function makeChip(faq, onPick) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "faq-bot-chip";
+      chip.setAttribute("data-en", faq.q.en);
+      chip.setAttribute("data-ne", faq.q.ne);
+      chip.textContent = faq.q[lang()];
+      chip.addEventListener("click", function () { onPick(faq); });
+      return chip;
+    }
+
+    // A bot message that carries tappable questions with it. The intro text
+    // goes in its own [data-en] span rather than on the message div, because
+    // script.js's applyLang sets textContent on every [data-en] element it
+    // finds -- putting it on the parent would wipe the chips on the first
+    // language toggle.
+    // alwaysShow keeps the intro line when there's nothing left to suggest --
+    // right for a reply that has to say something back (small talk), wrong for
+    // follow-ups, where an empty "people usually ask this next:" with no
+    // questions under it is just noise.
+    function addSuggestions(faqs, introPair, forceLang, alwaysShow) {
+      if (!faqs.length && !alwaysShow) return;
+      var el = document.createElement("div");
+      el.className = "faq-bot-msg bot";
+
+      var intro = document.createElement("span");
+      intro.setAttribute("data-en", introPair.en);
+      intro.setAttribute("data-ne", introPair.ne);
+      intro.textContent = introPair[forceLang || lang()];
+      el.appendChild(intro);
+
+      var list = document.createElement("div");
+      list.className = "faq-bot-suggest";
+      faqs.forEach(function (faq) {
+        list.appendChild(makeChip(faq, function (picked) {
+          addMessage(picked.q, "user");
+          answer(picked);
+          collapseMenuOnFirstQuestion();
+        }));
+      });
+      el.appendChild(list);
+
+      messagesEl.appendChild(el);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    // Every entry answered this session, so follow-up chips never offer
+    // something the visitor has already been told, and every entry already
+    // put forward as a suggestion, so they don't get offered on repeat.
+    var answered = {};
+    var suggested = {};
+
+    var FOLLOW_UP = {
+      en: "People usually ask this next:",
+      ne: "यसपछि प्रायः यो सोधिन्छ:"
+    };
+    var TRY_THESE = {
+      en: "Closest I've got:",
+      ne: "मसँग भएका नजिकका प्रश्नहरू:"
+    };
+    var NOT_IT = {
+      en: "Not what you meant? Try one of these:",
+      ne: "यो होइन? यीमध्ये एउटा हेर्नुहोस्:"
+    };
+
+    // skipFollowUps is for the middle of a multi-part reply -- suggestions
+    // sandwiched between two answers read as if the second answer belongs to
+    // them. They come once, at the end.
+    function answer(faq, forceLang, skipFollowUps) {
+      addMessage(faq.a, "bot", forceLang);
+      answered[faq.id] = true;
+      if (skipFollowUps) return;
+      var unanswered = (faq.related || []).filter(function (f) { return !answered[f.id]; });
+      // Offering the same untaken suggestion after every answer reads like the
+      // bot is nagging. Prefer ones not put forward yet, and only repeat when
+      // there's nothing fresh left to offer.
+      var fresh = unanswered.filter(function (f) { return !suggested[f.id]; });
+      var follow = (fresh.length ? fresh : unanswered).slice(0, 2);
+      follow.forEach(function (f) { suggested[f.id] = true; });
+      addSuggestions(follow, FOLLOW_UP, forceLang);
+    }
+
+    function setMenuOpen(open) {
+      panel.classList.toggle("menu-open", open);
+      menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    // The full list is worth its space right up until the visitor has asked
+    // something -- after that the transcript is the thing they're reading, and
+    // a 15-item menu sitting under it was taking nearly half the panel to show
+    // four questions behind a second scrollbar. Folding it away is what gives
+    // the conversation room to breathe; the toggle brings it straight back.
+    function collapseMenuOnFirstQuestion() {
+      if (panel.classList.contains("menu-open")) setMenuOpen(false);
+    }
+
+    menuToggle.addEventListener("click", function () {
+      setMenuOpen(!panel.classList.contains("menu-open"));
+      if (panel.classList.contains("menu-open")) menuEl.scrollTop = 0;
+    });
+
+    setMenuOpen(true);
 
     function renderMenu() {
       menuEl.innerHTML = "";
       FAQS.forEach(function (faq) {
-        var chip = document.createElement("button");
-        chip.type = "button";
-        chip.className = "faq-bot-chip";
-        chip.setAttribute("data-en", faq.q.en);
-        chip.setAttribute("data-ne", faq.q.ne);
-        chip.textContent = faq.q[lang()];
-        chip.addEventListener("click", function () {
-          addMessage(faq.q, "user");
-          addMessage(faq.a, "bot");
-        });
-        menuEl.appendChild(chip);
+        menuEl.appendChild(makeChip(faq, function (picked) {
+          addMessage(picked.q, "user");
+          answer(picked);
+          collapseMenuOnFirstQuestion();
+        }));
       });
     }
 
@@ -555,10 +1071,79 @@
       if (!typed) return;
       addMessage(typed, "user");
       inputEl.value = "";
-      var match = matchFaq(typed);
-      addMessage(match ? match.a : FALLBACK_ANSWER, "bot");
+      collapseMenuOnFirstQuestion();
+
+      // Any Devanagari at all in the question is taken as "answer me in
+      // Nepali" regardless of the site's current toggle. Romanised Nepali is
+      // deliberately not treated the same way -- it's genuinely ambiguous,
+      // and guessing wrong there is more annoying than just following the
+      // site setting.
+      var replyLang = /[ऀ-ॿ]/.test(typed) ? "ne" : null;
+
+      var chat = matchSmallTalk(typed);
+      if (chat) {
+        addSuggestions(
+          POPULAR.filter(function (f) { return !answered[f.id]; }).slice(0, 3),
+          chat.reply,
+          replyLang,
+          true
+        );
+        return;
+      }
+
+      var result = matchFaq(typed);
+
+      if (result.kind === "confident") {
+        result.faqs.forEach(function (faq, i) {
+          // Second and third answers to a multi-part question get a lead-in,
+          // otherwise two answers in a row read as one rambling reply.
+          if (i > 0) {
+            addMessage({
+              en: "And on “" + faq.q.en + "”:",
+              ne: "अनि “" + faq.q.ne + "” को बारेमा:"
+            }, "bot", replyLang);
+          }
+          answer(faq, replyLang, i < result.faqs.length - 1);
+        });
+        return;
+      }
+
+      if (result.kind === "maybe") {
+        var faq = result.faqs[0];
+        // Naming the question we landed on is the whole point of this branch:
+        // the visitor can see the guess and correct it in one tap instead of
+        // being left wondering whether the answer was even about their
+        // question.
+        addMessage({
+          en: "I think you're asking about “" + faq.q.en + "”:",
+          ne: "मलाई लाग्छ तपाईं “" + faq.q.ne + "” सोध्दै हुनुहुन्छ:"
+        }, "bot", replyLang);
+        addMessage(faq.a, "bot", replyLang);
+        answered[faq.id] = true;
+        addSuggestions(result.alternatives, NOT_IT, replyLang);
+        return;
+      }
+
+      logMiss(typed);
+      addMessage(FALLBACK_ANSWER, "bot", replyLang);
+      addSuggestions(result.alternatives, TRY_THESE, replyLang);
     });
   }
+
+  // Console handle for tuning: KhatiwadaFaqBot.test("kati parcha") shows what
+  // the matcher scored and why, and .misses() lists the questions it couldn't
+  // answer on this browser -- the shortlist for which FAQ entry to write next.
+  window.KhatiwadaFaqBot = {
+    test: function (text) { return matchFaq(text); },
+    score: function (text) {
+      return scoreAll(text).slice(0, 5).map(function (s) {
+        return { id: s.faq.id, confidence: Math.round(s.confidence * 100) / 100 };
+      });
+    },
+    smalltalk: matchSmallTalk,
+    misses: readMisses,
+    faqs: FAQS
+  };
 
   document.addEventListener("DOMContentLoaded", build);
 })();
